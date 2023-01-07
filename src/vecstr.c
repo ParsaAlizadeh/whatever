@@ -19,6 +19,12 @@ string *string_from(char *str) {
     return this;
 }
 
+char *string_free(string *this) {
+    char *seq = this->seq;
+    free(this);
+    return seq;
+}
+
 static void string_recap(string *this, int newcap) {
     if (newcap <= this->size+1)
         return;
@@ -36,8 +42,7 @@ void string_push(string *this, char c) {
     this->seq[++this->size] = '\0';
 }
 
-char *string_free(string *this) {
-    char *seq = this->seq;
-    free(this);
-    return seq;
+void string_clear(string *this) {
+    this->size = 0;
+    this->seq[0] = '\0';
 }

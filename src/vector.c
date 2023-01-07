@@ -33,3 +33,9 @@ void **vector_free(vector *this) {
     free(this);
     return seq;
 }
+
+void vector_freeall(vector *this) {
+    for (int i = 0; i < this->size; i++)
+        free(this->seq[i]);
+    vector_free(this);
+}

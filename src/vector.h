@@ -11,5 +11,6 @@ typedef struct vector vector;
 vector *vector_new(void);
 void vector_push(vector *, void *);
 void **vector_free(vector *);
+void vector_freeall(vector *);
 
 #endif
