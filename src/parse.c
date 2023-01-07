@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include <err.h>
 #include "vecstr.h"
 
 vector *scan_line(void) {
@@ -50,7 +49,7 @@ vector *scan_line(void) {
         string_push(cur, c);
     }
     if (escaped || qoute)
-        warnx("unexpected eof");
+        fprintf(stderr, "scan_line: unexpected eof\n");
     if (cur->size > 0) {
         vector_push(tokens, string_free(cur));
     } else {
