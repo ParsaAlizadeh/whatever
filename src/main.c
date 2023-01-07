@@ -5,6 +5,7 @@
 
 #include "commands/creatfile.h"
 #include "commands/insertstr.h"
+#include "commands/removestr.h"
 #include "commands/cat.h"
 #include "commands/undo.h"
 
@@ -12,6 +13,7 @@ int main() {
     const command all_cmds[] = {
         creatfile,
         insertstr,
+        removestr,
         cat,
         undo
     };
