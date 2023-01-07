@@ -6,12 +6,14 @@
 #include "commands/creatfile.h"
 #include "commands/insertstr.h"
 #include "commands/cat.h"
+#include "commands/undo.h"
 
 int main() {
     const command all_cmds[] = {
         creatfile,
         insertstr,
-        cat
+        cat,
+        undo
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     while (!feof(stdin)) {
