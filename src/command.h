@@ -7,7 +7,7 @@ typedef struct {
     char *name;
     char *optstring;
     void *(*make)(void);
-    void  (*set_opt)(void *, int, char *);
+    int   (*set_opt)(void *, int, char *);
     void  (*run)(void *);
 } command;
 
@@ -18,8 +18,8 @@ typedef struct {
 
 const command *lookup_command(int, const command [], char *);
 command_obj make_command(int, const command [], vector *);
-void feed_options(command_obj, vector *);
+int feed_options(command_obj, vector *);
 void run_command(command_obj);
-void procedure_command(int, const command [], vector *);
+int procedure_command(int, const command [], vector *);
 
 #endif

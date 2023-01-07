@@ -23,7 +23,7 @@ command_obj make_command(int n, const command cmds[], vector *tokens) {
     return result;
 }
 
-void feed_options(command_obj self, vector *tokens) {
+int feed_options(command_obj self, vector *tokens) {
     int argc = tokens->size;
     char **argv = (char **)tokens->seq;
     int opt;
@@ -36,34 +36,41 @@ void feed_options(command_obj self, vector *tokens) {
     while ((opt = getopt(argc, argv, self.cmd->optstring)) != -1) {
         switch (opt) {
         case '?':
-            fprintf(stderr, "%s: unknown option %c\n", self.cmd->name, optopt);
-            break;
+            fprintf(stderr, "%s: unknown option \"-%c\"\n", self.cmd->name, optopt);
+            return EXIT_FAILURE;
         case ':':
-            fprintf(stderr, "%s: option %c requires an argument\n", self.cmd->name, optopt);
-            break;
+            fprintf(stderr, "%s: option \"-%c\" requires an argument\n", self.cmd->name, optopt);
+            return EXIT_FAILURE;
         default:
-            self.cmd->set_opt(self.obj, opt, optarg);
+            if (self.cmd->set_opt(self.obj, opt, optarg))
+                return EXIT_FAILURE;
             break;
         }
     }
-    if (optind < argc)
-        fprintf(stderr, "%s: ignore extra arguments\n", self.cmd->name);
+    if (optind < argc) {
+        fprintf(stderr, "%s: extra arguments was found\n", self.cmd->name);
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
 }
 
 void run_command(command_obj self) {
     self.cmd->run(self.obj);
 }
 
-void procedure_command(int n, const command cmds[], vector *tokens) {
+int procedure_command(int n, const command cmds[], vector *tokens) {
     if (tokens == NULL || tokens->size == 0) {
         fprintf(stderr, "procedure: tokens should be non empty\n");
-        return;
+        return EXIT_FAILURE;
     }
     command_obj cobj = make_command(n, cmds, tokens);
     if (cobj.cmd == NULL) {
-        fprintf(stderr, "procedure: invalid command %s\n", (char *)tokens->seq[0]);
-        return;
+        fprintf(stderr, "procedure: invalid command \"%s\"\n", (char *)tokens->seq[0]);
+        return EXIT_FAILURE;
     }
-    feed_options(cobj, tokens);
+    int rc;
+    if ((rc = feed_options(cobj, tokens)))
+        return rc;
     run_command(cobj);
+    return EXIT_SUCCESS;
 }
