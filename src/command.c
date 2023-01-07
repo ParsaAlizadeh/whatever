@@ -80,9 +80,10 @@ int procedure_command(int n, const command cmds[], vector *tokens) {
         fprintf(stderr, "procedure: invalid command \"%s\"\n", (char *)tokens->seq[0]);
         return CMD_FAILURE;
     }
-    int rc;
-    if ((rc = feed_options(cobj, tokens)) != CMD_SUCCESS)
+    int rc = feed_options(cobj, tokens);
+    if (rc != CMD_SUCCESS)
         return rc;
     run_command(cobj);
+    free(cobj.obj);
     return CMD_SUCCESS;
 }
