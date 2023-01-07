@@ -62,6 +62,12 @@ static void run(void *_this) {
         return;
     }
 
+    if (fu_backup(this->path) == -1) {
+        fprintf(stderr, "insertstr: backup failed: %s\n",
+            strerror(errno));
+        return;
+    }
+
     FILE *source, *tmp;
     if ((source = fopen(this->path, "r")) == NULL) {
         fprintf(stderr, "insertstr: unable to open file: %s\n",

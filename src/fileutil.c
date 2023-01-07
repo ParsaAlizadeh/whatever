@@ -53,3 +53,28 @@ int fu_isdirectory(const char *path) {
         return 0;
     return S_ISDIR(buf.st_mode);
 }
+
+void fu_copy(FILE *from, FILE *to) {
+    int c;
+    while ((c = fgetc(from)) != EOF)
+        fputc(c, to);
+}
+
+int fu_backup(const char *path) {
+    FILE *orig, *bak;
+    if ((orig = fopen(path, "r")) == NULL)
+        return -1;
+    int size = strlen(path);
+    char *bakpath = malloc(size+2);
+    sprintf(bakpath, "%s~", path);
+    if ((bak = fopen(bakpath, "w")) == NULL) {
+        free(bakpath);
+        fclose(orig);
+        return -1;
+    }
+    fu_copy(orig, bak);
+    free(bakpath);
+    fclose(orig);
+    fclose(bak);
+    return 0;
+}

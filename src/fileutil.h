@@ -1,6 +1,7 @@
 #ifndef FILEUTIL_H
 #define FILEUTIL_H
 
+#include <stdio.h>
 #include "vector.h"
 
 /*
@@ -19,5 +20,13 @@ char *fu_dirname(const char *);
  */
 int fu_exists(const char *);
 int fu_isdirectory(const char *);
+
+void fu_copy(FILE *, FILE *);
+
+/*
+ * backup /path/to/file into /path/to/file~
+ * returns 0 on success, -1 on failure and set errno
+ */
+int fu_backup(const char *);
 
 #endif
