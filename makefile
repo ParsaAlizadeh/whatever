@@ -1,5 +1,5 @@
 CC=cc
-CFLAGS=-Wall -Wextra
+CFLAGS=-Wall -Wextra -g
 SRC=${wildcard src/*.c}
 OBJ=${patsubst src/%.c,build/%.o,${SRC}}
 
