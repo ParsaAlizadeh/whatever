@@ -49,6 +49,10 @@ int feed_options(command_obj self, vector *tokens) {
                     fprintf(stderr, "%s: option \"-%c\" is repeated\n",
                         self.cmd->name, opt);
                     break;
+                case CMD_UNEXPECTED:
+                    fprintf(stderr, "%s: unexpected option \"-%c\"\n",
+                        self.cmd->name, opt);
+                    break;
                 }
                 return rc;
             }

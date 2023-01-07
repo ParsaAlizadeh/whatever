@@ -41,8 +41,7 @@ static int set_opt(void *_this, int c, char *argv) {
         }
         break;
     default:
-        fprintf(stderr, "insertstr: unexpected option \"-%c\"\n", c);
-        return CMD_FAILURE;
+        return CMD_UNEXPECTED;
     }
     return CMD_SUCCESS;
 }

@@ -25,8 +25,7 @@ static int set_opt(void *_this, int c, char *argv) {
         this->path = argv;
         break;
     default:
-        fprintf(stderr, "creatfile: unexpected flag %c\n", c);
-        return CMD_FAILURE;
+        return CMD_UNEXPECTED;
     }
     return CMD_SUCCESS;
 }
