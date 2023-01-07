@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
+#include "vecstr.h"
 
 int mkdir_p(const char *_path) {
     if (_path == NULL  || *_path == '\0')
@@ -54,10 +55,15 @@ int fu_isdirectory(const char *path) {
     return S_ISDIR(buf.st_mode);
 }
 
+void fu_copyn(FILE *from, FILE *to, int n) {
+    int ind, chr;
+    for (ind = 0; (n == -1 || ind < n) && (chr = fgetc(from)) != EOF; ind++)
+        if (to != NULL)
+            fputc(chr, to);
+}
+
 void fu_copy(FILE *from, FILE *to) {
-    int c;
-    while ((c = fgetc(from)) != EOF)
-        fputc(c, to);
+    return fu_copyn(from, to, -1);
 }
 
 char *fu_backuppath(const char *path) {
@@ -82,4 +88,81 @@ int fu_backup(const char *path) {
     fclose(orig);
     fclose(bak);
     return 0;
+}
+
+int fu_insertat(const char *path, int pos, const char *str) {
+    FILE *file, *tmp;
+    if ((file = fopen(path, "r")) == NULL)
+        return -1;
+    if ((tmp = tmpfile()) == NULL) {
+        fclose(file);
+        return -1;
+    }
+    fu_copyn(file, tmp, pos);
+    fputs(str, tmp);
+    fu_copy(file, tmp);
+    fflush(tmp);
+    fclose(file);
+    if ((file = fopen(path, "w")) == NULL) {
+        fclose(tmp);
+        return -1;
+    }
+    fseek(tmp, 0, SEEK_SET);
+    fu_copy(tmp, file);
+    fclose(file);
+    fclose(tmp);
+    return 0;
+}
+
+int fu_removeat(const char *path, int pos, int n) {
+    FILE *file, *tmp;
+    if ((file = fopen(path, "r")) == NULL)
+        return -1;
+    if ((tmp = tmpfile()) == NULL) {
+        fclose(file);
+        return -1;
+    }
+    fu_copyn(file, tmp, pos);
+    fu_copyn(file, NULL, n);
+    fu_copy(file, tmp);
+    fflush(tmp);
+    fclose(file);
+    if ((file = fopen(path, "w")) == NULL) {
+        fclose(tmp);
+        return -1;
+    }
+    fseek(tmp, 0, SEEK_SET);
+    fu_copy(tmp, file);
+    fclose(file);
+    fclose(tmp);
+    return 0;
+}
+
+char *fu_readat(FILE *file, int pos, int n) {
+    int before = ftell(file);
+    fseek(file, pos, SEEK_SET);
+    string *str = string_new();
+    int ind, chr;
+    for (ind = 0; ind < n && (chr = fgetc(file)) != EOF; ind++)
+        string_push(str, chr);
+    fseek(file, before, SEEK_SET);
+    return string_free(str);
+}
+
+int fu_whereat(FILE *file, int line, int col) {
+    int before = ftell(file);
+    int cur_l = 1, cur_c = 0, chr = EOF, ind = 0;
+    do {
+        if (chr != EOF)
+            cur_c++;
+        if (chr == '\n')
+            cur_l++, cur_c = 0;
+        if (cur_l == line && cur_c == col)
+            break;
+        ind++;
+    } while ((chr = fgetc(file)) != EOF);
+    fseek(file, before, SEEK_SET);
+    if (cur_l != line && cur_c != col)
+        return -1;
+    return before + ind;
 }

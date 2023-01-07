@@ -21,6 +21,7 @@ char *fu_dirname(const char *);
 int fu_exists(const char *);
 int fu_isdirectory(const char *);
 
+void fu_copyn(FILE *, FILE *, int);
 void fu_copy(FILE *, FILE *);
 
 /*
@@ -33,5 +34,11 @@ char *fu_backuppath(const char *);
  * returns 0 on success, -1 on failure and set errno
  */
 int fu_backup(const char *);
+
+int fu_insertat(const char *, int, const char *);
+int fu_removeat(const char *, int, int);
+
+char *fu_readat(FILE *, int, int);
+int fu_whereat(FILE *, int, int);
 
 #endif

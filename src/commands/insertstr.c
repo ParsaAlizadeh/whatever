@@ -67,47 +67,19 @@ static void run(void *_this) {
         return;
     }
 
-    FILE *source, *tmp;
-    if ((source = fopen(this->path, "r")) == NULL) {
+    FILE *file;
+    if ((file = fopen(this->path, "r")) == NULL) {
         fprintf(stderr, "insertstr: unable to open file: %s\n",
             strerror(errno));
         return;
     }
-    if ((tmp = tmpfile()) == NULL) {
-        fprintf(stderr, "insertstr: unable to open temp file: %s\n",
-            strerror(errno));
-        fclose(source);
+    int pos = fu_whereat(file, this->line_no, this->col_no);
+    fclose(file);
+    if (pos == -1) {
+        fprintf(stderr, "insertstr: not a valid position\n");
         return;
     }
-
-    int cur_line_no = 1, cur_col_no = 0;
-    int chr = EOF;
-    do {
-        if (chr != EOF) {
-            fputc(chr, tmp);
-            cur_col_no++;
-        }
-        if (chr == '\n')
-            cur_line_no++, cur_col_no = 0;
-        if (cur_line_no == this->line_no && cur_col_no == this->col_no)
-            fputs(this->str, tmp);
-    } while ((chr = fgetc(source)) != EOF);
-    fflush(tmp);
-
-    fclose(source);
-    if ((source = fopen(this->path, "w")) == NULL) {
-        fprintf(stderr, "insertstr: unable to open file: %s\n",
-            strerror(errno));
-        fclose(tmp);
-        return;
-    }
-
-    fseek(tmp, 0, SEEK_SET);
-    while ((chr = fgetc(tmp)) != EOF)
-        fputc(chr, source);
-
-    fclose(source);
-    fclose(tmp);
+    fu_insertat(this->path, pos, this->str);
 
     fprintf(stderr, "insertstr: done\n");
     return;
