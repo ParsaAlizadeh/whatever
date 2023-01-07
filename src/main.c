@@ -9,10 +9,10 @@ int main() {
         creatfile
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
-    while (1) {
+    while (!feof(stdin)) {
         vector *tokens = scan_line();
-        if (tokens->size == 0)
-            break;
+        if (tokens->size == 0) /* empty line */
+            continue;
         procedure_command(n_cmds, all_cmds, tokens);
         vector_freeall(tokens);
     }
