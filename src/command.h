@@ -3,6 +3,11 @@
 
 #include "vector.h"
 
+enum cmd_error {
+    CMD_FAILURE = -1,
+    CMD_SUCCESS = 0
+};
+
 typedef struct {
     char *name;
     char *optstring;
@@ -20,6 +25,11 @@ const command *lookup_command(int, const command [], char *);
 command_obj make_command(int, const command [], vector *);
 int feed_options(command_obj, vector *);
 void run_command(command_obj);
+
+/*
+ * given an array of all commands and a vector of tokens,
+ * runs the command and return an cmd_error (0 on success)
+ */
 int procedure_command(int, const command [], vector *);
 
 #endif

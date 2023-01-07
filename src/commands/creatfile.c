@@ -24,9 +24,9 @@ static int set_opt(void *_this, int c, char *argv) {
         break;
     default:
         fprintf(stderr, "creatfile: unexpected flag %c\n", c);
-        return EXIT_FAILURE;
+        return CMD_FAILURE;
     }
-    return EXIT_SUCCESS;
+    return CMD_SUCCESS;
 }
 
 static void run(void *_this) {
@@ -43,7 +43,7 @@ static void run(void *_this) {
     }
     free(dir);
     if (fu_exists(this->path)) {
-        fprintf(stderr, "creatfile: file \"%s\" exists\n", this->path);
+        fprintf(stderr, "creatfile: \"%s\" exists\n", this->path);
         return;
     }
     FILE *file;

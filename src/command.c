@@ -37,21 +37,21 @@ int feed_options(command_obj self, vector *tokens) {
         switch (opt) {
         case '?':
             fprintf(stderr, "%s: unknown option \"-%c\"\n", self.cmd->name, optopt);
-            return EXIT_FAILURE;
+            return CMD_FAILURE;
         case ':':
             fprintf(stderr, "%s: option \"-%c\" requires an argument\n", self.cmd->name, optopt);
-            return EXIT_FAILURE;
+            return CMD_FAILURE;
         default:
-            if (self.cmd->set_opt(self.obj, opt, optarg))
-                return EXIT_FAILURE;
+            if (self.cmd->set_opt(self.obj, opt, optarg) != CMD_SUCCESS)
+                return CMD_FAILURE;
             break;
         }
     }
     if (optind < argc) {
         fprintf(stderr, "%s: extra arguments was found\n", self.cmd->name);
-        return EXIT_FAILURE;
+        return CMD_FAILURE;
     }
-    return EXIT_SUCCESS;
+    return CMD_SUCCESS;
 }
 
 void run_command(command_obj self) {
@@ -61,16 +61,16 @@ void run_command(command_obj self) {
 int procedure_command(int n, const command cmds[], vector *tokens) {
     if (tokens == NULL || tokens->size == 0) {
         fprintf(stderr, "procedure: tokens should be non empty\n");
-        return EXIT_FAILURE;
+        return CMD_FAILURE;
     }
     command_obj cobj = make_command(n, cmds, tokens);
     if (cobj.cmd == NULL) {
         fprintf(stderr, "procedure: invalid command \"%s\"\n", (char *)tokens->seq[0]);
-        return EXIT_FAILURE;
+        return CMD_FAILURE;
     }
     int rc;
-    if ((rc = feed_options(cobj, tokens)))
+    if ((rc = feed_options(cobj, tokens)) != CMD_SUCCESS)
         return rc;
     run_command(cobj);
-    return EXIT_SUCCESS;
+    return CMD_SUCCESS;
 }
