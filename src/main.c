@@ -2,11 +2,14 @@
 #include <stdlib.h>
 #include "parse.h"
 #include "command.h"
+
 #include "commands/creatfile.h"
+#include "commands/insertstr.h"
 
 int main() {
     const command all_cmds[] = {
-        creatfile
+        creatfile,
+        insertstr
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     while (!feof(stdin)) {
