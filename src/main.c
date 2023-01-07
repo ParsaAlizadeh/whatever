@@ -1,14 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "parse.h"
+#include "command.h"
+#include "commands/creatfile.h"
 
 int main() {
-    vector *vec = scan_line();
-    printf("vec size=%d cap=%d\n", vec->size, vec->cap);
-    for (int i = 0; i < vec->size; i++) {
-        char *tk = vec->seq[i];
-        printf("======\n%s\n======\n", tk);
+    const command all_cmds[] = {
+        creatfile
+    };
+    int n_cmds = sizeof(all_cmds) / sizeof(command);
+    while (1) {
+        vector *tokens = scan_line();
+        if (tokens->size == 0)
+            break;
+        procedure_command(n_cmds, all_cmds, tokens);
+        vector_freeall(tokens);
     }
-    vector_freeall(vec);
     return EXIT_SUCCESS;
 }

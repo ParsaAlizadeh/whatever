@@ -1,6 +1,6 @@
 CC=cc
 CFLAGS=-Wall -Wextra -g
-SRC=${wildcard src/*.c}
+SRC=${wildcard src/*.c src/commands/*.c}
 OBJ=${patsubst src/%.c,build/%.o,${SRC}}
 
 all: ${OBJ}

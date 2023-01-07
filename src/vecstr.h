@@ -1,12 +1,10 @@
 #ifndef VECSTR_H
 #define VECSTR_H
 
-struct string {
+typedef struct {
     char *seq;
     int size, cap;
-};
-
-typedef struct string string;
+} string;
 
 string *string_new(void);
 string *string_from(char *);

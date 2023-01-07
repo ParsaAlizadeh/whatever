@@ -1,12 +1,10 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-struct vector {
+typedef struct {
     void **seq;
     int size, cap;
-};
-
-typedef struct vector vector;
+} vector;
 
 vector *vector_new(void);
 void vector_push(vector *, void *);
