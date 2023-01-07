@@ -24,6 +24,11 @@ int fu_isdirectory(const char *);
 void fu_copy(FILE *, FILE *);
 
 /*
+ * returns malloc(3)ated string pointing to backup path
+ */
+char *fu_backuppath(const char *);
+
+/*
  * backup /path/to/file into /path/to/file~
  * returns 0 on success, -1 on failure and set errno
  */

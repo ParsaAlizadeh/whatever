@@ -60,13 +60,18 @@ void fu_copy(FILE *from, FILE *to) {
         fputc(c, to);
 }
 
+char *fu_backuppath(const char *path) {
+    int size = strlen(path);
+    char *bakpath = malloc(size+2);
+    sprintf(bakpath, "%s~", path);
+    return bakpath;
+}
+
 int fu_backup(const char *path) {
     FILE *orig, *bak;
     if ((orig = fopen(path, "r")) == NULL)
         return -1;
-    int size = strlen(path);
-    char *bakpath = malloc(size+2);
-    sprintf(bakpath, "%s~", path);
+    char *bakpath = fu_backuppath(path);
     if ((bak = fopen(bakpath, "w")) == NULL) {
         free(bakpath);
         fclose(orig);
