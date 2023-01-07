@@ -11,7 +11,7 @@ typedef struct {
 } creatfile_t;
 
 static void *make(void) {
-    creatfile_t *this = malloc(sizeof(creatfile));
+    creatfile_t *this = malloc(sizeof(creatfile_t));
     this->path = NULL;
     return this;
 }
@@ -20,6 +20,8 @@ static int set_opt(void *_this, int c, char *argv) {
     creatfile_t *this = _this;
     switch (c) {
     case 'f':
+        if (this->path != NULL)
+            return CMD_REPEATED_OPTION;
         this->path = argv;
         break;
     default:

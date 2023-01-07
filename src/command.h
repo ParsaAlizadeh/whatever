@@ -4,6 +4,7 @@
 #include "vector.h"
 
 enum cmd_error {
+    CMD_REPEATED_OPTION = -2,
     CMD_FAILURE = -1,
     CMD_SUCCESS = 0
 };

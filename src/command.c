@@ -42,8 +42,16 @@ int feed_options(command_obj self, vector *tokens) {
             fprintf(stderr, "%s: option \"-%c\" requires an argument\n", self.cmd->name, optopt);
             return CMD_FAILURE;
         default:
-            if (self.cmd->set_opt(self.obj, opt, optarg) != CMD_SUCCESS)
-                return CMD_FAILURE;
+            int rc = self.cmd->set_opt(self.obj, opt, optarg);
+            if (rc != CMD_SUCCESS) {
+                switch (rc) {
+                case CMD_REPEATED_OPTION:
+                    fprintf(stderr, "%s: option \"-%c\" is repeated\n",
+                        self.cmd->name, opt);
+                    break;
+                }
+                return rc;
+            }
             break;
         }
     }
