@@ -62,9 +62,8 @@ static void run(void *_this) {
     }
 
     if (fu_backup(this->path) == -1) {
-        fprintf(stderr, "insertstr: backup failed: %s\n",
+        fprintf(stderr, "insertstr: backup failed, ignoring: %s\n",
             strerror(errno));
-        return;
     }
 
     FILE *file;
@@ -79,7 +78,11 @@ static void run(void *_this) {
         fprintf(stderr, "insertstr: not a valid position\n");
         return;
     }
-    fu_insertat(this->path, pos, this->str);
+    if (fu_insertat(this->path, pos, this->str) == -1) {
+        fprintf(stderr, "insertstr: insert failed: %s\n",
+            strerror(errno));
+        return;
+    }
 
     fprintf(stderr, "insertstr: done\n");
     return;
