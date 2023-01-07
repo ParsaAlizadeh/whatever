@@ -11,6 +11,14 @@ string *string_new(void) {
     return this;
 }
 
+string *string_from(char *str) {
+    string *this = malloc(sizeof(string));
+    this->seq = str;
+    this->size = strlen(str);
+    this->cap = this->size + 1;
+    return this;
+}
+
 static void string_recap(string *this, int newcap) {
     if (newcap <= this->size+1)
         return;
