@@ -5,11 +5,13 @@
 
 #include "commands/creatfile.h"
 #include "commands/insertstr.h"
+#include "commands/cat.h"
 
 int main() {
     const command all_cmds[] = {
         creatfile,
-        insertstr
+        insertstr,
+        cat
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     while (!feof(stdin)) {
