@@ -1,10 +1,5 @@
 #include "insertstr.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include "../fileutil.h"
+#include "setup.h"
 
 typedef struct {
     char *path;
@@ -36,7 +31,7 @@ static int set_opt(void *_this, int c, char *argv) {
         if (this->line_no != -1)
             return CMD_REPEATED_OPTION;
         if (sscanf(argv, "%u:%u", &this->line_no, &this->col_no) < 2) {
-            fprintf(stderr, "insertstr: option \"-p\" must be in this format \"%%u:%%u\"\n");
+            cmdlog(&insertstr, "option \"-p\" must be in this format \"%%u:%%u\"");
             return CMD_FAILURE;
         }
         break;
@@ -48,44 +43,29 @@ static int set_opt(void *_this, int c, char *argv) {
 
 static void run(void *_this) {
     insertstr_t *this = _this;
-    if (this->path == NULL) {
-        fprintf(stderr, "insertstr: option \"-f\" is required\n");
-        return;
-    }
-    if (this->str == NULL) {
-        fprintf(stderr, "insertstr: option \"-s\" is required\n");
-        return;
-    }
-    if (this->line_no == -1) {
-        fprintf(stderr, "insertstr: option \"-p\" is required\n");
-        return;
-    }
+    if (this->path == NULL)
+        return (void)cmdlogrequired(&insertstr, 'f');
+    if (this->str == NULL)
+        return (void)cmdlogrequired(&insertstr, 's');
+    if (this->line_no == -1)
+        return (void)cmdlogrequired(&insertstr, 'p');
 
-    if (fu_backup(this->path) == -1) {
-        fprintf(stderr, "insertstr: backup failed, ignoring: %s\n",
+    if (fu_backup(this->path) == -1)
+        cmdlog(&insertstr, "backup failed, ignoring: %s",
             strerror(errno));
-    }
 
     FILE *file;
-    if ((file = fopen(this->path, "r")) == NULL) {
-        fprintf(stderr, "insertstr: unable to open file: %s\n",
+    if ((file = fopen(this->path, "r")) == NULL)
+        return (void)cmdlog(&insertstr, "unable to open file: %s",
             strerror(errno));
-        return;
-    }
     int pos = fu_whereat(file, this->line_no, this->col_no);
     fclose(file);
-    if (pos == -1) {
-        fprintf(stderr, "insertstr: not a valid position\n");
-        return;
-    }
-    if (fu_insertat(this->path, pos, this->str) == -1) {
-        fprintf(stderr, "insertstr: insert failed: %s\n",
+    if (pos == -1)
+        return (void)cmdlog(&insertstr, "not a valid position");
+    if (fu_insertat(this->path, pos, this->str) == -1)
+        return (void)cmdlog(&insertstr, "insert failed: %s",
             strerror(errno));
-        return;
-    }
-
-    fprintf(stderr, "insertstr: done\n");
-    return;
+    cmdlog(&insertstr, "done");
 }
 
 const command insertstr = {

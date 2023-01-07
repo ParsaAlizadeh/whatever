@@ -1,10 +1,5 @@
 #include "removestr.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include "../fileutil.h"
+#include "setup.h"
 
 typedef struct {
     char *path;
@@ -33,7 +28,7 @@ static int set_opt(void *_this, int c, char *argv) {
         if (this->line_no != -1)
             return CMD_REPEATED_OPTION;
         if (sscanf(argv, "%u:%u", &this->line_no, &this->col_no) < 2) {
-            fprintf(stderr, "removestr: option \"-p\" must be in this format \"%%u:%%u\"\n");
+            cmdlog(&removestr, "option \"-p\" must be in this format \"%%u:%%u\"");
             return CMD_FAILURE;
         }
         break;
@@ -41,7 +36,7 @@ static int set_opt(void *_this, int c, char *argv) {
         if (this->n != -1)
             return CMD_REPEATED_OPTION;
         if (sscanf(argv, "%u", &this->n) < 1) {
-            fprintf(stderr, "removestr: option \"-n\" accepts an integer\n");
+            cmdlog(&removestr, "option \"-n\" accepts an integer");
             return CMD_FAILURE;
         }
         break;
@@ -63,54 +58,37 @@ static int set_opt(void *_this, int c, char *argv) {
 
 static void run(void *_this) {
     removestr_t *this = _this;
-    if (this->path == NULL) {
-        fprintf(stderr, "removestr: option \"-f\" is required\n");
-        return;
-    }
-    if (this->line_no == -1) {
-        fprintf(stderr, "removestr: option \"-p\" is required\n");
-        return;
-    }
-    if (this->n == -1) {
-        fprintf(stderr, "removestr: option \"-n\" is required\n");
-        return;
-    }
-    if (this->direction == 0) {
-        fprintf(stderr, "removestr: one of \"->\" or \"-<\" is required\n");
-        return;
-    }
+    if (this->path == NULL)
+        return (void)cmdlogrequired(&removestr, 'f');
+    if (this->line_no == -1)
+        return (void)cmdlogrequired(&removestr, 'p');
+    if (this->n == -1)
+        return (void)cmdlogrequired(&removestr, 'n');
+    if (this->direction == 0)
+        return (void)cmdlog(&removestr, "one of \"->\" or \"-<\" is required");
 
-    if (fu_backup(this->path) == -1) {
-        fprintf(stderr, "removestr: backup failed, ignoring: %s\n",
+    if (fu_backup(this->path) == -1)
+        return (void)cmdlog(&removestr, "backup failed, ignoring: %s",
             strerror(errno));
-    }
 
     FILE *file;
-    if ((file = fopen(this->path, "r")) == NULL) {
-        fprintf(stderr, "removestr: unable to open file: %s\n",
+    if ((file = fopen(this->path, "r")) == NULL)
+        return (void)cmdlog(&removestr, "unable to open file: %s",
             strerror(errno));
-        return;
-    }
     int pos = fu_whereat(file, this->line_no, this->col_no);
     fclose(file);
-    if (pos == -1) {
-        fprintf(stderr, "removestr: not a valid position\n");
-        return;
-    }
+    if (pos == -1)
+        return (void)cmdlog(&removestr, "not a valid position");
     if (this->direction == -1)
         pos -= this->n - 1;
     if (pos < 0) {
         this->n += pos;
         pos = 0;
     }
-    if (fu_removeat(this->path, pos, this->n) == -1) {
-        fprintf(stderr, "removestr: remove failed: %s\n",
+    if (fu_removeat(this->path, pos, this->n) == -1)
+        return (void)cmdlog(&removestr, "remove failed: %s",
             strerror(errno));
-        return;
-    }
-
-    fprintf(stderr, "removestr: done\n");
-    return;
+    cmdlog(&removestr, "done");
 }
 
 const command removestr = {

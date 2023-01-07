@@ -1,10 +1,5 @@
 #include "undo.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include "../fileutil.h"
+#include "setup.h"
 
 typedef struct {
     char *path;
@@ -32,21 +27,15 @@ static int set_opt(void *_this, int c, char *arg) {
 
 static void run(void *_this) {
     undo_t *this = _this;
-    if (this->path == NULL) {
-        fprintf(stderr, "undo: option \"-f\" is required\n");
-        return;
-    }
+    if (this->path == NULL)
+        return (void)cmdlogrequired(&undo, 'f');
     char *bakpath = fu_backuppath(this->path);
-    if (!fu_exists(bakpath)) {
-        fprintf(stderr, "undo: no backup exists\n");
-        return;
-    }
-    if (rename(bakpath, this->path) == -1) {
-        fprintf(stderr, "undo: rename failed: %s", strerror(errno));
-        return;
-    }
-    fprintf(stderr, "undo: done\n");
-    return;
+    if (!fu_exists(bakpath))
+        return (void)cmdlog(&undo, "no backup exists");
+    if (rename(bakpath, this->path) == -1)
+        return (void)cmdlog(&undo, "rename failed: %s",
+            strerror(errno));
+    cmdlog(&undo, "done");
 }
 
 const command undo = {

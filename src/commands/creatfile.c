@@ -1,10 +1,5 @@
 #include "creatfile.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include "../fileutil.h"
+#include "setup.h"
 
 typedef struct {
     char *path;
@@ -32,29 +27,21 @@ static int set_opt(void *_this, int c, char *argv) {
 
 static void run(void *_this) {
     creatfile_t *this = _this;
-    if (this->path == NULL) {
-        fprintf(stderr, "creatfile: option \"-f\" is required\n");
-        return;
-    }
+    if (this->path == NULL)
+        return (void)cmdlogrequired(&creatfile, 'f');
     char *dir = fu_dirname(this->path);
-    if (mkdir_p(dir) == -1) {
-        fprintf(stderr, "creatfile: failed to create directory: %s\n",
+    if (mkdir_p(dir) == -1)
+        return (void)cmdlog(&creatfile, "failed to create directory: %s",
             strerror(errno));
-        return;
-    }
     free(dir);
-    if (fu_exists(this->path)) {
-        fprintf(stderr, "creatfile: \"%s\" exists\n", this->path);
-        return;
-    }
+    if (fu_exists(this->path))
+        return (void)cmdlog(&creatfile, "\"%s\" exists", this->path);
     FILE *file;
-    if ((file = fopen(this->path, "w")) == NULL) {
-        fprintf(stderr, "creatfile: failed to create file \"%s\": %s\n",
-            this->path, strerror(errno));
-        return;
-    }
+    if ((file = fopen(this->path, "w")) == NULL)
+        return (void)cmdlog(&creatfile, "failed to create file: %s",
+            strerror(errno));
     fclose(file);
-    fprintf(stderr, "creatfile: done\n");
+    cmdlog(&creatfile, "done");
 }
 
 const command creatfile = {

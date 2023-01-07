@@ -1,10 +1,5 @@
 #include "cat.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include "../fileutil.h"
+#include "setup.h"
 
 typedef struct {
     char *path;
@@ -32,19 +27,14 @@ static int set_opt(void *_this, int c, char *arg) {
 
 static void run(void *_this) {
     cat_t *this = _this;
-    if (this->path == NULL) {
-        fprintf(stderr, "cat: option \"-f\" is required\n");
-        return;
-    }
+    if (this->path == NULL)
+        return (void)cmdlogrequired(&cat, 'f');
     FILE *file;
-    if ((file = fopen(this->path, "r")) == NULL) {
-        fprintf(stderr, "cat: failed to open file: %s\n", strerror(errno));
-        return;
-    }
+    if ((file = fopen(this->path, "r")) == NULL)
+        return (void)cmdlog(&cat, "failed to open file: %s", strerror(errno));
     fu_copy(file, stdout);
     fclose(file);
-    fprintf(stderr, "cat: done\n");
-    return;
+    cmdlog(&cat, "done");
 }
 
 const command cat = {
