@@ -29,7 +29,7 @@ int cmdlogrequired(const command *, char);
         if (this->memb != (def)) \
             return CMD_REPEATED_OPTION; \
         if (sscanf(argv, format, &this->memb) < 1) { \
-            cmdlog(&cmd, "option \"-%c\" must be in this format"#format, c); \
+            cmdlog(&cmd, "option \"-%c\" must be in this format %s", c, #format); \
             return CMD_FAILURE; \
         } \
         break;

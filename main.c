@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "parse.h"
-#include "command.h"
+#include "src/parse.h"
+#include "src/command.h"
 
-#include "commands/creatfile.h"
-#include "commands/insertstr.h"
-#include "commands/removestr.h"
-#include "commands/cat.h"
-#include "commands/undo.h"
-#include "commands/copystr.h"
-#include "commands/cutstr.h"
-#include "commands/pastestr.h"
+#include "src/commands/creatfile.h"
+#include "src/commands/insertstr.h"
+#include "src/commands/removestr.h"
+#include "src/commands/cat.h"
+#include "src/commands/undo.h"
+#include "src/commands/copystr.h"
+#include "src/commands/cutstr.h"
+#include "src/commands/pastestr.h"
 
 int main() {
     const command all_cmds[] = {
