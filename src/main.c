@@ -9,6 +9,7 @@
 #include "commands/cat.h"
 #include "commands/undo.h"
 #include "commands/copystr.h"
+#include "commands/cutstr.h"
 #include "commands/pastestr.h"
 
 int main() {
@@ -19,6 +20,7 @@ int main() {
         cat,
         undo,
         copystr,
+        cutstr,
         pastestr
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
