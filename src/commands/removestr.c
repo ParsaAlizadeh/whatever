@@ -19,37 +19,11 @@ static void *make(void) {
 static int set_opt(void *_this, int c, char *argv) {
     removestr_t *this = _this;
     switch (c) {
-    case 'f':
-        if (this->path != NULL)
-            return CMD_REPEATED_OPTION;
-        this->path = argv;
-        break;
-    case 'p':
-        if (this->line_no != -1)
-            return CMD_REPEATED_OPTION;
-        if (sscanf(argv, "%u:%u", &this->line_no, &this->col_no) < 2) {
-            cmdlog(&removestr, "option \"-p\" must be in this format \"%%u:%%u\"");
-            return CMD_FAILURE;
-        }
-        break;
-    case 'n':
-        if (this->n != -1)
-            return CMD_REPEATED_OPTION;
-        if (sscanf(argv, "%u", &this->n) < 1) {
-            cmdlog(&removestr, "option \"-n\" accepts an integer");
-            return CMD_FAILURE;
-        }
-        break;
-    case '>':
-        if (this->direction != 0)
-            return CMD_REPEATED_OPTION;
-        this->direction = 1;
-        break;
-    case '<':
-        if (this->direction != 0)
-            return CMD_REPEATED_OPTION;
-        this->direction = -1;
-        break;
+    SINGLE_OPTION_ARGV('f', path)
+    SINGLE_OPTION_POSITION('p', removestr, line_no, col_no)
+    SINGLE_OPTION_SCANF('n', removestr, n, -1, "%u")
+    SINGLE_OPTION_CONSTANT('>', direction, 0, 1)
+    SINGLE_OPTION_CONSTANT('<', direction, 0, -1)
     default:
         return CMD_UNEXPECTED;
     }

@@ -11,14 +11,10 @@ static void *make(void) {
     return this;
 }
 
-static int set_opt(void *_this, int c, char *arg) {
+static int set_opt(void *_this, int c, char *argv) {
     cat_t *this = _this;
     switch (c) {
-    case 'f':
-        if (this->path != NULL)
-            return CMD_REPEATED_OPTION;
-        this->path = arg;
-        break;
+    SINGLE_OPTION_ARGV('f', path)
     default:
         return CMD_UNEXPECTED;
     }

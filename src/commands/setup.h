@@ -17,19 +17,19 @@ int cmdlogrequired(const command *, char);
 
 #define SINGLE_OPTION_CONSTANT(c, memb, def, val) \
     case c: \
-        if (this->memb != def) \
+        if (this->memb != (def)) \
             return CMD_REPEATED_OPTION; \
-        this->memb = val; \
+        this->memb = (val); \
         break;
 
 #define SINGLE_OPTION_ARGV(c, memb) SINGLE_OPTION_CONSTANT(c, memb, NULL, argv)
 
 #define SINGLE_OPTION_SCANF(c, cmd, memb, def, format) \
     case c: \
-        if (this->memb != def) \
+        if (this->memb != (def)) \
             return CMD_REPEATED_OPTION; \
         if (sscanf(argv, format, &this->memb) < 1) { \
-            cmdlog(&copystr, "option \"-%c\" must be in this format"#format, c); \
+            cmdlog(&cmd, "option \"-%c\" must be in this format"#format, c); \
             return CMD_FAILURE; \
         } \
         break;

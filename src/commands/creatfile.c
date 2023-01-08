@@ -14,11 +14,7 @@ static void *make(void) {
 static int set_opt(void *_this, int c, char *argv) {
     creatfile_t *this = _this;
     switch (c) {
-    case 'f':
-        if (this->path != NULL)
-            return CMD_REPEATED_OPTION;
-        this->path = argv;
-        break;
+    SINGLE_OPTION_ARGV('f', path)
     default:
         return CMD_UNEXPECTED;
     }

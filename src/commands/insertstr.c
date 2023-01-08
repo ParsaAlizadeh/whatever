@@ -17,24 +17,9 @@ static void *make(void) {
 static int set_opt(void *_this, int c, char *argv) {
     insertstr_t *this = _this;
     switch (c) {
-    case 'f':
-        if (this->path != NULL)
-            return CMD_REPEATED_OPTION;
-        this->path = argv;
-        break;
-    case 's':
-        if (this->str != NULL)
-            return CMD_REPEATED_OPTION;
-        this->str = argv;
-        break;
-    case 'p':
-        if (this->line_no != -1)
-            return CMD_REPEATED_OPTION;
-        if (sscanf(argv, "%u:%u", &this->line_no, &this->col_no) < 2) {
-            cmdlog(&insertstr, "option \"-p\" must be in this format \"%%u:%%u\"");
-            return CMD_FAILURE;
-        }
-        break;
+    SINGLE_OPTION_ARGV('f', path)
+    SINGLE_OPTION_ARGV('s', str)
+    SINGLE_OPTION_POSITION('p', insertstr, line_no, col_no)
     default:
         return CMD_UNEXPECTED;
     }
