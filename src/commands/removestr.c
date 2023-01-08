@@ -3,8 +3,8 @@
 
 typedef struct {
     char *path;
-    int line_no, col_no;
-    int n;
+    long line_no, col_no;
+    long n;
     int direction;
 } removestr_t;
 
@@ -21,7 +21,7 @@ static int set_opt(void *_this, int c, char *argv) {
     switch (c) {
     SINGLE_OPTION_ARGV('f', path)
     SINGLE_OPTION_POSITION('p', removestr, line_no, col_no)
-    SINGLE_OPTION_SCANF('n', removestr, n, -1, "%u")
+    SINGLE_OPTION_SCANF('n', removestr, n, -1, "%lu")
     SINGLE_OPTION_CONSTANT('>', direction, 0, 1)
     SINGLE_OPTION_CONSTANT('<', direction, 0, -1)
     default:
@@ -45,7 +45,7 @@ static void run(void *_this) {
         return (void)cmdlog(&removestr, "backup failed, ignoring: %s",
             strerror(errno));
 
-    int pos = fu_pwhereat(
+    long pos = fu_pwhereat(
         this->path, this->line_no, this->col_no,
         this->direction, &this->n);
     if (pos == -1)

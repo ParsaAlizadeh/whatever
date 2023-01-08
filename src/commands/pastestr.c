@@ -3,7 +3,7 @@
 
 typedef struct {
     char *path;
-    int line_no, col_no;
+    long line_no, col_no;
 } pastestr_t;
 
 static void *make(void) {
@@ -35,7 +35,7 @@ static void run(void *_this) {
         cmdlog(&pastestr, "backup failed, ignoring: %s",
             strerror(errno));
 
-    int pos = fu_pwhereat(this->path, this->line_no, this->col_no, 1, NULL);
+    long pos = fu_pwhereat(this->path, this->line_no, this->col_no, 1, NULL);
     if (pos == -1)
         return (void)cmdlog(&pastestr, "not a valid position");
     if (fu_insertat(this->path, pos, clipboard_get()) == -1)

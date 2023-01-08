@@ -38,8 +38,8 @@ int cmdlogrequired(const command *, char);
     case c: \
         if (this->line_no != -1) \
             return CMD_REPEATED_OPTION; \
-        if (sscanf(argv, "%u:%u", &this->line_no, &this->col_no) < 2) { \
-            cmdlog(&cmd, "option \"-%c\" must be a position \"%%u:%%u\"", c); \
+        if (sscanf(argv, "%lu:%lu", &this->line_no, &this->col_no) < 2) { \
+            cmdlog(&cmd, "option \"-%c\" must be a position \"%%lu:%%lu\"", c); \
             return CMD_FAILURE; \
         } \
         break;

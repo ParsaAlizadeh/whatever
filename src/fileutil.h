@@ -18,7 +18,7 @@ char *fu_dirname(const char *path);
 int fu_exists(const char *path);
 int fu_isdirectory(const char *path);
 
-void fu_copyn(FILE *from, FILE *to, int n);
+void fu_copyn(FILE *from, FILE *to, long n);
 void fu_copy(FILE *from, FILE *to);
 
 /*
@@ -32,13 +32,13 @@ char *fu_backuppath(const char *path);
  */
 int fu_backup(const char *path);
 
-int fu_insertat(const char *path, int pos, const char *str);
-int fu_removeat(const char *path, int pos, int n);
+int fu_insertat(const char *path, long pos, const char *str);
+int fu_removeat(const char *path, long pos, long n);
 
-char *fu_readat(FILE *file, int pos, int n);
-char *fu_preadat(const char *path, int pos, int n);
+char *fu_readat(FILE *file, long pos, long n);
+char *fu_preadat(const char *path, long pos, long n);
 
-int fu_whereat(FILE *file, int line, int col);
-int fu_pwhereat(const char *path, int line, int col, int dir, int *n);
+long fu_whereat(FILE *file, long line, long col);
+long fu_pwhereat(const char *path, long line, long col, long dir, long *n);
 
 #endif

@@ -3,8 +3,8 @@
 
 typedef struct {
     char *path;
-    int line_no, col_no;
-    int n;
+    long line_no, col_no;
+    long n;
     int direction;
 } copystr_t;
 
@@ -24,7 +24,7 @@ static int set_opt(void *_this, int c, char *argv) {
     SINGLE_OPTION_CONSTANT('>', direction, 0, 1)
     SINGLE_OPTION_CONSTANT('<', direction, 0, -1)
     SINGLE_OPTION_POSITION('p', copystr, line_no, col_no)
-    SINGLE_OPTION_SCANF('n', copystr, n, -1, "%u")
+    SINGLE_OPTION_SCANF('n', copystr, n, -1, "%lu")
     default:
         return CMD_UNEXPECTED;
     }
@@ -41,7 +41,7 @@ static void run(void *_this) {
         return (void)cmdlogrequired(&copystr, 'n');
     if (this->direction == 0)
         return (void)cmdlog(&copystr, "one of \"->\" or \"-<\" is required");
-    int pos = fu_pwhereat(
+    long pos = fu_pwhereat(
         this->path, this->line_no, this->col_no,
         this->direction, &this->n);
     if (pos == -1)

@@ -4,7 +4,7 @@
 typedef struct {
     char *path;
     char *str;
-    int line_no, col_no;
+    long line_no, col_no;
 } insertstr_t;
 
 static void *make(void) {
@@ -39,7 +39,7 @@ static void run(void *_this) {
         cmdlog(&insertstr, "backup failed, ignoring: %s",
             strerror(errno));
 
-    int pos = fu_pwhereat(this->path, this->line_no, this->col_no, 1, NULL);
+    long pos = fu_pwhereat(this->path, this->line_no, this->col_no, 1, NULL);
     if (pos == -1)
         return (void)cmdlog(&insertstr, "not a valid position");
     if (fu_insertat(this->path, pos, this->str) == -1)
