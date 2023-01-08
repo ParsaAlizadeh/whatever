@@ -25,6 +25,8 @@ int main() {
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     while (!feof(stdin)) {
+        printf("$ ");
+        fflush(stdout);
         vector *tokens = scan_line();
         if (tokens->size == 0) /* empty line */
             continue;
