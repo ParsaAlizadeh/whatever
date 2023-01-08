@@ -49,7 +49,6 @@ static void run(void *_this) {
     char *content = fu_preadat(this->path, pos, this->n);
     if (content == NULL)
         return (void)cmdlog(&copystr, "can not read at the position");
-    printf("before: %s\n", clipboard_get());
     clipboard_set(content);
     cmdlog(&copystr, "done");
 }
