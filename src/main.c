@@ -8,6 +8,7 @@
 #include "commands/removestr.h"
 #include "commands/cat.h"
 #include "commands/undo.h"
+#include "commands/copystr.h"
 
 int main() {
     const command all_cmds[] = {
@@ -15,7 +16,8 @@ int main() {
         insertstr,
         removestr,
         cat,
-        undo
+        undo,
+        copystr
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     while (!feof(stdin)) {

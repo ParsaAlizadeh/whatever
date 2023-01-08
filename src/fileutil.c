@@ -149,6 +149,15 @@ char *fu_readat(FILE *file, int pos, int n) {
     return string_free(str);
 }
 
+char *fu_preadat(const char *path, int pos, int n) {
+    FILE *file;
+    if ((file = fopen(path, "r")) == NULL)
+        return NULL;
+    char *content = fu_readat(file, pos, n);
+    fclose(file);
+    return content;
+}
+
 int fu_whereat(FILE *file, int line, int col) {
     int before = ftell(file);
     int cur_l = 1, cur_c = 0, chr = EOF, ind = 0;
@@ -165,4 +174,21 @@ int fu_whereat(FILE *file, int line, int col) {
     if (cur_l != line && cur_c != col)
         return -1;
     return before + ind;
+}
+
+int fu_pwhereat(const char *path, int line, int col, int dir, int *n) {
+    FILE *file;
+    if ((file = fopen(path, "r")) == NULL)
+        return -1;
+    int pos = fu_whereat(file, line, col);
+    fclose(file);
+    if (pos == -1)
+        return -1;
+    if (dir == -1)
+        pos -= *n - 1;
+    if (pos < 0) {
+        *n += pos;
+        pos = 0;
+    }
+    return pos;
 }
