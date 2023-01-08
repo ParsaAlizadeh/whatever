@@ -171,7 +171,7 @@ int fu_whereat(FILE *file, int line, int col) {
         ind++;
     } while ((chr = fgetc(file)) != EOF);
     fseek(file, before, SEEK_SET);
-    if (cur_l != line && cur_c != col)
+    if (cur_l != line || cur_c != col)
         return -1;
     return before + ind;
 }

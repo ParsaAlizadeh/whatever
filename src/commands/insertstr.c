@@ -39,12 +39,7 @@ static void run(void *_this) {
         cmdlog(&insertstr, "backup failed, ignoring: %s",
             strerror(errno));
 
-    FILE *file;
-    if ((file = fopen(this->path, "r")) == NULL)
-        return (void)cmdlog(&insertstr, "unable to open file: %s",
-            strerror(errno));
-    int pos = fu_whereat(file, this->line_no, this->col_no);
-    fclose(file);
+    int pos = fu_pwhereat(this->path, this->line_no, this->col_no, 1, NULL);
     if (pos == -1)
         return (void)cmdlog(&insertstr, "not a valid position");
     if (fu_insertat(this->path, pos, this->str) == -1)

@@ -45,20 +45,11 @@ static void run(void *_this) {
         return (void)cmdlog(&removestr, "backup failed, ignoring: %s",
             strerror(errno));
 
-    FILE *file;
-    if ((file = fopen(this->path, "r")) == NULL)
-        return (void)cmdlog(&removestr, "unable to open file: %s",
-            strerror(errno));
-    int pos = fu_whereat(file, this->line_no, this->col_no);
-    fclose(file);
+    int pos = fu_pwhereat(
+        this->path, this->line_no, this->col_no,
+        this->direction, &this->n);
     if (pos == -1)
         return (void)cmdlog(&removestr, "not a valid position");
-    if (this->direction == -1)
-        pos -= this->n - 1;
-    if (pos < 0) {
-        this->n += pos;
-        pos = 0;
-    }
     if (fu_removeat(this->path, pos, this->n) == -1)
         return (void)cmdlog(&removestr, "remove failed: %s",
             strerror(errno));
