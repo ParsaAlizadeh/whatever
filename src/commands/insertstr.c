@@ -53,5 +53,6 @@ const command insertstr = {
     .optstring  = ":f:s:p:",
     .make       = make,
     .set_opt    = set_opt,
-    .run        = run
+    .run        = run,
+    .free       = free
 };

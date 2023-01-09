@@ -39,5 +39,6 @@ const command undo = {
     .optstring  = ":f:",
     .make       = make,
     .set_opt    = set_opt,
-    .run        = run
+    .run        = run,
+    .free       = free
 };

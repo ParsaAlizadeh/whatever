@@ -1,47 +1,38 @@
 #include "pastestr.h"
 #include "setup.h"
 
+#include "insertstr.h"
+
 typedef struct {
-    char *path;
-    long line_no, col_no;
+    void *insertobj;
 } pastestr_t;
 
 static void *make(void) {
     pastestr_t *this = malloc(sizeof(pastestr_t));
-    this->path = NULL;
-    this->line_no = this->col_no = -1;
+    this->insertobj = insertstr.make();
     return this;
 }
 
 static int set_opt(void *_this, int c, char *argv) {
     pastestr_t *this = _this;
-    switch (c) {
-    SINGLE_OPTION_ARGV('f', path)
-    SINGLE_OPTION_POSITION('p', pastestr, line_no, col_no)
-    default:
-        return CMD_UNEXPECTED;
-    }
+    int rc;
+    if ((rc = insertstr.set_opt(this->insertobj, c, argv)) != CMD_SUCCESS)
+        return rc;
     return CMD_SUCCESS;
 }
 
 static void run(void *_this) {
     pastestr_t *this = _this;
-    if (this->path == NULL)
-        return (void)cmdlogrequired(&pastestr, 'f');
-    if (this->line_no == -1)
-        return (void)cmdlogrequired(&pastestr, 'p');
-
-    if (fu_backup(this->path) == -1)
-        cmdlog(&pastestr, "backup failed, ignoring: %s",
-            strerror(errno));
-
-    long pos = fu_pwhereat(this->path, this->line_no, this->col_no, 1, NULL);
-    if (pos == -1)
-        return (void)cmdlog(&pastestr, "not a valid position");
-    if (fu_insertat(this->path, pos, clipboard_get()) == -1)
-        return (void)cmdlog(&pastestr, "paste failed: %s",
-            strerror(errno));
+    if (insertstr.set_opt(this->insertobj, 's', (char *)clipboard_get()) != CMD_SUCCESS)
+        return;
+    insertstr.run(this->insertobj);
     cmdlog(&pastestr, "done");
+}
+
+static void pastestr_free(void *_this) {
+    pastestr_t *this = _this;
+    insertstr.free(this->insertobj);
+    free(this);
 }
 
 const command pastestr = {
@@ -49,5 +40,6 @@ const command pastestr = {
     .optstring  = ":f:p:",
     .make       = make,
     .set_opt    = set_opt,
-    .run        = run
+    .run        = run,
+    .free       = pastestr_free
 };

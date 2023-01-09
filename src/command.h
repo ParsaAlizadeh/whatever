@@ -16,6 +16,7 @@ typedef struct {
     void *(*make)(void);
     int   (*set_opt)(void *, int, char *);
     void  (*run)(void *);
+    void  (*free)(void *);
 } command;
 
 typedef struct {

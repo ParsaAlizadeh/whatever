@@ -82,10 +82,10 @@ int procedure_command(int n, const command cmds[], vector *tokens) {
     }
     int rc = feed_options(cobj, tokens);
     if (rc != CMD_SUCCESS) {
-        free(cobj.obj);
+        cobj.cmd->free(cobj.obj);
         return rc;
     }
     run_command(cobj);
-    free(cobj.obj);
+    cobj.cmd->free(cobj.obj);
     return CMD_SUCCESS;
 }
