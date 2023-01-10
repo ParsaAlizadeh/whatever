@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "src/parse.h"
-#include "src/command.h"
+#include "src/chain.h"
 
 #include "src/commands/creatfile.h"
 #include "src/commands/insertstr.h"
@@ -38,9 +38,8 @@ int main() {
         printf("$ ");
         fflush(stdout);
         vector *tokens = scan_line();
-        if (tokens->size == 0) /* empty line */
-            continue;
-        procedure_command(n_cmds, all_cmds, tokens);
+        if (tokens->size != 0)
+            procedure_chain(n_cmds, all_cmds, tokens);
         vector_freeall(tokens);
     }
     return EXIT_SUCCESS;

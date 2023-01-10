@@ -1,5 +1,5 @@
 CC=cc
-CFLAGS=-Wall -Wextra -g
+CFLAGS=-Wall -Wextra -g -fsanitize=address
 SRC=${wildcard main.c src/*.c src/commands/*.c}
 OBJ=${patsubst %.c,build/%.o,${SRC}}
 

@@ -21,11 +21,12 @@ static int set_opt(void *_this, int c, char *argv) {
     return CMD_SUCCESS;
 }
 
-static void run(void *_this) {
+static void run(void *_this, char *inp, char **out) {
+    (void)inp;
     pastestr_t *this = _this;
     if (insertstr.set_opt(this->insertobj, 's', (char *)clipboard_get()) != CMD_SUCCESS)
         return;
-    insertstr.run(this->insertobj);
+    insertstr.run(this->insertobj, NULL, out);
     cmdlog(&pastestr, "done");
 }
 

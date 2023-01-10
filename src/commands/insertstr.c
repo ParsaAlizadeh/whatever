@@ -26,10 +26,13 @@ static int set_opt(void *_this, int c, char *argv) {
     return CMD_SUCCESS;
 }
 
-static void run(void *_this) {
+static void run(void *_this, char *inp, char **out) {
+    (void)out;
     insertstr_t *this = _this;
     if (this->path == NULL)
         return (void)cmdlogrequired(&insertstr, 'f');
+    if (this->str == NULL)
+        this->str = inp;
     if (this->str == NULL)
         return (void)cmdlogrequired(&insertstr, 's');
     if (this->line_no == -1)

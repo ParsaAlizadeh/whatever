@@ -34,15 +34,19 @@ static int set_opt(void *_this, int c, char *argv) {
     return CMD_SUCCESS;
 }
 
-static void run(void *_this) {
+static void run(void *_this, char *inp, char **out) {
     grepat_t *this = _this;
     if (this->files->size == 0)
         return (void)cmdlogrequired(&grepat, 'f');
+    if (this->patstr == NULL)
+        this->patstr = inp;
     if (this->patstr == NULL)
         return (void)cmdlogrequired(&grepat, 's');
     this->pat = pattern_new(this->patstr);
     if (this->pat == NULL)
         return (void)cmdlog(&grepat, "invalid pattern");
+    size_t out_size;
+    FILE *fout = open_memstream(out, &out_size);
     for (int i = 0; i < this->files->size; i++) {
         char *path = this->files->seq[i];
         FILE *file = fu_open(path, "r");
@@ -59,18 +63,19 @@ static void run(void *_this) {
                 this->count++;
             if (this->all) {
                 if (this->count == -1)
-                    printf("%s\n", path);
+                    fprintf(fout, "%s\n", path);
                 free(line);
                 break;
             }
             if (this->count == -1)
-                printf("%s: %s\n", path, line);
+                fprintf(fout, "%s: %s\n", path, line);
             free(line);
         }
         fclose(file);
     }
     if (this->count != -1)
-        printf("%ld\n", this->count);
+        fprintf(fout, "%ld\n", this->count);
+    fclose(fout);
     cmdlog(&grepat, "done");
 }
 

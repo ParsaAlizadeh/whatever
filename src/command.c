@@ -66,11 +66,11 @@ int feed_options(command_obj self, vector *tokens) {
     return CMD_SUCCESS;
 }
 
-void run_command(command_obj self) {
-    self.cmd->run(self.obj);
+void run_command(command_obj self, char *inp, char **out) {
+    self.cmd->run(self.obj, inp, out);
 }
 
-int procedure_command(int n, const command cmds[], vector *tokens) {
+int procedure_command(int n, const command cmds[], vector *tokens, char *inp, char **out) {
     if (tokens == NULL || tokens->size == 0) {
         fprintf(stderr, "procedure: tokens should be non empty\n");
         return CMD_FAILURE;
@@ -85,7 +85,7 @@ int procedure_command(int n, const command cmds[], vector *tokens) {
         cobj.cmd->free(cobj.obj);
         return rc;
     }
-    run_command(cobj);
+    run_command(cobj, inp, out);
     cobj.cmd->free(cobj.obj);
     return CMD_SUCCESS;
 }

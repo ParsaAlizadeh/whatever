@@ -21,7 +21,9 @@ static int set_opt(void *_this, int c, char *argv) {
     return CMD_SUCCESS;
 }
 
-static void run(void *_this) {
+static void run(void *_this, char *inp, char **out) {
+    (void)inp;
+    (void)out;
     creatfile_t *this = _this;
     if (this->path == NULL)
         return (void)cmdlogrequired(&creatfile, 'f');

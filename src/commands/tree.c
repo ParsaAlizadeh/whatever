@@ -48,6 +48,7 @@ static char *next_prefix(const char *prefix, int is_last) {
 }
 
 static void traverse(
+    FILE *fout,
     const char *path,
     const char *base,
     const char *prefix,
@@ -56,12 +57,12 @@ static void traverse(
     int is_last,
     int show_all)
 {
-    printf("%s", prefix);
+    fprintf(fout, "%s", prefix);
     if (is_last)
-        printf("└────");
+        fprintf(fout, "└────");
     else
-        printf("├────");
-    printf("%s\n", base);
+        fprintf(fout, "├────");
+    fprintf(fout, "%s\n", base);
     if (maxdepth != 0 && depth >= maxdepth)
         return;
     if (!is_dir)
@@ -96,6 +97,7 @@ static void traverse(
         child *cur = items->seq[i];
         int is_last = (i+1 == items->size);
         traverse(
+            fout,
             cur->path,
             cur->base,
             subprefix,
@@ -110,9 +112,13 @@ static void traverse(
     free(subprefix);
 }
 
-static void run(void *_this) {
+static void run(void *_this, char *inp, char **out) {
+    (void)inp;
     tree_t *this = _this;
-    traverse(".", ".", "", 0, this->level, 1, 1, this->all);
+    size_t out_size;
+    FILE *fout = open_memstream(out, &out_size);
+    traverse(fout, ".", ".", "", 0, this->level, 1, 1, this->all);
+    fclose(fout);
     cmdlog(&tree, "done");
 }
 

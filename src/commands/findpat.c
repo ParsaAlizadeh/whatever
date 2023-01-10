@@ -35,10 +35,12 @@ static int set_opt(void *_this, int c, char *argv) {
     return CMD_SUCCESS;
 }
 
-static void run(void *_this) {
+static void run(void *_this, char *inp, char **out) {
     findpat_t *this = _this;
     if (this->path == NULL)
         return (void)cmdlogrequired(&findpat, 'f');
+    if (this->patstr == NULL)
+        this->patstr = inp;
     if (this->patstr == NULL)
         return (void)cmdlogrequired(&findpat, 's');
     this->pat = pattern_new(this->patstr);
@@ -51,6 +53,8 @@ static void run(void *_this) {
     FILE *file = fu_open(this->path, "r");
     if (file == NULL)
         return (void)cmdlog(&findpat, "file not exists");
+    size_t out_size;
+    FILE *fout = open_memstream(out, &out_size);
     int needcomma = 0;
     while (fu_nextmatch(file, this->pat) != NULL) {
         if (this->at != -1)
@@ -66,20 +70,21 @@ static void run(void *_this) {
             if (this->word)
                 pos = fu_wordat(file, pos);
             if (needcomma)
-                printf(", ");
-            printf("%ld", pos);
+                fprintf(fout, ", ");
+            fprintf(fout, "%ld", pos);
             needcomma = 1;
         }
         if (this->at == 0)
             break;
     }
     if (this->count != -1)
-        printf("%ld\n", this->count);
+        fprintf(fout, "%ld\n", this->count);
     else if (!needcomma)
-        printf("-1\n");
+        fprintf(fout, "-1\n");
     else
-        printf("\n");
+        fprintf(fout, "\n");
     fclose(file);
+    fclose(fout);
     cmdlog(&findpat, "done");
 }
 

@@ -22,7 +22,8 @@ static int set_opt(void *_this, int c, char *argv) {
     return CMD_SUCCESS;
 }
 
-static void run(void *_this) {
+static void run(void *_this, char *inp, char **out) {
+    (void)inp;
     diff_t *this = _this;
     if (this->path1 == NULL)
         return (void)cmdlogrequired(&diff, '1');
@@ -38,6 +39,8 @@ static void run(void *_this) {
         return (void)cmdlog(&diff, "failed to open file 2: %s",
             strerror(errno));
     }
+    size_t out_size;
+    FILE *fout = open_memstream(out, &out_size);
     char *line1, *line2;
     long line_no = 0;
     while (1) {
@@ -47,27 +50,28 @@ static void run(void *_this) {
         if (line1 == NULL && line2 == NULL)
             break;
         if (line1 == NULL) {
-            printf(">>> #%ld - $\n%s\n", line_no, line2);
-            fu_copy(file2, stdout);
+            fprintf(fout, ">>> #%ld - $\n%s\n", line_no, line2);
+            fu_copy(file2, fout);
             free(line2);
             break;
         }
         if (line2 == NULL) {
-            printf("<<< #%ld - $\n%s\n", line_no, line1);
-            fu_copy(file1, stdout);
+            fprintf(fout, "<<< #%ld - $\n%s\n", line_no, line1);
+            fu_copy(file1, fout);
             free(line1);
             break;
         }
         if (strcmp(line1, line2) == 0) {
-            printf("%s\n", line1);
+            fprintf(fout, "%s\n", line1);
         } else {
-            printf("=== #%ld\n%s\n%s\n", line_no, line1, line2);
+            fprintf(fout, "=== #%ld\n%s\n%s\n", line_no, line1, line2);
         }
         free(line1);
         free(line2);
     }
     fclose(file1);
     fclose(file2);
+    fclose(fout);
     cmdlog(&diff, "done");
 }
 

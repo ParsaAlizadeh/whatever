@@ -22,7 +22,7 @@ static void vector_recap(vector *this, int newcap) {
 }
 
 void vector_push(vector *this, void *item) {
-    if (this->size == this->cap)
+    if (this->size+1 == this->cap)
         vector_recap(this, this->cap * 2);
     this->seq[this->size] = item;
     this->seq[++this->size] = NULL;
@@ -39,10 +39,9 @@ void vector_sort(vector *this, veccmp_fn_t cmp) {
     qsort(this->seq, this->size, sizeof(void *), qsort_cmp);
 }
 
-void **vector_free(vector *this) {
-    void **seq = this->seq;
+void vector_free(vector *this) {
+    free(this->seq);
     free(this);
-    return seq;
 }
 
 void vector_freeall(vector *this) {

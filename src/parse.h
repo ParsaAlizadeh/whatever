@@ -3,6 +3,9 @@
 
 #include "vector.h"
 
+#define PIPE "|"
+#define PIPENCODE "\x1f"
+
 vector *scan_line(void);
 
 #endif
