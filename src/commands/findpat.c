@@ -48,7 +48,7 @@ static void run(void *_this) {
         return (void)cmdlog(&findpat, "\"-i\" and \"-a\" are in conflict");
     if (this->at == -1 && !this->all)
         this->at = 1;
-    FILE *file = fopen(this->path, "r");
+    FILE *file = fu_open(this->path, "r");
     if (file == NULL)
         return (void)cmdlog(&findpat, "file not exists");
     int needcomma = 0;

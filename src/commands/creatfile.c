@@ -33,7 +33,7 @@ static void run(void *_this) {
     if (fu_exists(this->path))
         return (void)cmdlog(&creatfile, "\"%s\" exists", this->path);
     FILE *file;
-    if ((file = fopen(this->path, "w")) == NULL)
+    if ((file = fu_open(this->path, "w")) == NULL)
         return (void)cmdlog(&creatfile, "failed to create file: %s",
             strerror(errno));
     fclose(file);

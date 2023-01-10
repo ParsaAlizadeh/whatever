@@ -26,7 +26,7 @@ static void run(void *_this) {
     if (this->path == NULL)
         return (void)cmdlogrequired(&cat, 'f');
     FILE *file;
-    if ((file = fopen(this->path, "r")) == NULL)
+    if ((file = fu_open(this->path, "r")) == NULL)
         return (void)cmdlog(&cat, "failed to open file: %s", strerror(errno));
     fu_copy(file, stdout);
     fclose(file);

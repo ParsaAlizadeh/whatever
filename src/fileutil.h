@@ -19,6 +19,8 @@ char *fu_dirname(const char *path);
 int fu_exists(const char *path);
 int fu_isdirectory(const char *path);
 
+FILE *fu_open(const char *path, const char *mode);
+
 void fu_copyn(FILE *from, FILE *to, long n);
 void fu_copy(FILE *from, FILE *to);
 

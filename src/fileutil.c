@@ -56,6 +56,14 @@ int fu_isdirectory(const char *path) {
     return S_ISDIR(buf.st_mode);
 }
 
+FILE *fu_open(const char *path, const char *mode) {
+    if (fu_isdirectory(path)) {
+        errno = EISDIR;
+        return NULL;
+    }
+    return fopen(path, mode);
+}
+
 void fu_copyn(FILE *from, FILE *to, long n) {
     long ind;
     int chr;
@@ -76,10 +84,10 @@ char *fu_backuppath(const char *path) {
 
 int fu_backup(const char *path) {
     FILE *orig, *bak;
-    if ((orig = fopen(path, "r")) == NULL)
+    if ((orig = fu_open(path, "r")) == NULL)
         return -1;
     char *bakpath = fu_backuppath(path);
-    if ((bak = fopen(bakpath, "w")) == NULL) {
+    if ((bak = fu_open(bakpath, "w")) == NULL) {
         free(bakpath);
         fclose(orig);
         return -1;
@@ -93,7 +101,7 @@ int fu_backup(const char *path) {
 
 int fu_insertat(const char *path, long pos, const char *str) {
     FILE *file, *tmp;
-    if ((file = fopen(path, "r")) == NULL)
+    if ((file = fu_open(path, "r")) == NULL)
         return -1;
     if ((tmp = tmpfile()) == NULL) {
         fclose(file);
@@ -104,7 +112,7 @@ int fu_insertat(const char *path, long pos, const char *str) {
     fu_copy(file, tmp);
     fflush(tmp);
     fclose(file);
-    if ((file = fopen(path, "w")) == NULL) {
+    if ((file = fu_open(path, "w")) == NULL) {
         fclose(tmp);
         return -1;
     }
@@ -117,7 +125,7 @@ int fu_insertat(const char *path, long pos, const char *str) {
 
 int fu_removeat(const char *path, long pos, long n) {
     FILE *file, *tmp;
-    if ((file = fopen(path, "r")) == NULL)
+    if ((file = fu_open(path, "r")) == NULL)
         return -1;
     if ((tmp = tmpfile()) == NULL) {
         fclose(file);
@@ -128,7 +136,7 @@ int fu_removeat(const char *path, long pos, long n) {
     fu_copy(file, tmp);
     fflush(tmp);
     fclose(file);
-    if ((file = fopen(path, "w")) == NULL) {
+    if ((file = fu_open(path, "w")) == NULL) {
         fclose(tmp);
         return -1;
     }
@@ -153,7 +161,7 @@ char *fu_readat(FILE *file, long pos, long n) {
 
 char *fu_preadat(const char *path, long pos, long n) {
     FILE *file;
-    if ((file = fopen(path, "r")) == NULL)
+    if ((file = fu_open(path, "r")) == NULL)
         return NULL;
     char *content = fu_readat(file, pos, n);
     fclose(file);
@@ -181,7 +189,7 @@ long fu_whereat(FILE *file, long line, long col) {
 
 long fu_pwhereat(const char *path, long line, long col, long dir, long *n) {
     FILE *file;
-    if ((file = fopen(path, "r")) == NULL)
+    if ((file = fu_open(path, "r")) == NULL)
         return -1;
     long pos = fu_whereat(file, line, col);
     fclose(file);

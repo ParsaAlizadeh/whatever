@@ -48,9 +48,10 @@ static void run(void *_this) {
         return (void)cmdlog(&replacepat, "\"-i\" and \"-a\" are in conflict");
     if (this->at == -1 && !this->all)
         this->at = 1;
-    FILE *file = fopen(this->path, "r");
+    FILE *file = fu_open(this->path, "r");
     if (file == NULL)
-        return (void)cmdlog(&replacepat, "file not exists");
+        return (void)cmdlog(&replacepat, "failed to open file: %s",
+            strerror(errno));
     long replaced = 0;
     while (fu_nextmatch(file, this->pat) != NULL) {
         if (this->at != -1)
@@ -66,9 +67,10 @@ static void run(void *_this) {
             return (void)cmdlog(&replacepat, "remove failed");
         if (fu_insertat(this->path, ss.offset, this->repstr) == -1)
             return (void)cmdlog(&replacepat, "insert failed");
-        file = fopen(this->path, "r");
+        file = fu_open(this->path, "r");
         if (file == NULL)
-            return (void)cmdlog(&replacepat, "second open failed");
+            return (void)cmdlog(&replacepat, "failed to open file: %s",
+                strerror(errno));
         pattern_reset(this->pat);
         replaced++;
         if (this->at == 0)

@@ -45,9 +45,10 @@ static void run(void *_this) {
         return (void)cmdlog(&grepat, "invalid pattern");
     for (int i = 0; i < this->files->size; i++) {
         char *path = this->files->seq[i];
-        FILE *file = fopen(path, "r");
+        FILE *file = fu_open(path, "r");
         if (file == NULL)
-            return (void)cmdlog(&grepat, "failed to open file \"%s\"", path);
+            return (void)cmdlog(&grepat, "failed to open file \"%s\": %s",
+                path, strerror(errno));
         char *line;
         while ((line = fu_getline(file)) != NULL) {
             if (!pattern_search(this->pat, line)) {
