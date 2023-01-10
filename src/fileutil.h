@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "vector.h"
+#include "pattern.h"
 
 /*
  * returns 0 on success, or -1 on failure and set the errno
@@ -40,5 +41,10 @@ char *fu_preadat(const char *path, long pos, long n);
 
 long fu_whereat(FILE *file, long line, long col);
 long fu_pwhereat(const char *path, long line, long col, long dir, long *n);
+
+long fu_wordat(FILE *file, long pos);
+long fu_extendleft(FILE *file, long pos);
+
+pattern *fu_nextmatch(FILE *file, pattern *pat);
 
 #endif

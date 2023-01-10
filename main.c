@@ -11,6 +11,7 @@
 #include "src/commands/copystr.h"
 #include "src/commands/cutstr.h"
 #include "src/commands/pastestr.h"
+#include "src/commands/findpat.h"
 
 int main() {
     const command all_cmds[] = {
@@ -21,7 +22,8 @@ int main() {
         undo,
         copystr,
         cutstr,
-        pastestr
+        pastestr,
+        findpat
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     while (!feof(stdin)) {

@@ -31,6 +31,10 @@ vector *scan_line(void) {
                 break;
             case '\n':
                 break;
+            case '*':
+                string_push(cur, '\\');
+                string_push(cur, '*');
+                break;
             default:
                 string_push(cur, c);
                 break;

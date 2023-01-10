@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
+#include <ctype.h>
 #include "vecstr.h"
 
 int mkdir_p(const char *_path) {
@@ -193,4 +194,53 @@ long fu_pwhereat(const char *path, long line, long col, long dir, long *n) {
         pos = 0;
     }
     return pos;
+}
+
+long fu_wordat(FILE *file, long pos) {
+    long before = ftell(file);
+    rewind(file);
+    long cnt = 1;
+    int lastnotspace = 0;
+    int chr;
+    long ind;
+    for (ind = 0; ind <= pos && (chr = fgetc(file)) != EOF; ind++) {
+        if (isspace(chr)) {
+            cnt += lastnotspace;
+            lastnotspace = 0;
+        } else {
+            lastnotspace = 1;
+        }
+    }
+    fseek(file, before, SEEK_SET);
+    return cnt;
+}
+
+long fu_extendleft(FILE *file, long pos) {
+    long before = ftell(file);
+    rewind(file);
+    long start = 0;
+    int lastspace = 0;
+    int chr;
+    long ind;
+    for (ind = 0; ind <= pos && (chr = fgetc(file)) != EOF; ind++) {
+        if (isspace(chr)) {
+            start = ind+1;
+            lastspace = 1;
+        } else {
+            lastspace = 0;
+        }
+    }
+    start -= lastspace;
+    fseek(file, before, SEEK_SET);
+    return start;
+}
+
+pattern *fu_nextmatch(FILE *file, pattern *pat) {
+    int chr;
+    while ((chr = fgetc(file)) != EOF) {
+        pattern_feed(pat, chr);
+        if (pattern_matched(pat))
+            return pat;
+    }
+    return NULL;
 }

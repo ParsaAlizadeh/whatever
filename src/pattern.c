@@ -69,3 +69,7 @@ void pattern_feed(pattern *this, int c) {
 int pattern_matched(pattern *this) {
     return this->current == this->size;
 }
+
+long pattern_start(pattern *this) {
+    return this->visited - this->size;
+}
