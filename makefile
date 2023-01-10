@@ -15,3 +15,7 @@ build/%.o: %.c
 clean:
 	rm -rf main build
 .PHONY: clean
+
+count:
+	find . -name '*.c' -or -name '*.h' | xargs wc | sort -rn
+.PHONY: count
