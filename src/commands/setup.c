@@ -6,6 +6,7 @@ int cmdlog(const command *cmd, const char *format, ...) {
     int size = strlen(cmd->name) + 2 + strlen(format) + 1;
     char *full_format = malloc(size+1);
     sprintf(full_format, "%s: %s\n", cmd->name, format);
+    fflush(stdout);
     int r = vfprintf(stderr, full_format, args);
     free(full_format);
     va_end(args);
