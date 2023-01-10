@@ -28,9 +28,11 @@ static void run(void *_this, char *inp, char **out) {
     if (this->path == NULL)
         return (void)cmdlogrequired(&creatfile, 'f');
     char *dir = fu_dirname(this->path);
-    if (mkdir_p(dir) == -1)
+    if (mkdir_p(dir) == -1) {
+        free(dir);
         return (void)cmdlog(&creatfile, "failed to create directory: %s",
             strerror(errno));
+    }
     free(dir);
     if (fu_exists(this->path))
         return (void)cmdlog(&creatfile, "\"%s\" exists", this->path);
