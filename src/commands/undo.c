@@ -2,12 +2,12 @@
 #include "setup.h"
 
 typedef struct {
-    char *path;
+    char *path, *bakpath;
 } undo_t;
 
 static void *make(void) {
     undo_t *this = malloc(sizeof(undo_t));
-    this->path = 0;
+    this->path = this->bakpath = NULL;
     return this;
 }
 
@@ -27,13 +27,20 @@ static void run(void *_this, char *inp, char **out) {
     undo_t *this = _this;
     if (this->path == NULL)
         return (void)cmdlogrequired(&undo, 'f');
-    char *bakpath = fu_backuppath(this->path);
-    if (!fu_exists(bakpath))
+    this->bakpath = fu_backuppath(this->path);
+    if (!fu_exists(this->bakpath))
         return (void)cmdlog(&undo, "no backup exists");
-    if (rename(bakpath, this->path) == -1)
+    if (rename(this->bakpath, this->path) == -1)
         return (void)cmdlog(&undo, "rename failed: %s",
             strerror(errno));
     cmdlog(&undo, "done");
+}
+
+static void undo_free(void *_this) {
+    undo_t *this = _this;
+    if (this->bakpath != NULL)
+        free(this->bakpath);
+    free(this);
 }
 
 const command undo = {
@@ -42,5 +49,5 @@ const command undo = {
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,
-    .free       = free
+    .free       = undo_free
 };

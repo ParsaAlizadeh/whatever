@@ -67,11 +67,11 @@ static void traverse(
         return;
     if (!is_dir)
         return;
-    vector *items = vector_new();
     DIR *dir = opendir(path);
     if (dir == NULL)
         return (void)cmdlog(&tree, "failed to open directory: %s",
             strerror(errno));
+    vector *items = vector_new();
     struct dirent *dp;
     while ((dp = readdir(dir)) != NULL) {
         if (strcmp(".", dp->d_name) == 0 || strcmp("..", dp->d_name) == 0)
@@ -90,7 +90,7 @@ static void traverse(
     }
     closedir(dir);
     if (items->size == 0)
-        return;
+        return vector_freeall(items);
     char *subprefix = next_prefix(prefix, is_last);
     vector_sort(items, child_cmp);
     for (int i = 0; i < items->size; i++) {
