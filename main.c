@@ -14,6 +14,7 @@
 #include "src/commands/findpat.h"
 #include "src/commands/replacepat.h"
 #include "src/commands/grepat.h"
+#include "src/commands/diff.h"
 
 int main() {
     const command all_cmds[] = {
@@ -27,7 +28,8 @@ int main() {
         pastestr,
         findpat,
         replacepat,
-        grepat
+        grepat,
+        diff
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     while (!feof(stdin)) {
