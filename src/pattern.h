@@ -15,5 +15,6 @@ void pattern_free(pattern *this);
 void pattern_feed(pattern *this, int c);
 int pattern_matched(pattern *this);
 long pattern_start(pattern *this);
+void pattern_reset(pattern *this);
 
 #endif

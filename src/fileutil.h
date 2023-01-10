@@ -33,18 +33,44 @@ char *fu_backuppath(const char *path);
  */
 int fu_backup(const char *path);
 
+/*
+ * returns 0 on success, -1 on failure and set errno
+ */
 int fu_insertat(const char *path, long pos, const char *str);
 int fu_removeat(const char *path, long pos, long n);
 
+/*
+ * always return malloc(3)ated string
+ */
 char *fu_readat(FILE *file, long pos, long n);
+
+/*
+ * path version to fu_readat, returns NULL on failure
+ */
 char *fu_preadat(const char *path, long pos, long n);
 
+/*
+ * find position of file according to line and col
+ * return -1 on failure
+ */
 long fu_whereat(FILE *file, long line, long col);
 long fu_pwhereat(const char *path, long line, long col, long dir, long *n);
 
+/*
+ * always assuming pos is a valid position in the file
+ */
 long fu_wordat(FILE *file, long pos);
 long fu_extendleft(FILE *file, long pos);
 
+/*
+ * return pat if matched, or NULL if reached end of file
+ */
 pattern *fu_nextmatch(FILE *file, pattern *pat);
+
+typedef struct {
+    long offset, size;
+} subseq_t;
+
+subseq_t fu_extend(FILE *file, pattern *pat);
 
 #endif

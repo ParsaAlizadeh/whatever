@@ -244,3 +244,27 @@ pattern *fu_nextmatch(FILE *file, pattern *pat) {
     }
     return NULL;
 }
+
+subseq_t fu_extend(FILE *file, pattern *pat) {
+    subseq_t ss;
+    long pat_start = pattern_start(pat);
+    ss.offset = pat_start;
+    ss.size = pat->size;
+    if (pat->wildprefix) {
+        ss.offset = fu_extendleft(file, pat_start);
+        ss.size += pat_start - ss.offset;
+    }
+    if (pat->wildsuffix) {
+        long before = ftell(file);
+        rewind(file);
+        fu_copyn(file, NULL, ss.offset + ss.size);
+        int chr;
+        while ((chr = fgetc(file)) != EOF) {
+            if (isspace(chr))
+                break;
+            ss.size++;
+        }
+        fseek(file, before, SEEK_SET);
+    }
+    return ss;
+}

@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "vecstr.h"
 
 static char *escape_wildcard(const char *str, int size) {
@@ -10,6 +11,7 @@ static char *escape_wildcard(const char *str, int size) {
     for (int i = 0; i < size; i++) {
         if (escaped) {
             string_push(res, str[i]);
+            escaped = 0;
             continue;
         }
         if (str[i] == '\\') {
@@ -18,7 +20,6 @@ static char *escape_wildcard(const char *str, int size) {
         }
         if (str[i] != '*')
             string_push(res, str[i]);
-        escaped = 0;
     }
     return string_free(res);
 }
@@ -46,7 +47,7 @@ pattern *pattern_new(const char *pat) {
     this->size = strlen(this->str);
     this->visited = this->current = 0;
     this->wildprefix = (pat[0] == '*');
-    this->wildsuffix = (pat[size-1] == '*' && pat[size-2] != '\\');
+    this->wildsuffix = (pat[size-1] == '*') && (pat[size-2] != '\\');
     this->kmp = build_kmp(this->str, this->size);
     return this;
 }
@@ -72,4 +73,9 @@ int pattern_matched(pattern *this) {
 
 long pattern_start(pattern *this) {
     return this->visited - this->size;
+}
+
+void pattern_reset(pattern *this) {
+    this->current = 0;
+    this->visited = 0;
 }
