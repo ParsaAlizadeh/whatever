@@ -39,6 +39,8 @@ static void run(void *_this) {
         return (void)cmdlogrequired(&replacepat, 'f');
     if (this->patstr == NULL)
         return (void)cmdlogrequired(&replacepat, 's');
+    if (this->repstr == NULL)
+        this->repstr = "";
     this->pat = pattern_new(this->patstr);
     if (this->pat == NULL)
         return (void)cmdlog(&replacepat, "invalid pattern");
