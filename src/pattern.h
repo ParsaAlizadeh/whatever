@@ -1,5 +1,5 @@
 #ifndef PATTERN_H
-#define PATTERN_h
+#define PATTERN_H
 
 typedef struct {
     char *str;
