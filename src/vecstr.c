@@ -42,6 +42,11 @@ void string_push(string *this, char c) {
     this->seq[++this->size] = '\0';
 }
 
+void string_pushes(string *this, const char *str) {
+    while (*str)
+        string_push(this, *(str++));
+}
+
 void string_clear(string *this) {
     this->size = 0;
     this->seq[0] = '\0';

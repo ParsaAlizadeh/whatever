@@ -28,6 +28,17 @@ void vector_push(vector *this, void *item) {
     this->seq[++this->size] = NULL;
 }
 
+static veccmp_fn_t __cmp;
+
+static int qsort_cmp(const void *a, const void *b) {
+    return __cmp(*(void **)a, *(void **)b);
+}
+
+void vector_sort(vector *this, veccmp_fn_t cmp) {
+    __cmp = cmp;
+    qsort(this->seq, this->size, sizeof(void *), qsort_cmp);
+}
+
 void **vector_free(vector *this) {
     void **seq = this->seq;
     free(this);
