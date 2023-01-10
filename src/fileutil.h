@@ -40,7 +40,8 @@ int fu_insertat(const char *path, long pos, const char *str);
 int fu_removeat(const char *path, long pos, long n);
 
 /*
- * always return malloc(3)ated string
+ * always return malloc(3)ated string, rewind stream
+ * back to where started
  */
 char *fu_readat(FILE *file, long pos, long n);
 
@@ -72,5 +73,7 @@ typedef struct {
 } subseq_t;
 
 subseq_t fu_extend(FILE *file, pattern *pat);
+
+char *fu_getline(FILE *file);
 
 #endif

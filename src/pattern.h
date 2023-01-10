@@ -16,5 +16,6 @@ void pattern_feed(pattern *this, int c);
 int pattern_matched(pattern *this);
 long pattern_start(pattern *this);
 void pattern_reset(pattern *this);
+int pattern_search(pattern *this, const char *str);
 
 #endif

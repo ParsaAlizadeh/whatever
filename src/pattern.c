@@ -79,3 +79,15 @@ void pattern_reset(pattern *this) {
     this->current = 0;
     this->visited = 0;
 }
+
+int pattern_search(pattern *this, const char *str) {
+    while (*str) {
+        pattern_feed(this, *(str++));
+        if (pattern_matched(this)) {
+            pattern_reset(this);
+            return 1;
+        }
+    }
+    pattern_reset(this);
+    return 0;
+}

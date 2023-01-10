@@ -13,6 +13,7 @@
 #include "src/commands/pastestr.h"
 #include "src/commands/findpat.h"
 #include "src/commands/replacepat.h"
+#include "src/commands/grepat.h"
 
 int main() {
     const command all_cmds[] = {
@@ -25,7 +26,8 @@ int main() {
         cutstr,
         pastestr,
         findpat,
-        replacepat
+        replacepat,
+        grepat
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     while (!feof(stdin)) {

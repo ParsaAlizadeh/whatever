@@ -268,3 +268,16 @@ subseq_t fu_extend(FILE *file, pattern *pat) {
     }
     return ss;
 }
+
+char *fu_getline(FILE *file) {
+    if (feof(file))
+        return NULL;
+    string *line = string_new();
+    int chr;
+    while ((chr = fgetc(file)) != EOF) {
+        if (chr == '\n')
+            break;
+        string_push(line, chr);
+    }
+    return string_free(line);
+}
