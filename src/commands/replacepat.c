@@ -56,7 +56,8 @@ static void run(void *_this, char *inp, char **out) {
         return (void)cmdlog(&replacepat, "failed to open file: %s",
             strerror(errno));
     long replaced = 0;
-    while (fu_nextmatch(file, this->pat) != NULL) {
+    subseq_t ss;
+    while ((ss = fu_nextmatch(file, this->pat)).offset != -1) {
         if (this->at != -1)
             this->at--;
         if (this->at > 0)
@@ -64,7 +65,6 @@ static void run(void *_this, char *inp, char **out) {
         if (!replaced && fu_backup(this->path) == -1)
             cmdlog(&replacepat, "backup failed, ignoring: %s",
                 strerror(errno));
-        subseq_t ss = fu_extend(file, this->pat);
         fclose(file);
         if (fu_removeat(this->path, ss.offset, ss.size) == -1)
             return (void)cmdlog(&replacepat, "remove failed");

@@ -243,36 +243,33 @@ long fu_extendleft(FILE *file, long pos) {
     return start;
 }
 
-pattern *fu_nextmatch(FILE *file, pattern *pat) {
-    int chr;
-    while ((chr = fgetc(file)) != EOF) {
-        pattern_feed(pat, chr);
-        if (pattern_matched(pat))
-            return pat;
-    }
-    return NULL;
+static subseq_t fu_subseqmatched(pattern *pat) {
+    subseq_t ss;
+    ss.offset = pattern_matched(pat);
+    if (ss.offset == -1)
+        return ss;
+    ss.size = pat->visited - ss.offset;
+    return ss;
 }
 
-subseq_t fu_extend(FILE *file, pattern *pat) {
+subseq_t fu_nextmatch(FILE *file, pattern *pat) {
+    int chr;
     subseq_t ss;
-    long pat_start = pattern_start(pat);
-    ss.offset = pat_start;
-    ss.size = pat->size;
-    if (pat->wildprefix) {
-        ss.offset = fu_extendleft(file, pat_start);
-        ss.size += pat_start - ss.offset;
-    }
-    if (pat->wildsuffix) {
-        long before = ftell(file);
-        rewind(file);
-        fu_copyn(file, NULL, ss.offset + ss.size);
-        int chr;
-        while ((chr = fgetc(file)) != EOF) {
-            if (isspace(chr))
-                break;
-            ss.size++;
+    ss.offset = -1;
+    while (1) {
+        chr = fgetc(file);
+        if (chr == EOF || isspace(chr))
+            ss = fu_subseqmatched(pat);
+        if (chr == EOF)
+            break;
+        pattern_feed(pat, chr);
+        if (ss.offset != -1)
+            return ss;
+        if (isspace(chr)) {
+            ss = fu_subseqmatched(pat);
+            if (ss.offset != -1)
+                return ss;
         }
-        fseek(file, before, SEEK_SET);
     }
     return ss;
 }

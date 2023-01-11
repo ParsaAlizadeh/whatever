@@ -65,16 +65,11 @@ long fu_pwhereat(const char *path, long line, long col, long dir, long *n);
 long fu_wordat(FILE *file, long pos);
 long fu_extendleft(FILE *file, long pos);
 
-/*
- * return pat if matched, or NULL if reached end of file
- */
-pattern *fu_nextmatch(FILE *file, pattern *pat);
-
 typedef struct {
     long offset, size;
 } subseq_t;
 
-subseq_t fu_extend(FILE *file, pattern *pat);
+subseq_t fu_nextmatch(FILE *file, pattern *pat);
 
 char *fu_getline(FILE *file);
 

@@ -3,15 +3,31 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 #include "vecstr.h"
 
-static char *escape_wildcard(const char *str, int size) {
-    string *res = string_new();
-    int escaped = 0;
-    for (int i = 0; i < size; i++) {
+typedef struct {
+    char c;
+    int isWild;
+    long firstBefore;
+    long firstAfter;
+} node;
+
+node *node_new(char c, int isWild) {
+    node *this = malloc(sizeof(node));
+    this->c = c;
+    this->isWild = isWild;
+    this->firstBefore = this->firstAfter = -1;
+    return this;
+}
+
+static vector *build_nodes(const char *str, int size) {
+    vector *nodes = vector_new();
+    int escaped = 0, isWild = 0;
+    for (int i = 0; i <= size; i++) {
         if (escaped) {
-            string_push(res, str[i]);
-            escaped = 0;
+            vector_push(nodes, node_new(str[i], isWild));
+            escaped = isWild = 0;
             continue;
         }
         if (str[i] == '\\') {
@@ -19,23 +35,10 @@ static char *escape_wildcard(const char *str, int size) {
             continue;
         }
         if (str[i] != '*')
-            string_push(res, str[i]);
+            vector_push(nodes, node_new(str[i], isWild));
+        isWild = (str[i] == '*');
     }
-    return string_free(res);
-}
-
-static int *build_kmp(char *str, int n) {
-    int *kmp = malloc(sizeof(int) * n);
-    kmp[0] = 0;
-    for (int i = 1; i < n; i++) {
-        int j = kmp[i-1];
-        while (j > 0 && str[i] != str[j])
-            j = kmp[j-1];
-        if (str[i] == str[j])
-            j++;
-        kmp[i] = j;
-    }
-    return kmp;
+    return nodes;
 }
 
 pattern *pattern_new(const char *pat) {
@@ -43,51 +46,84 @@ pattern *pattern_new(const char *pat) {
     if (size == 0 || (size == 1 && pat[0] == '*'))
         return NULL;
     pattern *this = malloc(sizeof(pattern));
-    this->str = escape_wildcard(pat, size);
-    this->size = strlen(this->str);
-    this->visited = this->current = 0;
-    this->wildprefix = (pat[0] == '*');
+    this->nodes = build_nodes(pat, size);
+    this->visited = 0;
     this->wildsuffix = (pat[size-1] == '*') && (pat[size-2] != '\\');
-    this->kmp = build_kmp(this->str, this->size);
     return this;
 }
 
 void pattern_free(pattern *this) {
-    free(this->str);
-    free(this->kmp);
+    vector_freeall(this->nodes);
     free(this);
 }
 
+static void append(node *this, long first) {
+    if (this->firstAfter == -1 || this->firstAfter > first)
+        this->firstAfter = first;
+}
+
+static void push(node *this, node *next, char c) {
+    if (this->firstBefore == -1)
+        return;
+    if (this->c == c && next != NULL)
+        append(next, this->firstBefore);
+    if (this->isWild && !isspace(c))
+        append(this, this->firstBefore);
+}
+
+static void step(node *this) {
+    this->firstBefore = this->firstAfter;
+    this->firstAfter = -1;
+}
+
 void pattern_feed(pattern *this, int c) {
-    int *cur = &this->current;
-    while (*cur > 0 && this->str[*cur] != c)
-        *cur = this->kmp[(*cur)-1];
-    if (this->str[*cur] == c)
-        (*cur)++;
+    node *first = this->nodes->seq[0];
+    if (first->firstBefore == -1) {
+        first->firstBefore = this->visited;
+    }
+    for (int i = 0; i < this->nodes->size; i++) {
+        node *cur = this->nodes->seq[i];
+        node *nxt = this->nodes->seq[i+1];
+        push(cur, nxt, c);
+    }
+    for (int i = 0; i < this->nodes->size; i++) {
+        node *cur = this->nodes->seq[i];
+        step(cur);
+    }
     this->visited++;
 }
 
-int pattern_matched(pattern *this) {
-    return this->current == this->size;
-}
-
-long pattern_start(pattern *this) {
-    return this->visited - this->size;
+long pattern_matched(pattern *this) {
+    int size = this->nodes->size;
+    node *last = this->nodes->seq[size-1];
+    return last->firstBefore;
 }
 
 void pattern_reset(pattern *this) {
-    this->current = 0;
     this->visited = 0;
+    for (int i = 0; i < this->nodes->size; i++) {
+        node *cur = this->nodes->seq[i];
+        cur->firstBefore = cur->firstAfter = -1;
+    }
 }
 
 int pattern_search(pattern *this, const char *str) {
     while (*str) {
         pattern_feed(this, *(str++));
-        if (pattern_matched(this)) {
+        if (pattern_matched(this) != -1) {
             pattern_reset(this);
             return 1;
         }
     }
     pattern_reset(this);
     return 0;
+}
+
+void pattern_log(pattern *this) {
+    for (int i = 0; i < this->nodes->size; i++) {
+        node *n = this->nodes->seq[i];
+        fprintf(stderr, "c=%c, isWild=%d, firstB=%ld, firstA=%ld\n",
+            n->c, n->isWild, n->firstBefore, n->firstAfter);
+    }
+    fprintf(stderr, "===\n");
 }

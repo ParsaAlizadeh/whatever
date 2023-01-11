@@ -56,7 +56,8 @@ static void run(void *_this, char *inp, char **out) {
     size_t out_size;
     FILE *fout = open_memstream(out, &out_size);
     int needcomma = 0;
-    while (fu_nextmatch(file, this->pat) != NULL) {
+    subseq_t ss;
+    while ((ss = fu_nextmatch(file, this->pat)).offset != -1) {
         if (this->at != -1)
             this->at--;
         if (this->at > 0)
@@ -64,9 +65,7 @@ static void run(void *_this, char *inp, char **out) {
         if (this->count != -1)
             this->count++;
         else {
-            long pos = pattern_start(this->pat);
-            if (this->pat->wildprefix)
-                pos = fu_extendleft(file, pos);
+            long pos = ss.offset;
             if (this->word)
                 pos = fu_wordat(file, pos);
             if (needcomma)
