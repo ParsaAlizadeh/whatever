@@ -39,11 +39,11 @@ static int child_cmp(const void *_a, const void *_b) {
 
 static char *next_prefix(const char *prefix, int is_last) {
     string *subprefix = string_new();
-    string_pushes(subprefix, prefix);
+    fprintf(subprefix->f, "%s", prefix);
     if (is_last)
-        string_pushes(subprefix, "     ");
+        fprintf(subprefix->f, "     ");
     else
-        string_pushes(subprefix, "│    ");
+        fprintf(subprefix->f, "│    ");
     return string_free(subprefix);
 }
 
@@ -79,9 +79,7 @@ static void traverse(
         if (!show_all && dp->d_name[0] == '.')
             continue;
         string *subpath = string_new();
-        string_pushes(subpath, path);
-        string_push(subpath, '/');
-        string_pushes(subpath, dp->d_name);
+        fprintf(subpath->f, "%s/%s", path, dp->d_name);
         child *chd = malloc(sizeof(child));
         chd->path = string_free(subpath);
         chd->base = strdup(dp->d_name);

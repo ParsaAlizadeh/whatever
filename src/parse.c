@@ -15,33 +15,34 @@ vector *scan_line(void) {
         if (!escaped && !qoute && c == '\n')
             break;
         if (!escaped && !qoute && c == ' ') {
-            if (cur->size == 0)
+            if (string_size(cur) == 0)
                 continue;
-            if (!was_qouted && strcmp(cur->seq, PIPE) == 0) {
+            char *seq = string_free(cur);
+            if (!was_qouted && strcmp(seq, PIPE) == 0) {
+                free(seq);
                 vector_push(tokens, strdup(PIPENCODE));
             } else {
-                vector_push(tokens, strdup(cur->seq));
+                vector_push(tokens, seq);
             }
-            string_clear(cur);
+            cur = string_new();
             was_qouted = 0;
             continue;
         }
         if (escaped) {
             switch (c) {
             case 'n':
-                string_push(cur, '\n');
+                fprintf(cur->f, "\n");
                 break;
             case 't':
-                string_push(cur, '\t');
+                fprintf(cur->f, "\t");
                 break;
             case '\n':
                 break;
             case '*':
-                string_push(cur, '\\');
-                string_push(cur, '*');
+                fprintf(cur->f, "\\*");
                 break;
             default:
-                string_push(cur, c);
+                fprintf(cur->f, "%c", c);
                 break;
             }
             escaped = 0;
@@ -56,11 +57,11 @@ vector *scan_line(void) {
             continue;
         }
         was_qouted |= qoute;
-        string_push(cur, c);
+        fprintf(cur->f, "%c", c);
     }
     if (escaped || qoute)
         fprintf(stderr, "scan_line: unexpected eof\n");
-    if (cur->size > 0) {
+    if (string_size(cur) > 0) {
         /* no pipe at the end */
         vector_push(tokens, string_free(cur));
     } else {

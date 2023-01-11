@@ -1,16 +1,16 @@
 #ifndef VECSTR_H
 #define VECSTR_H
 
+#include <stdio.h>
+
 typedef struct {
     char *seq;
-    int size, cap;
+    size_t size;
+    FILE *f;
 } string;
 
 string *string_new(void);
-string *string_from(char *);
 char *string_free(string *);
-void string_push(string *, char);
-void string_pushes(string *, const char *);
-void string_clear(string *);
+size_t string_size(string *);
 
 #endif

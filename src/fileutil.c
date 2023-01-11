@@ -154,7 +154,7 @@ char *fu_readat(FILE *file, long pos, long n) {
     long ind;
     int chr;
     for (ind = 0; ind < n && (chr = fgetc(file)) != EOF; ind++)
-        string_push(str, chr);
+        fprintf(str->f, "%c", (char)chr);
     fseek(file, before, SEEK_SET);
     return string_free(str);
 }
@@ -282,7 +282,7 @@ char *fu_getline(FILE *file) {
     while ((chr = fgetc(file)) != EOF) {
         if (chr == '\n')
             break;
-        string_push(line, chr);
+        fprintf(line->f, "%c", (char)chr);
     }
     return string_free(line);
 }
