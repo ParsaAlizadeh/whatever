@@ -34,7 +34,7 @@ static int set_opt(void *_this, int c, char *argv) {
     return CMD_SUCCESS;
 }
 
-static void run(void *_this, char *inp, char **out) {
+static void run(void *_this, char *inp, char **_out) {
     grepat_t *this = _this;
     if (this->files->size == 0)
         return (void)cmdlogrequired(&grepat, 'f');
@@ -45,13 +45,12 @@ static void run(void *_this, char *inp, char **out) {
     this->pat = pattern_new(this->patstr);
     if (this->pat == NULL)
         return (void)cmdlog(&grepat, "invalid pattern");
-    size_t out_size;
-    FILE *fout = open_memstream(out, &out_size);
+    string *out = string_using(_out);
     for (int i = 0; i < this->files->size; i++) {
         char *path = this->files->seq[i];
         FILE *file = fu_open(path, "r");
         if (file == NULL) {
-            fclose(fout);
+            string_free(out);
             return (void)cmdlog(&grepat, "failed to open file \"%s\": %s",
                 path, strerror(errno));
         }
@@ -65,19 +64,19 @@ static void run(void *_this, char *inp, char **out) {
                 this->count++;
             if (this->all) {
                 if (this->count == -1)
-                    fprintf(fout, "%s\n", path);
+                    fprintf(out->f, "%s\n", path);
                 free(line);
                 break;
             }
             if (this->count == -1)
-                fprintf(fout, "%s: %s\n", path, line);
+                fprintf(out->f, "%s: %s\n", path, line);
             free(line);
         }
         fclose(file);
     }
     if (this->count != -1)
-        fprintf(fout, "%ld\n", this->count);
-    fclose(fout);
+        fprintf(out->f, "%ld\n", this->count);
+    fclose(out->f);
     cmdlog(&grepat, "done");
 }
 

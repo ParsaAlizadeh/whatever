@@ -110,13 +110,12 @@ static void traverse(
     free(subprefix);
 }
 
-static void run(void *_this, char *inp, char **out) {
+static void run(void *_this, char *inp, char **_out) {
     (void)inp;
     tree_t *this = _this;
-    size_t out_size;
-    FILE *fout = open_memstream(out, &out_size);
-    traverse(fout, ".", ".", "", 0, this->level, 1, 1, this->all);
-    fclose(fout);
+    string *out = string_using(_out);
+    traverse(out->f, ".", ".", "", 0, this->level, 1, 1, this->all);
+    string_free(out);
     cmdlog(&tree, "done");
 }
 

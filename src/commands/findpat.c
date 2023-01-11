@@ -35,7 +35,7 @@ static int set_opt(void *_this, int c, char *argv) {
     return CMD_SUCCESS;
 }
 
-static void run(void *_this, char *inp, char **out) {
+static void run(void *_this, char *inp, char **_out) {
     findpat_t *this = _this;
     if (this->path == NULL)
         return (void)cmdlogrequired(&findpat, 'f');
@@ -53,8 +53,7 @@ static void run(void *_this, char *inp, char **out) {
     FILE *file = fu_open(this->path, "r");
     if (file == NULL)
         return (void)cmdlog(&findpat, "file not exists");
-    size_t out_size;
-    FILE *fout = open_memstream(out, &out_size);
+    string *out = string_using(_out);
     int needcomma = 0;
     subseq_t ss;
     while ((ss = fu_nextmatch(file, this->pat)).offset != -1) {
@@ -69,21 +68,21 @@ static void run(void *_this, char *inp, char **out) {
             if (this->word)
                 pos = fu_wordat(file, pos);
             if (needcomma)
-                fprintf(fout, ", ");
-            fprintf(fout, "%ld", pos);
+                fprintf(out->f, ", ");
+            fprintf(out->f, "%ld", pos);
             needcomma = 1;
         }
         if (this->at == 0)
             break;
     }
     if (this->count != -1)
-        fprintf(fout, "%ld\n", this->count);
+        fprintf(out->f, "%ld\n", this->count);
     else if (!needcomma)
-        fprintf(fout, "-1\n");
+        fprintf(out->f, "-1\n");
     else
-        fprintf(fout, "\n");
+        fprintf(out->f, "\n");
     fclose(file);
-    fclose(fout);
+    string_free(out);
     cmdlog(&findpat, "done");
 }
 

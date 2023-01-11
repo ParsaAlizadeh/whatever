@@ -10,6 +10,7 @@ typedef struct {
 } string;
 
 string *string_new(void);
+string *string_using(char **);
 char *string_free(string *);
 size_t string_size(string *);
 
