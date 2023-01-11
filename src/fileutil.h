@@ -24,16 +24,8 @@ FILE *fu_open(const char *path, const char *mode);
 void fu_copyn(FILE *from, FILE *to, long n);
 void fu_copy(FILE *from, FILE *to);
 
-/*
- * returns malloc(3)ated string pointing to backup path
- */
-char *fu_backuppath(const char *path);
-
-/*
- * backup /path/to/file into /path/to/file~
- * returns 0 on success, -1 on failure and set errno
- */
 int fu_backup(const char *path);
+int fu_restore(const char *path);
 
 /*
  * returns 0 on success, -1 on failure and set errno

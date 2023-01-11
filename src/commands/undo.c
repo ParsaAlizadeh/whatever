@@ -27,12 +27,8 @@ static void run(void *_this, char *inp, char **out) {
     undo_t *this = _this;
     if (this->path == NULL)
         return (void)cmdlogrequired(&undo, 'f');
-    this->bakpath = fu_backuppath(this->path);
-    if (!fu_exists(this->bakpath))
+    if (fu_restore(this->path) == -1)
         return (void)cmdlog(&undo, "no backup exists");
-    if (rename(this->bakpath, this->path) == -1)
-        return (void)cmdlog(&undo, "rename failed: %s",
-            strerror(errno));
     cmdlog(&undo, "done");
 }
 

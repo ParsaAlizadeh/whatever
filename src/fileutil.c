@@ -76,17 +76,40 @@ void fu_copy(FILE *from, FILE *to) {
     return fu_copyn(from, to, -1);
 }
 
-char *fu_backuppath(const char *path) {
-    char *bakpath = malloc(strlen(path)+2);
-    sprintf(bakpath, "%s~", path);
-    return bakpath;
+static char *fu_backuppath(const char *path, int n) {
+    if (n == 0)
+        return strdup(path);
+    string *bakpath = string_new();
+    fprintf(bakpath->f, "%s~%d", path, n);
+    return string_free(bakpath);
+}
+
+static void fu_push_backups(const char *path, const char *cur, int n) {
+    if (!fu_exists(cur))
+        return;
+    char *nxt = fu_backuppath(path, n+1);
+    fu_push_backups(path, nxt, n+1);
+    rename(cur, nxt);
+    free(nxt);
+}
+
+static int fu_pop_backups(const char *path, const char *cur, int n) {
+    char *nxt = fu_backuppath(path, n+1);
+    int exists = fu_exists(nxt);
+    if (exists) {
+        rename(nxt, cur);
+        fu_pop_backups(path, nxt, n+1);
+    }
+    free(nxt);
+    return n == 0 && exists;
 }
 
 int fu_backup(const char *path) {
     FILE *orig, *bak;
     if ((orig = fu_open(path, "r")) == NULL)
         return -1;
-    char *bakpath = fu_backuppath(path);
+    char *bakpath = fu_backuppath(path, 1);
+    fu_push_backups(path, bakpath, 1);
     if ((bak = fu_open(bakpath, "w")) == NULL) {
         free(bakpath);
         fclose(orig);
@@ -97,6 +120,12 @@ int fu_backup(const char *path) {
     fclose(orig);
     fclose(bak);
     return 0;
+}
+
+int fu_restore(const char *path) {
+    if (fu_pop_backups(path, path, 0))
+        return 0;
+    return -1;
 }
 
 int fu_insertat(const char *path, long pos, const char *str) {
