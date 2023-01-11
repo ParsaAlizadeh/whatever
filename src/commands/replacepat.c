@@ -57,6 +57,7 @@ static void run(void *_this, char *inp, char **out) {
             strerror(errno));
     long replaced = 0;
     subseq_t ss;
+    int repsize = strlen(this->repstr);
     while ((ss = fu_nextmatch(file, this->pat)).offset != -1) {
         if (this->at != -1)
             this->at--;
@@ -75,6 +76,8 @@ static void run(void *_this, char *inp, char **out) {
             return (void)cmdlog(&replacepat, "failed to open file: %s",
                 strerror(errno));
         pattern_reset(this->pat);
+        fu_copyn(file, NULL, ss.offset+repsize);
+        this->pat->visited = ss.offset+repsize;
         replaced++;
         if (this->at == 0)
             break;
