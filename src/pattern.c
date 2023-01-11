@@ -42,12 +42,9 @@ static vector *build_nodes(const char *str, int size) {
 
 pattern *pattern_new(const char *pat) {
     int size = strlen(pat);
-    if (size == 0 || (size == 1 && pat[0] == '*'))
-        return NULL;
     pattern *this = malloc(sizeof(pattern));
     this->nodes = build_nodes(pat, size);
     this->visited = 0;
-    this->wildsuffix = (pat[size-1] == '*') && (pat[size-2] != '\\');
     return this;
 }
 
@@ -75,9 +72,9 @@ static void step(node *this) {
     this->firstAfter = -1;
 }
 
-void pattern_feed(pattern *this, int c) {
+void pattern_feed(pattern *this, char c, int start) {
     node *first = this->nodes->seq[0];
-    if (first->firstBefore == -1) {
+    if (start && first->firstBefore == -1) {
         first->firstBefore = this->visited;
     }
     for (int i = 0; i < this->nodes->size; i++) {
@@ -108,7 +105,7 @@ void pattern_reset(pattern *this) {
 
 int pattern_search(pattern *this, const char *str) {
     while (*str) {
-        pattern_feed(this, *(str++));
+        pattern_feed(this, *(str++), 1);
         if (pattern_matched(this) != -1) {
             pattern_reset(this);
             return 1;

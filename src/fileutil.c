@@ -238,26 +238,6 @@ long fu_wordat(FILE *file, long pos) {
     return cnt;
 }
 
-long fu_extendleft(FILE *file, long pos) {
-    long before = ftell(file);
-    rewind(file);
-    long start = 0;
-    int lastspace = 0;
-    int chr;
-    long ind;
-    for (ind = 0; ind <= pos && (chr = fgetc(file)) != EOF; ind++) {
-        if (isspace(chr)) {
-            start = ind+1;
-            lastspace = 1;
-        } else {
-            lastspace = 0;
-        }
-    }
-    start -= lastspace;
-    fseek(file, before, SEEK_SET);
-    return start;
-}
-
 static subseq_t fu_subseqmatched(pattern *pat) {
     subseq_t ss;
     ss.offset = pattern_matched(pat);
@@ -268,6 +248,7 @@ static subseq_t fu_subseqmatched(pattern *pat) {
 }
 
 subseq_t fu_nextmatch(FILE *file, pattern *pat) {
+    int lastspace = 1;
     int chr;
     subseq_t ss;
     ss.offset = -1;
@@ -277,7 +258,8 @@ subseq_t fu_nextmatch(FILE *file, pattern *pat) {
             ss = fu_subseqmatched(pat);
         if (chr == EOF)
             break;
-        pattern_feed(pat, chr);
+        pattern_feed(pat, chr, lastspace || isspace(chr));
+        lastspace = isspace(chr);
         if (ss.offset != -1)
             return ss;
         if (isspace(chr)) {

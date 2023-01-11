@@ -45,7 +45,6 @@ long fu_pwhereat(const char *path, long line, long col, long dir, long *n);
  * always assuming pos is a valid position in the file
  */
 long fu_wordat(FILE *file, long pos);
-long fu_extendleft(FILE *file, long pos);
 
 typedef struct {
     long offset, size;
