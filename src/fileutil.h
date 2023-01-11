@@ -32,17 +32,7 @@ int fu_restore(const char *path);
  */
 int fu_insertat(const char *path, long pos, const char *str);
 int fu_removeat(const char *path, long pos, long n);
-
-/*
- * always return malloc(3)ated string, rewind stream
- * back to where started
- */
-char *fu_readat(FILE *file, long pos, long n);
-
-/*
- * path version to fu_readat, returns NULL on failure
- */
-char *fu_preadat(const char *path, long pos, long n);
+int fu_finsertat(const char *path, long pos, FILE *from);
 
 /*
  * find position of file according to line and col

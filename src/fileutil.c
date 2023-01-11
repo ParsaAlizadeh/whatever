@@ -129,27 +129,10 @@ int fu_restore(const char *path) {
 }
 
 int fu_insertat(const char *path, long pos, const char *str) {
-    FILE *file, *tmp;
-    if ((file = fu_open(path, "r")) == NULL)
-        return -1;
-    if ((tmp = tmpfile()) == NULL) {
-        fclose(file);
-        return -1;
-    }
-    fu_copyn(file, tmp, pos);
-    fputs(str, tmp);
-    fu_copy(file, tmp);
-    fflush(tmp);
-    fclose(file);
-    if ((file = fu_open(path, "w")) == NULL) {
-        fclose(tmp);
-        return -1;
-    }
-    rewind(tmp);
-    fu_copy(tmp, file);
-    fclose(file);
-    fclose(tmp);
-    return 0;
+    FILE *from = fmemopen((char *)str, strlen(str), "r");
+    int rc = fu_finsertat(path, pos, from);
+    fclose(from);
+    return rc;
 }
 
 int fu_removeat(const char *path, long pos, long n) {
@@ -176,25 +159,28 @@ int fu_removeat(const char *path, long pos, long n) {
     return 0;
 }
 
-char *fu_readat(FILE *file, long pos, long n) {
-    long before = ftell(file);
-    fseek(file, pos, SEEK_SET);
-    string *str = string_new();
-    long ind;
-    int chr;
-    for (ind = 0; ind < n && (chr = fgetc(file)) != EOF; ind++)
-        fprintf(str->f, "%c", (char)chr);
-    fseek(file, before, SEEK_SET);
-    return string_free(str);
-}
-
-char *fu_preadat(const char *path, long pos, long n) {
-    FILE *file;
+int fu_finsertat(const char *path, long pos, FILE *from) {
+    FILE *file, *tmp;
     if ((file = fu_open(path, "r")) == NULL)
-        return NULL;
-    char *content = fu_readat(file, pos, n);
+        return -1;
+    if ((tmp = tmpfile()) == NULL) {
+        fclose(file);
+        return -1;
+    }
+    fu_copyn(file, tmp, pos);
+    fu_copy(from, tmp);
+    fu_copy(file, tmp);
+    fflush(tmp);
     fclose(file);
-    return content;
+    if ((file = fu_open(path, "w")) == NULL) {
+        fclose(tmp);
+        return -1;
+    }
+    rewind(tmp);
+    fu_copy(tmp, file);
+    fclose(file);
+    fclose(tmp);
+    return 0;
 }
 
 long fu_whereat(FILE *file, long line, long col) {

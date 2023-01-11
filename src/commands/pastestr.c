@@ -1,39 +1,47 @@
 #include "pastestr.h"
 #include "setup.h"
 
-#include "insertstr.h"
-
 typedef struct {
-    void *insertobj;
+    char *path;
+    long line_no, col_no;
 } pastestr_t;
 
 static void *make(void) {
     pastestr_t *this = malloc(sizeof(pastestr_t));
-    this->insertobj = insertstr.make();
+    this->path = NULL;
+    this->line_no = this->col_no = -1;
     return this;
 }
 
 static int set_opt(void *_this, int c, char *argv) {
     pastestr_t *this = _this;
-    int rc;
-    if ((rc = insertstr.set_opt(this->insertobj, c, argv)) != CMD_SUCCESS)
-        return rc;
+    switch (c) {
+    SINGLE_OPTION_ARGV('f', path)
+    SINGLE_OPTION_POSITION('p', pastestr, line_no, col_no)
+    default:
+        return CMD_UNEXPECTED;
+    }
     return CMD_SUCCESS;
 }
 
 static void run(void *_this, char *inp, char **out) {
     (void)inp;
+    (void)out;
     pastestr_t *this = _this;
-    if (insertstr.set_opt(this->insertobj, 's', (char *)clipboard_get()) != CMD_SUCCESS)
-        return;
-    insertstr.run(this->insertobj, NULL, out);
+    if (this->path == NULL)
+        return (void)cmdlogrequired(&pastestr, 'f');
+    if (this->line_no == -1)
+        return (void)cmdlogrequired(&pastestr, 'p');
+    if (fu_backup(this->path) == -1)
+        cmdlog(&pastestr, "backup failed, ignoring: %s",
+            strerror(errno));
+    long pos = fu_pwhereat(this->path, this->line_no, this->col_no, 1, NULL);
+    if (pos == -1)
+        return (void)cmdlog(&pastestr, "not a valid position");
+    if (fu_finsertat(this->path, pos, clipboard_get()) == -1)
+        return (void)cmdlog(&pastestr, "insert failed: %s",
+            strerror(errno));
     cmdlog(&pastestr, "done");
-}
-
-static void pastestr_free(void *_this) {
-    pastestr_t *this = _this;
-    insertstr.free(this->insertobj);
-    free(this);
 }
 
 const command pastestr = {
@@ -42,5 +50,5 @@ const command pastestr = {
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,
-    .free       = pastestr_free
+    .free       = free
 };

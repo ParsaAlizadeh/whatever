@@ -48,10 +48,13 @@ static void run(void *_this, char *inp, char **out) {
         this->direction, &this->n);
     if (pos == -1)
         return (void)cmdlog(&copystr, "can not locate the position");
-    char *content = fu_preadat(this->path, pos, this->n);
-    if (content == NULL)
-        return (void)cmdlog(&copystr, "can not read at the position");
-    clipboard_set(content);
+    FILE *file = fu_open(this->path, "r");
+    if (file == NULL)
+        return (void)cmdlog(&copystr, "failed to open file: %s",
+            strerror(errno));
+    fu_copyn(file, NULL, pos);
+    fu_copyn(file, clipboard_reset(), this->n);
+    fclose(file);
     cmdlog(&copystr, "done");
 }
 

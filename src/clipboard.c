@@ -1,17 +1,21 @@
 #include "clipboard.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void clipboard_set(char *s) {
-    // if (clipboard != NULL)
-    //     free(string_free(clipboard));
-    // clipboard = string_from(s);
+static FILE *clip = NULL;
+
+FILE *clipboard_reset(void) {
+    if (clip != NULL)
+        fclose(clip);
+    clip = tmpfile();
+    return clip;
 }
 
-const char *clipboard_get(void) {
-    return "";
-    // if (clipboard == NULL)
-    //     return "";
-    // return clipboard->seq;
+FILE *clipboard_get(void) {
+    if (clip == NULL)
+        return clipboard_reset();
+    rewind(clip);
+    return clip;
 }
