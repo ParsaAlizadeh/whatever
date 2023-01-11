@@ -25,7 +25,7 @@ static int set_opt(void *_this, int c, char *argv) {
     SINGLE_OPTION_ARGV('f', path)
     SINGLE_OPTION_ARGV('s', patstr)
     SINGLE_OPTION_ARGV('r', repstr)
-    SINGLE_OPTION_SCANF('i', replacepat, at, -1, "%lu")
+    SINGLE_OPTION_SCANF_COND('i', replacepat, at, -1, "%ld", this->at > 0)
     SINGLE_OPTION_CONSTANT('a', all, 0, 1)
     default:
         return CMD_UNEXPECTED;

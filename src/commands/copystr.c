@@ -24,7 +24,7 @@ static int set_opt(void *_this, int c, char *argv) {
     SINGLE_OPTION_CONSTANT('>', direction, 0, 1)
     SINGLE_OPTION_CONSTANT('<', direction, 0, -1)
     SINGLE_OPTION_POSITION('p', copystr, line_no, col_no)
-    SINGLE_OPTION_SCANF('n', copystr, n, -1, "%lu")
+    SINGLE_OPTION_SCANF_COND('n', copystr, n, -1, "%ld", this->n > 0)
     default:
         return CMD_UNEXPECTED;
     }

@@ -21,7 +21,7 @@ static int set_opt(void *_this, int c, char *argv) {
     switch (c) {
     SINGLE_OPTION_ARGV('f', path)
     SINGLE_OPTION_POSITION('p', removestr, line_no, col_no)
-    SINGLE_OPTION_SCANF('n', removestr, n, -1, "%lu")
+    SINGLE_OPTION_SCANF_COND('n', removestr, n, -1, "%ld", this->n > 0)
     SINGLE_OPTION_CONSTANT('>', direction, 0, 1)
     SINGLE_OPTION_CONSTANT('<', direction, 0, -1)
     default:

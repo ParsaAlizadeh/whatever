@@ -18,7 +18,7 @@ static void *make(void) {
 static int set_opt(void *_this, int c, char *argv) {
     tree_t *this = _this;
     switch (c) {
-    SINGLE_OPTION_SCANF('n', tree, level, 0, "%u")
+    SINGLE_OPTION_SCANF_COND('n', tree, level, 0, "%d", this->level >= 0)
     SINGLE_OPTION_CONSTANT('a', all, 0, 1)
     default:
         return CMD_UNEXPECTED;

@@ -26,7 +26,7 @@ static int set_opt(void *_this, int c, char *argv) {
     SINGLE_OPTION_ARGV('f', path)
     SINGLE_OPTION_ARGV('s', patstr)
     SINGLE_OPTION_CONSTANT('c', count, -1, 0)
-    SINGLE_OPTION_SCANF('i', findpat, at, -1, "%lu")
+    SINGLE_OPTION_SCANF_COND('i', findpat, at, -1, "%ld", this->at > 0)
     SINGLE_OPTION_CONSTANT('w', word, 0, 1)
     SINGLE_OPTION_CONSTANT('a', all, 0, 1)
     default:
