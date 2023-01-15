@@ -30,9 +30,10 @@ int fu_restore(const char *path);
 /*
  * returns 0 on success, -1 on failure and set errno
  */
+int fu_fmodifyat(const char *path, long pos, long n, FILE *from, FILE *to);
+int fu_finsertat(const char *path, long pos, FILE *from);
 int fu_insertat(const char *path, long pos, const char *str);
 int fu_removeat(const char *path, long pos, long n);
-int fu_finsertat(const char *path, long pos, FILE *from);
 
 /*
  * find position of file according to line and col
