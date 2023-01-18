@@ -173,4 +173,5 @@ void prettify(FILE *file, FILE *out) {
             break;
         }
     }
+    free(string_free(cur));
 }
