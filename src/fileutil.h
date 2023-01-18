@@ -11,10 +11,11 @@
 int mkdir_p(const char *path);
 
 /*
- * returns a malloc(3)ated string representing dirname,
+ * returns a malloc(3)ated string representing dirname and basename,
  * or null if path is a null pointer or empty string
  */
 char *fu_dirname(const char *path);
+char *fu_basename(const char *path);
 
 int fu_exists(const char *path);
 int fu_isdirectory(const char *path);

@@ -44,6 +44,15 @@ char *fu_dirname(const char *_path) {
     return path;
 }
 
+char *fu_basename(const char *path) {
+    if (path == NULL || *path == '\0')
+        return NULL;
+    const char *last = strrchr(path, '/');
+    if (last == NULL)
+        return strdup(path);
+    return strdup(last+1);
+}
+
 int fu_exists(const char *path) {
     struct stat buf;
     return stat(path, &buf) == 0;
@@ -79,8 +88,12 @@ void fu_copy(FILE *from, FILE *to) {
 static char *fu_backuppath(const char *path, int n) {
     if (n == 0)
         return strdup(path);
+    char *dir = fu_dirname(path);
+    char *base = fu_basename(path);
     string *bakpath = string_new();
-    fprintf(bakpath->f, "%s~%d", path, n);
+    fprintf(bakpath->f, "%s/.%s~%d", dir, base, n);
+    free(dir);
+    free(base);
     return string_free(bakpath);
 }
 
