@@ -11,6 +11,7 @@
 #include "../vector.h"
 #include "../command.h"
 #include "../clipboard.h"
+#include "../parse.h"
 
 int cmdlog(const command *, const char *, ...);
 int cmdlogrequired(const command *, char);

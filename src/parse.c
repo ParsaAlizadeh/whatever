@@ -69,3 +69,108 @@ vector *scan_line(void) {
     }
     return tokens;
 }
+
+static void multifputs(FILE *file, int n, const char *str) {
+    while (n--)
+        fputs(str, file);
+}
+
+enum pretty_state {
+    P_WORD,
+    P_SPACE,
+    P_NEWLINE
+};
+
+void prettify(FILE *file, FILE *out) {
+    string *cur = string_new();
+    int state = P_NEWLINE;
+    int chr;
+    int indent = 0, prenext = 0;
+    while ((chr = fgetc(file)) != EOF) {
+        switch (state) {
+        case P_NEWLINE:
+            if (chr == '\n') {
+                if (!prenext)
+                    fprintf(out, "\n");
+                prenext = 0;
+                break;
+            }
+            if (isspace(chr))
+                break;
+            if (chr == '}') {
+                indent--;
+                multifputs(out, indent*4, " ");
+                fprintf(out, "}\n");
+                prenext = 1;
+                break;
+            }
+            multifputs(out, indent*4, " ");
+            ungetc(chr, file);
+            prenext = 0;
+            if (chr == '{') {
+                state = P_SPACE;
+                break;
+            }
+            state = P_WORD;
+            break;
+        case P_WORD:
+            if (chr == '{') {
+                fprintf(out, " ");
+                state = P_SPACE;
+                ungetc(chr, file);
+                break;
+            }
+            if (chr == '}') {
+                fprintf(out, "\n");
+                state = P_NEWLINE;
+                ungetc(chr, file);
+                break;
+            }
+            if (isspace(chr)) {
+                state = P_SPACE;
+                ungetc(chr, file);
+                break;
+            }
+            fprintf(out, "%c", (char)chr);
+            break;
+        case P_SPACE:
+            if (chr == '{') {
+                if (string_size(cur) > 0)
+                    fprintf(out, " ");
+                fprintf(out, "{\n");
+                free(string_free(cur));
+                cur = string_new();
+                indent++;
+                prenext = 1;
+                state = P_NEWLINE;
+                break;
+            }
+            if (chr == '}') {
+                fprintf(out, "\n");
+                free(string_free(cur));
+                cur = string_new();
+                state = P_NEWLINE;
+                ungetc(chr, file);
+                break;
+            }
+            if (chr == '\n') {
+                fprintf(out, "\n");
+                free(string_free(cur));
+                cur = string_new();
+                state = P_NEWLINE;
+                break;
+            }
+            if (isspace(chr)) {
+                fprintf(cur->f, "%c", (char)chr);
+                break;
+            }
+            char *seq = string_free(cur);
+            fprintf(out, "%s", seq);
+            free(seq);
+            cur = string_new();
+            state = P_WORD;
+            ungetc(chr, file);
+            break;
+        }
+    }
+}
