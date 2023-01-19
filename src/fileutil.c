@@ -247,25 +247,14 @@ static subseq_t fu_subseqmatched(pattern *pat) {
 }
 
 subseq_t fu_nextmatch(FILE *file, pattern *pat) {
-    int lastspace = 1;
     int chr;
     subseq_t ss;
     ss.offset = -1;
-    while (1) {
-        chr = fgetc(file);
-        if (chr == EOF || isspace(chr))
-            ss = fu_subseqmatched(pat);
-        if (chr == EOF)
-            break;
-        pattern_feed(pat, chr, lastspace || isspace(chr));
-        lastspace = isspace(chr);
+    while ((chr = fgetc(file)) != EOF) {
+        pattern_feed(pat, chr, 1);
+        ss = fu_subseqmatched(pat);
         if (ss.offset != -1)
-            return ss;
-        if (isspace(chr)) {
-            ss = fu_subseqmatched(pat);
-            if (ss.offset != -1)
                 return ss;
-        }
     }
     return ss;
 }
