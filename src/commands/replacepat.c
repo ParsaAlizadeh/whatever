@@ -97,7 +97,8 @@ static void replacepat_free(void *_this) {
 
 const command replacepat = {
     .name       = "replace",
-    .optstring  = ":f:s:r:i:a",
+    .optstring  = "f:s:r:i:a",
+    .usage      = "-f FILE -s PATTERN -r REPLACE [-a] [-i AT]",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,

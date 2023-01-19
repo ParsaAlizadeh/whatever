@@ -38,7 +38,8 @@ static void run(void *_this, char *inp, char **_out) {
 
 const command cat = {
     .name       = "cat",
-    .optstring  = ":f:",
+    .optstring  = "f:",
+    .usage      = "-f FILE",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,

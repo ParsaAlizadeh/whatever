@@ -46,7 +46,8 @@ static void run(void *_this, char *inp, char **out) {
 
 const command creatfile = {
     .name       = "creatfile",
-    .optstring  = ":f:",
+    .optstring  = "f:",
+    .usage      = "-f FILE",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,

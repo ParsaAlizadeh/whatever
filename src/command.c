@@ -24,6 +24,8 @@ command_obj make_command(int n, const command cmds[], vector *tokens) {
 }
 
 int feed_options(command_obj self, vector *tokens) {
+    static char optstringbuf[256];
+
     int argc = tokens->size;
     char **argv = (char **)tokens->seq;
     int opt;
@@ -33,7 +35,10 @@ int feed_options(command_obj self, vector *tokens) {
     /* disable print errors */
     opterr = 0;
 
-    while ((opt = getopt(argc, argv, self.cmd->optstring)) != -1) {
+    snprintf(optstringbuf, sizeof(optstringbuf),
+        ":h%s", self.cmd->optstring);
+
+    while ((opt = getopt(argc, argv, optstringbuf)) != -1) {
         switch (opt) {
         case '?':
             fprintf(stderr, "%s: unknown option \"-%c\"\n", self.cmd->name, optopt);
@@ -41,6 +46,9 @@ int feed_options(command_obj self, vector *tokens) {
         case ':':
             fprintf(stderr, "%s: option \"-%c\" requires an argument\n", self.cmd->name, optopt);
             return CMD_FAILURE;
+        case 'h':
+            fprintf(stderr, "usage: %s %s\n", self.cmd->name, self.cmd->usage);
+            break;
         default:
             int rc = self.cmd->set_opt(self.obj, opt, optarg);
             if (rc != CMD_SUCCESS) {

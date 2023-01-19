@@ -76,7 +76,8 @@ static void run(void *_this, char *inp, char **_out) {
 
 const command diff = {
     .name       = "diff",
-    .optstring  = ":1:2:",
+    .optstring  = "1:2:",
+    .usage      = "-1 OLDFILE -2 NEWFILE",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,

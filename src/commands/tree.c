@@ -121,7 +121,8 @@ static void run(void *_this, char *inp, char **_out) {
 
 const command tree = {
     .name       = "tree",
-    .optstring  = ":n:a",
+    .optstring  = "n:a",
+    .usage      = "[-a] [-n DEPTH]",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,

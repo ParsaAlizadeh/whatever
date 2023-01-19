@@ -11,8 +11,9 @@ enum cmd_error {
 };
 
 typedef struct {
-    char *name;
-    char *optstring;
+    const char *name;
+    const char *optstring;
+    const char *usage;
     void *(*make)(void);
     int   (*set_opt)(void *, int, char *);
     void  (*run)(void *, char *, char **);

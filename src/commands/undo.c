@@ -41,7 +41,8 @@ static void undo_free(void *_this) {
 
 const command undo = {
     .name       = "undo",
-    .optstring  = ":f:",
+    .optstring  = "f:",
+    .usage      = "-f FILE",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,
