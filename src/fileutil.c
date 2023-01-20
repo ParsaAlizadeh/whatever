@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
+#include <err.h>
 #include <ctype.h>
 #include "vecstr.h"
 
@@ -71,6 +72,13 @@ FILE *fu_open(const char *path, const char *mode) {
         return NULL;
     }
     return fopen(path, mode);
+}
+
+FILE *fu_tmpfile(void) {
+    FILE *file = tmpfile();
+    if (file == NULL)
+        err(EXIT_FAILURE, "tmpfile");
+    return file;
 }
 
 void fu_copyn(FILE *from, FILE *to, long n) {
@@ -142,13 +150,10 @@ int fu_restore(const char *path) {
 }
 
 int fu_fmodifyat(const char *path, long pos, long n, FILE *from, FILE *to) {
-    FILE *file, *tmp;
+    FILE *file;
     if ((file = fu_open(path, "r")) == NULL)
         return -1;
-    if ((tmp = tmpfile()) == NULL) {
-        fclose(file);
-        return -1;
-    }
+    FILE *tmp = fu_tmpfile();
     fu_copyn(file, tmp, pos);
     fu_copyn(file, to, n);
     if (from != NULL)
