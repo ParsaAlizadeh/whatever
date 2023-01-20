@@ -246,15 +246,30 @@ static subseq_t fu_subseqmatched(pattern *pat) {
     return ss;
 }
 
+static int isdelim(int c) {
+    return !(isalnum(c) || c == '_');
+}
+
 subseq_t fu_nextmatch(FILE *file, pattern *pat) {
+    int lastdelim = 1;
     int chr;
     subseq_t ss;
     ss.offset = -1;
-    while ((chr = fgetc(file)) != EOF) {
-        pattern_feed(pat, chr, 1);
-        ss = fu_subseqmatched(pat);
+    while (1) {
+        chr = fgetc(file);
+        if (chr == EOF || isdelim(chr))
+            ss = fu_subseqmatched(pat);
+        if (chr == EOF)
+            break;
+        pattern_feed(pat, chr, lastdelim || isdelim(chr));
+        lastdelim = isdelim(chr);
         if (ss.offset != -1)
+            return ss;
+        if (isdelim(chr)) {
+            ss = fu_subseqmatched(pat);
+            if (ss.offset != -1)
                 return ss;
+        }
     }
     return ss;
 }
