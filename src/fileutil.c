@@ -246,10 +246,6 @@ static subseq_t fu_subseqmatched(pattern *pat) {
     return ss;
 }
 
-static int isdelim(int c) {
-    return !(isalnum(c) || c == '_');
-}
-
 subseq_t fu_nextmatch(FILE *file, pattern *pat) {
     int lastdelim = 1;
     int chr;

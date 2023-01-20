@@ -63,7 +63,7 @@ static void push(node *this, node *next, char c) {
         return;
     if (this->c == c && next != NULL)
         append(next, this->firstBefore);
-    if (this->isWild && !isspace(c))
+    if (this->isWild && !isdelim(c))
         append(this, this->firstBefore);
 }
 

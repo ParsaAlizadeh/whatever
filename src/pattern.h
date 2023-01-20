@@ -1,7 +1,10 @@
 #ifndef PATTERN_H
 #define PATTERN_H
 
+#include <ctype.h>
 #include "vector.h"
+
+#define isdelim(c) (!(isalnum(c) || (c) == '_'))
 
 typedef struct {
     vector *nodes;
