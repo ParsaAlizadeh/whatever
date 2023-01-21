@@ -52,7 +52,7 @@ static void run(void *_this, char *inp, char **out) {
 }
 
 const command insertstr = {
-    .name       = "insertstr",
+    .name       = "insert",
     .optstring  = "f:s:p:",
     .usage      = "-f FILE -p LINE:COL [-s STRING]",
     .make       = make,

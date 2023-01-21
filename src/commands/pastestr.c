@@ -45,7 +45,7 @@ static void run(void *_this, char *inp, char **out) {
 }
 
 const command pastestr = {
-    .name       = "pastestr",
+    .name       = "paste",
     .optstring  = "f:p:",
     .usage      = "-f FILE -p LINE:COL",
     .make       = make,

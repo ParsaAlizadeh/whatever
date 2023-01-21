@@ -59,7 +59,7 @@ static void run(void *_this, char *inp, char **out) {
 }
 
 const command copystr = {
-    .name       = "copystr",
+    .name       = "copy",
     .optstring  = "f:p:n:<>",
     .usage      = "-p LINE:COL -n COUNT [-<>]",
     .make       = make,
