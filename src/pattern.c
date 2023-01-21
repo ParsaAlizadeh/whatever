@@ -63,7 +63,7 @@ static void push(node *this, node *next, char c) {
         return;
     if (this->c == c && next != NULL)
         append(next, this->firstBefore);
-    if (this->isWild && !isdelim(c))
+    if (this->isWild && isstar(c))
         append(this, this->firstBefore);
 }
 

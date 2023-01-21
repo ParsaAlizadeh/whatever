@@ -11,7 +11,7 @@ ${PROG}: ${OBJS}
 
 build/%.o: %.c
 	mkdir -p ${dir $@}
-	${CC} ${CFLAGS} -MMD -c $< -o $@
+	${CC} ${CFLAGS} ${CDEFINES} -MMD -c $< -o $@
 
 -include ${DEPS}
 
@@ -20,4 +20,3 @@ clean:
 
 count:
 	find . -name '*.c' -or -name '*.h' | xargs wc | sort -rn
-

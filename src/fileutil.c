@@ -71,6 +71,15 @@ FILE *fu_open(const char *path, const char *mode) {
         errno = EISDIR;
         return NULL;
     }
+#ifdef IDIOT
+    char *dir = fu_dirname(path);
+    if (!fu_isdirectory(dir)) {
+        errno = EFAULT; /* I am aware this is a socket error, hence the ifdef */
+        free(dir);
+        return NULL;
+    }
+    free(dir);
+#endif
     return fopen(path, mode);
 }
 
@@ -252,27 +261,17 @@ static subseq_t fu_subseqmatched(pattern *pat) {
 }
 
 subseq_t fu_nextmatch(FILE *file, pattern *pat) {
-    int lastdelim = 1;
     int chr;
-    subseq_t ss;
-    ss.offset = -1;
-    while (1) {
-        chr = fgetc(file);
-        if (chr == EOF || isdelim(chr))
-            ss = fu_subseqmatched(pat);
-        if (chr == EOF)
-            break;
-        pattern_feed(pat, chr, lastdelim || isdelim(chr));
-        lastdelim = isdelim(chr);
-        if (ss.offset != -1)
-            return ss;
-        if (isdelim(chr)) {
-            ss = fu_subseqmatched(pat);
-            if (ss.offset != -1)
-                return ss;
-        }
+    subseq_t sprv, snxt;
+    sprv.offset = -1;
+    while ((chr = fgetc(file)) != EOF) {
+        pattern_feed(pat, chr, 1);
+        snxt = fu_subseqmatched(pat);
+        if (snxt.offset == -1 && sprv.offset != -1)
+            return sprv;
+        sprv = snxt;
     }
-    return ss;
+    return sprv;
 }
 
 char *fu_getline(FILE *file) {

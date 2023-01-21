@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include "vector.h"
 
-#define isdelim(c) (!(isalnum(c) || (c) == '_'))
+#define isstar(c) (!isspace(c))
 
 typedef struct {
     vector *nodes;
