@@ -13,5 +13,5 @@ $ make
 For teacher assistants:
 
 ```console
-$ make CDEFINES=IDIOT
+$ make CDEFINES=-DIDIOT
 ```
