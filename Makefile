@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -g -fsanitize=address
+CFLAGS=-lncurses -Wall -Wextra -g -fsanitize=address
 PROG=main
 SRCS=${wildcard main.c src/*.c src/commands/*.c}
 OBJS=${patsubst %.c,build/%.o,${SRCS}}
