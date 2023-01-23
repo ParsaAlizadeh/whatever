@@ -7,12 +7,8 @@
 #define TAB_STOP        4
 #define SCROLLYOFF      3
 #define SCROLLXOFF      TAB_STOP
-#define LINE_WIDTH      3
-#define LINE_FORMAT     "%-3d"
-
-typedef struct {
-    int line, col;
-} pos_t;
+#define LINE_WIDTH      4
+#define LINE_FORMAT     "%-4d"
 
 typedef struct {
     WINDOW *frame;
@@ -55,6 +51,9 @@ void editor_end(EDITOR *ed);
 
 void editor_printborder(EDITOR *ed);
 void editor_refresh(EDITOR *ed);
+
+void editor_insert(EDITOR *ed, char chr);
+void editor_erase(EDITOR *ed);
 
 void init_ncurses(void);
 void end_ncurses(void);

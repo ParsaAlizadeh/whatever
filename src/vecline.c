@@ -18,22 +18,24 @@ void line_free(line_t *this) {
     free(this);
 }
 
-void line_insert(line_t *this, int col, char chr) {
+int line_insert(line_t *this, int col, char chr) {
     char *newc = string_insert(this->content, this->size, col, chr);
     if (newc == NULL)
-        return;
+        return 0;
     free(this->content);
     this->content = newc;
     this->size++;
+    return 1;
 }
 
-void line_erase(line_t *this, int col) {
+int line_erase(line_t *this, int col) {
     char *newc = string_erase(this->content, this->size, col);
     if (newc == NULL)
-        return;
+        return 0;
     free(this->content);
     this->content = newc;
     this->size--;
+    return 1;
 }
 
 void line_append(line_t *this, line_t *oth) {
@@ -108,7 +110,7 @@ int vc_nlines(vecline *this) {
 }
 
 line_t *vc_atline(vecline *this, int row) {
-    if (row >= vc_nlines(this))
+    if (row < 0 || row >= vc_nlines(this))
         return NULL;
     return this->lines->seq[row];
 }
@@ -120,43 +122,48 @@ void vc_free(vecline *this) {
     free(this);
 }
 
-int vc_at(vecline *this, int row, int col) {
-    line_t *line = vc_atline(this, row);
-    if (line == NULL || col > line->size)
+int vc_at(vecline *this, pos_t apos) {
+    line_t *line = vc_atline(this, apos.line);
+    if (line == NULL || apos.col > line->size)
         return -1;
-    return line->content[col];
+    return line->content[apos.col];
 }
 
-void vc_insert(vecline *this, int row, int col, char chr) {
-    line_t *line = vc_atline(this, row);
+pos_t vc_insert(vecline *this, pos_t apos, char chr) {
+    line_t *line = vc_atline(this, apos.line);
     if (line == NULL)
-        return;
-    if (col < 0 || col > line->size)
-        return;
+        return apos;
+    if (apos.col < 0 || apos.col > line->size)
+        return apos;
     if (chr == '\n') {
-        line_t *newline = line_partition(line, col);
-        vector_insert(this->lines, row+1, newline);
-        return;
+        line_t *newline = line_partition(line, apos.col);
+        vector_insert(this->lines, apos.line+1, newline);
+        return (pos_t) { apos.line+1, 0 };
     }
-    line_insert(line, col, chr);
+    if (line_insert(line, apos.col, chr))
+        return (pos_t) { apos.line, apos.col+1 };
+    return apos;
 }
 
-void vc_erase(vecline *this, int row, int col) {
-    line_t *line = vc_atline(this, row);
+pos_t vc_erase(vecline *this, pos_t apos) {
+    line_t *line = vc_atline(this, apos.line);
     if (line == NULL)
-        return;
-    if (col < 0 || col > line->size)
-        return;
-    if (col == 0) {
-        line_t *prvline = vc_atline(this, row-1);
+        return apos;
+    if (apos.col < 0 || apos.col > line->size)
+        return apos;
+    if (apos.col == 0) {
+        line_t *prvline = vc_atline(this, apos.line-1);
         if (prvline == NULL)
-            return;
+            return apos;
+        int prvsize = prvline->size;
         line_append(prvline, line);
         line_free(line);
-        vector_erase(this->lines, row);
-        return;
+        vector_erase(this->lines, apos.line);
+        return (pos_t) { apos.line-1, prvsize };
     }
-    line_erase(line, col-1);
+    if (line_erase(line, apos.col-1))
+        return (pos_t) { apos.line, apos.col-1 };
+    return apos;
 }
 
 void vc_log(vecline *this) {

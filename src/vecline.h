@@ -5,6 +5,10 @@
 #include "vector.h"
 
 typedef struct {
+    int line, col;
+} pos_t;
+
+typedef struct {
     char *content;
     int size;
 } line_t;
@@ -16,8 +20,8 @@ typedef struct {
 line_t *line_new(char *content, int size);
 void line_free(line_t *this);
 
-void line_insert(line_t *this, int col, char chr);
-void line_erase(line_t *this, int col);
+int line_insert(line_t *this, int col, char chr);
+int line_erase(line_t *this, int col);
 
 void line_append(line_t *this, line_t *oth);
 line_t *line_partition(line_t *this, int col);
@@ -30,10 +34,10 @@ vecline *vc_newpath(const char *path);
 int vc_nlines(vecline *this);
 line_t *vc_atline(vecline *this, int row);
 void vc_free(vecline *this);
-int vc_at(vecline *this, int row, int col);
+int vc_at(vecline *this, pos_t apos);
 
-void vc_insert(vecline *this, int row, int col, char chr);
-void vc_erase(vecline *this, int row, int col);
+pos_t vc_insert(vecline *this, pos_t apos, char chr);
+pos_t vc_erase(vecline *this, pos_t apos);
 
 void vc_log(vecline *this);
 

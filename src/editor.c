@@ -109,7 +109,7 @@ void editor_printc(EDITOR *ed, pos_t apos) {
     pos_t dpos = editor_dpos(ed, apos);
     if (!wvisible(ed->fw, dpos))
         return;
-    char chr = vc_at(ed->vc, apos.line, apos.col);
+    char chr = vc_at(ed->vc, apos);
     if (isspace(chr))
         return;
     mvwaddch(ed->fw, dpos.line, dpos.col, chr);
@@ -251,6 +251,14 @@ void editor_refresh(EDITOR *ed) {
     wrefresh(ed->lw);
     wrefresh(ed->iw);
     wrefresh(ed->frame);
+}
+
+void editor_insert(EDITOR *ed, char chr) {
+    ed->acur = vc_insert(ed->vc, ed->acur, chr);
+}
+
+void editor_erase(EDITOR *ed) {
+    ed->acur = vc_erase(ed->vc, ed->acur);
 }
 
 void init_ncurses(void) {
