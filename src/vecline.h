@@ -22,7 +22,8 @@ void line_erase(line_t *this, int col);
 void line_append(line_t *this, line_t *oth);
 line_t *line_partition(line_t *this, int col);
 
-vecline *vc_new(void);
+vecline *vc_new0(void);
+vecline *vc_new1(void);
 vecline *vc_newfile(FILE *file);
 vecline *vc_newpath(const char *path);
 

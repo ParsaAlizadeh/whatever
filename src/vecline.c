@@ -61,14 +61,20 @@ line_t *line_partition(line_t *this, int col) {
     return line_new(rc, size-col);
 }
 
-vecline *vc_new(void) {
+vecline *vc_new0(void) {
     vecline *this = malloc(sizeof(vecline));
     this->lines = vector_new();
     return this;
 }
 
+vecline *vc_new1(void) {
+    vecline *this = vc_new0();
+    vector_push(this->lines, line_new(strdup(""), 0));
+    return this;
+}
+
 vecline *vc_newfile(FILE *file) {
-    vecline *this = vc_new();
+    vecline *this = vc_new0();
     string *strline = string_new();
     int chr;
     while (1) {
