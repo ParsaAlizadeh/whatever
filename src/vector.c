@@ -49,3 +49,25 @@ void vector_freeall(vector *this) {
         free(this->seq[i]);
     vector_free(this);
 }
+
+void vector_insert(vector *this, int ind, void *item) {
+    if (ind < 0 || ind > this->size)
+        return;
+    for (int i = ind; i < this->size; i++) {
+        void *nxt = this->seq[i];
+        this->seq[i] = item;
+        item = nxt;
+    }
+    vector_push(this, item);
+}
+
+void *vector_erase(vector *this, int ind) {
+    if (ind < 0 || ind >= this->size)
+        return NULL;
+    void *item = this->seq[ind];
+    for (int i = ind; i < this->size; i++) {
+        this->seq[i] = this->seq[i+1];
+    }
+    this->size--;
+    return item;
+}
