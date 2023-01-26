@@ -52,6 +52,7 @@ void editor_home(void);
 void editor_end(void);
 
 void editor_printborder(void);
+void editor_printinfo(void);
 void editor_refresh(void);
 
 void editor_insert(char chr);

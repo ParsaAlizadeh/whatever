@@ -248,9 +248,19 @@ void editor_printborder(void) {
     mvwaddch(ed->frame, getmaxy(ed->lw), getmaxx(ed->lw), ACS_BTEE);
 }
 
+void editor_printinfo(void) {
+    wmove(ed->iw, 0, 1);
+    const char *ctx = ctx_get();
+    if (ctx == NULL)
+        wprintw(ed->iw, "(buffer)");
+    else
+        wprintw(ed->iw, "%s", ctx);
+}
+
 void editor_refresh(void) {
     editor_fixoffset();
     editor_printfile();
+    editor_printinfo();
     editor_printborder();
     wrefresh(ed->fw);
     wrefresh(ed->lw);
