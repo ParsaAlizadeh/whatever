@@ -15,6 +15,7 @@ typedef struct {
     WINDOW *lw, *fw, *iw, *cw; /* line, file, info, command */
     vecline *vc;
     pos_t off, acur;
+    int modified;
 } EDITOR;
 
 extern EDITOR *ed;

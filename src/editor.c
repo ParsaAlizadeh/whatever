@@ -27,6 +27,8 @@ EDITOR *editor_new(WINDOW *frame) {
 
     ed->vc = vc_new1();
 
+    ed->modified = 0;
+
     return ed;
 }
 
@@ -45,6 +47,7 @@ void editor_setvc(vecline *vc) {
     ed->vc = vc;
     ed->acur = (pos_t) { 0, 0 };
     ed->off = (pos_t) { 0, 0 };
+    ed->modified = 0;
 }
 
 int editor_dline(pos_t apos) {
@@ -252,8 +255,11 @@ void editor_printinfo(void) {
     wmove(ed->iw, 0, 1);
     if (ctx_get_buf_mode())
         wprintw(ed->iw, "(buffer)");
-    else
+    else {
         wprintw(ed->iw, "%s", ctx_get());
+        if (ed->modified)
+            wprintw(ed->iw, " +");
+    }
 }
 
 void editor_refresh(void) {
@@ -270,10 +276,12 @@ void editor_refresh(void) {
 
 void editor_insert(char chr) {
     ed->acur = vc_insert(ed->vc, ed->acur, chr);
+    ed->modified = 1;
 }
 
 void editor_erase(void) {
     ed->acur = vc_erase(ed->vc, ed->acur);
+    ed->modified = 1;
 }
 
 void init_ncurses(void) {
