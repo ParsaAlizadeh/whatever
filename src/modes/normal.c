@@ -49,6 +49,16 @@ void normal_mode(int n_cmds, const command all_cmds[]) {
             editor_right();
             break;
 
+        case KEY_HOME:
+            loginfo("home");
+            editor_home();
+            break;
+
+        case KEY_END:
+            loginfo("end");
+            editor_end();
+            break;
+
         default:
             loginfo("unkown key");
         }
