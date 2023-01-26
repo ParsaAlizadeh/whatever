@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "src/parse.h"
 #include "src/chain.h"
+#include "src/context.h"
 
 #include "src/commands/creatfile.h"
 #include "src/commands/insertstr.h"
@@ -18,7 +19,9 @@
 #include "src/commands/tree.h"
 #include "src/commands/pretty.h"
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc == 2)
+        ctx_set(argv[1]);
     const command all_cmds[] = {
         creatfile,
         insertstr,
@@ -44,5 +47,6 @@ int main() {
             procedure_chain(n_cmds, all_cmds, tokens);
         vector_freeall(tokens);
     }
+    ctx_clear();
     return EXIT_SUCCESS;
 }

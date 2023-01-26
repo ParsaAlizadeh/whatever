@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include "context.h"
 
 const command *lookup_command(int n, const command cmds[], char *name) {
     for (int i = 0; i < n; i++)
@@ -93,6 +94,10 @@ int procedure_command(int n, const command cmds[], vector *tokens, char *inp, ch
         cobj.cmd->free(cobj.obj);
         return rc;
     }
+
+    /* may or maynot return error-code, didn't care, won't logged */
+    (void) cobj.cmd->set_opt(cobj.obj, 'f', ctx_get());
+
     run_command(cobj, inp, out);
     cobj.cmd->free(cobj.obj);
     return CMD_SUCCESS;
