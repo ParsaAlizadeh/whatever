@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+EDITOR *ed = NULL;
+
 EDITOR *editor_new(WINDOW *frame) {
     int h, w;
     getmaxyx(frame, h, w);
@@ -27,27 +29,28 @@ EDITOR *editor_new(WINDOW *frame) {
     return ed;
 }
 
-void editor_free(EDITOR *ed) {
+void editor_free(void) {
     delwin(ed->lw);
     delwin(ed->fw);
     delwin(ed->iw);
     delwin(ed->cw);
     vc_free(ed->vc);
     free(ed);
+    ed = NULL;
 }
 
-void editor_setvc(EDITOR *ed, vecline *vc) {
+void editor_setvc(vecline *vc) {
     vc_free(ed->vc);
     ed->vc = vc;
     ed->acur = (pos_t) { 0, 0 };
     ed->off = (pos_t) { 0, 0 };
 }
 
-int editor_dline(EDITOR *ed, pos_t apos) {
+int editor_dline(pos_t apos) {
     return apos.line - ed->off.line;
 }
 
-int editor_dcol(EDITOR *ed, pos_t apos) {
+int editor_dcol(pos_t apos) {
     line_t *line = vc_atline(ed->vc, apos.line);
     if (line == NULL)
         return -1;
@@ -67,14 +70,14 @@ int editor_dcol(EDITOR *ed, pos_t apos) {
     return dcol - ed->off.col;
 }
 
-pos_t editor_dpos(EDITOR *ed, pos_t apos) {
+pos_t editor_dpos(pos_t apos) {
     return (pos_t) {
-        .line = editor_dline(ed, apos),
-        .col  = editor_dcol(ed, apos)
+        .line = editor_dline(apos),
+        .col  = editor_dcol(apos)
     };
 }
 
-int editor_acol(EDITOR *ed, int aline, int dcol) {
+int editor_acol(int aline, int dcol) {
     line_t *line = vc_atline(ed->vc, aline);
     if (line == NULL)
         return -1;
@@ -105,8 +108,8 @@ static int wvisible(WINDOW *win, pos_t dpos) {
     return 1;
 }
 
-void editor_printc(EDITOR *ed, pos_t apos) {
-    pos_t dpos = editor_dpos(ed, apos);
+void editor_printc(pos_t apos) {
+    pos_t dpos = editor_dpos(apos);
     if (!wvisible(ed->fw, dpos))
         return;
     char chr = vc_at(ed->vc, apos);
@@ -115,7 +118,7 @@ void editor_printc(EDITOR *ed, pos_t apos) {
     mvwaddch(ed->fw, dpos.line, dpos.col, chr);
 }
 
-void editor_printline(EDITOR *ed, int aline) {
+void editor_printline(int aline) {
     int h = getmaxy(ed->lw);
     if (aline < ed->off.line || aline >= ed->off.line+h)
         return;
@@ -123,56 +126,56 @@ void editor_printline(EDITOR *ed, int aline) {
     pos_t apos = { aline, 0 };
     int size = vc_atline(ed->vc, aline)->size;
     for (; apos.col < size; apos.col++)
-        editor_printc(ed, apos);
+        editor_printc(apos);
 }
 
-void editor_printfile(EDITOR *ed) {
+void editor_printfile(void) {
     wclear(ed->fw);
     wclear(ed->lw);
     for (int aline = 0; aline < vc_nlines(ed->vc); aline++)
-        editor_printline(ed, aline);
+        editor_printline(aline);
 }
 
-line_t *editor_curline(EDITOR *ed) {
+line_t *editor_curline(void) {
     return vc_atline(ed->vc, ed->acur.line);
 }
 
-int editor_dcurline(EDITOR *ed) {
-    return editor_dline(ed, ed->acur);
+int editor_dcurline(void) {
+    return editor_dline(ed->acur);
 }
 
-int editor_dcurcol(EDITOR *ed) {
-    return editor_dcol(ed, ed->acur);
+int editor_dcurcol(void) {
+    return editor_dcol(ed->acur);
 }
 
-pos_t editor_dcur(EDITOR *ed) {
+pos_t editor_dcur(void) {
     return (pos_t) {
-        .line = editor_dcurline(ed),
-        .col  = editor_dcurcol(ed)
+        .line = editor_dcurline(),
+        .col  = editor_dcurcol()
     };
 }
 
-void editor_mvcur(EDITOR *ed) {
-    pos_t dcur = editor_dcur(ed);
+void editor_mvcur(void) {
+    pos_t dcur = editor_dcur();
     if (!wvisible(ed->fw, dcur))
         return;
     wmove(ed->frame, dcur.line, LINE_WIDTH + dcur.col + 1);
 }
 
-int editor_minvisx(EDITOR *ed) {
-    return editor_dcurcol(ed) - SCROLLXOFF + 1;
+int editor_minvisx(void) {
+    return editor_dcurcol() - SCROLLXOFF + 1;
 }
 
-int editor_maxvisx(EDITOR *ed) {
-    return editor_dcurcol(ed) + SCROLLXOFF - 1;
+int editor_maxvisx(void) {
+    return editor_dcurcol() + SCROLLXOFF - 1;
 }
 
-int editor_minvisy(EDITOR *ed) {
-    return editor_dcurline(ed) - SCROLLYOFF + 1;
+int editor_minvisy(void) {
+    return editor_dcurline() - SCROLLYOFF + 1;
 }
 
-int editor_maxvisy(EDITOR *ed) {
-    return editor_dcurline(ed) + SCROLLYOFF - 1;
+int editor_maxvisy(void) {
+    return editor_dcurline() + SCROLLYOFF - 1;
 }
 
 #define _fixmin(off, min) do { \
@@ -187,77 +190,77 @@ int editor_maxvisy(EDITOR *ed) {
         _fixmax(off, w, max); \
     } while (0)
 
-void editor_fixoffset(EDITOR *ed) {
+void editor_fixoffset(void) {
     int h, w;
     getmaxyx(ed->fw, h, w);
-    int minvisx = editor_minvisx(ed);
-    int maxvisx = editor_maxvisx(ed);
+    int minvisx = editor_minvisx();
+    int maxvisx = editor_maxvisx();
     _fix(ed->off.col, w, minvisx, maxvisx);
-    int minvisy = editor_minvisy(ed);
-    int maxvisy = editor_maxvisy(ed);
+    int minvisy = editor_minvisy();
+    int maxvisy = editor_maxvisy();
     _fix(ed->off.line, h, minvisy, maxvisy);
 }
 
-void editor_left(EDITOR *ed) {
+void editor_left(void) {
     if (ed->acur.col == 0)
         return;
     ed->acur.col--;
 }
 
-void editor_right(EDITOR *ed) {
-    line_t *line = editor_curline(ed);
+void editor_right(void) {
+    line_t *line = editor_curline();
     if (ed->acur.col == line->size)
         return;
     ed->acur.col++;
 }
 
-void editor_up(EDITOR *ed) {
+void editor_up(void) {
     if (ed->acur.line == 0)
         return;
-    int prvdcurcol = editor_dcurcol(ed);
+    int prvdcurcol = editor_dcurcol();
     ed->acur.line--;
-    ed->acur.col = editor_acol(ed, ed->acur.line, prvdcurcol);
+    ed->acur.col = editor_acol(ed->acur.line, prvdcurcol);
 }
 
-void editor_down(EDITOR *ed) {
+void editor_down(void) {
     if (ed->acur.line == vc_nlines(ed->vc)-1)
         return;
-    int prvdcurcol = editor_dcurcol(ed);
+    int prvdcurcol = editor_dcurcol();
     ed->acur.line++;
-    ed->acur.col = editor_acol(ed, ed->acur.line, prvdcurcol);
+    ed->acur.col = editor_acol(ed->acur.line, prvdcurcol);
 }
 
-void editor_home(EDITOR *ed) {
+void editor_home(void) {
     ed->acur.col = 0;
 }
 
-void editor_end(EDITOR *ed) {
-    ed->acur.col = editor_curline(ed)->size;
+void editor_end(void) {
+    ed->acur.col = editor_curline()->size;
 }
 
-void editor_printborder(EDITOR *ed) {
+void editor_printborder(void) {
     mvwvline(ed->frame, 0, getmaxx(ed->lw), ACS_VLINE, getmaxy(ed->lw));
     mvwhline(ed->frame, getmaxy(ed->lw), 0, ACS_HLINE, getmaxx(ed->lw));
     mvwhline(ed->frame, getmaxy(ed->lw), getmaxx(ed->lw)+1, ACS_HLINE, getmaxx(ed->fw));
     mvwaddch(ed->frame, getmaxy(ed->lw), getmaxx(ed->lw), ACS_BTEE);
 }
 
-void editor_refresh(EDITOR *ed) {
-    editor_fixoffset(ed);
-    editor_printfile(ed);
-    editor_printborder(ed);
-    editor_mvcur(ed);
+void editor_refresh(void) {
+    editor_fixoffset();
+    editor_printfile();
+    editor_printborder();
+    editor_mvcur();
     wrefresh(ed->fw);
     wrefresh(ed->lw);
     wrefresh(ed->iw);
     wrefresh(ed->frame);
 }
 
-void editor_insert(EDITOR *ed, char chr) {
+void editor_insert(char chr) {
     ed->acur = vc_insert(ed->vc, ed->acur, chr);
 }
 
-void editor_erase(EDITOR *ed) {
+void editor_erase(void) {
     ed->acur = vc_erase(ed->vc, ed->acur);
 }
 
@@ -267,8 +270,10 @@ void init_ncurses(void) {
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
+    ed = editor_new(stdscr);
 }
 
 void end_ncurses(void) {
+    editor_free();
     endwin();
 }

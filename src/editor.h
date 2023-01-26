@@ -17,43 +17,45 @@ typedef struct {
     pos_t off, acur;
 } EDITOR;
 
+extern EDITOR *ed;
+
 EDITOR *editor_new(WINDOW *frame);
-void editor_free(EDITOR *ed);
-void editor_setvc(EDITOR *ed, vecline *vc);
+void editor_free(void);
+void editor_setvc(vecline *vc);
 
-int editor_dline(EDITOR *ed, pos_t apos);
-int editor_dcol(EDITOR *ed, pos_t apos);
-pos_t editor_dpos(EDITOR *ed, pos_t apos);
-int editor_acol(EDITOR *ed, int aline, int dcol);
+int editor_dline(pos_t apos);
+int editor_dcol(pos_t apos);
+pos_t editor_dpos(pos_t apos);
+int editor_acol(int aline, int dcol);
 
-void editor_printc(EDITOR *ed, pos_t apos);
-void editor_printline(EDITOR *ed, int aline);
-void editor_printfile(EDITOR *ed);
+void editor_printc(pos_t apos);
+void editor_printline(int aline);
+void editor_printfile(void);
 
-line_t *editor_curline(EDITOR *ed);
-int editor_dcurline(EDITOR *ed);
-int editor_dcurcol(EDITOR *ed);
-pos_t editor_dcur(EDITOR *ed);
-void editor_mvcur(EDITOR *ed);
+line_t *editor_curline(void);
+int editor_dcurline(void);
+int editor_dcurcol(void);
+pos_t editor_dcur(void);
+void editor_mvcur(void);
 
-int editor_minvisx(EDITOR *ed);
-int editor_maxvisx(EDITOR *ed);
-int editor_minvisy(EDITOR *ed);
-int editor_maxvisy(EDITOR *ed);
-void editor_fixoffset(EDITOR *ed);
+int editor_minvisx(void);
+int editor_maxvisx(void);
+int editor_minvisy(void);
+int editor_maxvisy(void);
+void editor_fixoffset(void);
 
-void editor_left(EDITOR *ed);
-void editor_right(EDITOR *ed);
-void editor_up(EDITOR *ed);
-void editor_down(EDITOR *ed);
-void editor_home(EDITOR *ed);
-void editor_end(EDITOR *ed);
+void editor_left(void);
+void editor_right(void);
+void editor_up(void);
+void editor_down(void);
+void editor_home(void);
+void editor_end(void);
 
-void editor_printborder(EDITOR *ed);
-void editor_refresh(EDITOR *ed);
+void editor_printborder(void);
+void editor_refresh(void);
 
-void editor_insert(EDITOR *ed, char chr);
-void editor_erase(EDITOR *ed);
+void editor_insert(char chr);
+void editor_erase(void);
 
 void init_ncurses(void);
 void end_ncurses(void);
