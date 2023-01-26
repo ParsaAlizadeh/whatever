@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "src/parse.h"
-#include "src/chain.h"
 #include "src/context.h"
 
 #include "src/commands/creatfile.h"
@@ -18,6 +16,8 @@
 #include "src/commands/diff.h"
 #include "src/commands/tree.h"
 #include "src/commands/pretty.h"
+
+#include "src/modes/normal.h"
 
 int main(int argc, char *argv[]) {
     if (argc == 2)
@@ -39,14 +39,7 @@ int main(int argc, char *argv[]) {
         pretty
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
-    while (!feof(stdin)) {
-        printf("$ ");
-        fflush(stdout);
-        vector *tokens = scan_line();
-        if (tokens->size != 0)
-            procedure_chain(n_cmds, all_cmds, tokens);
-        vector_freeall(tokens);
-    }
+    normal_mode(n_cmds, all_cmds);
     ctx_clear();
     return EXIT_SUCCESS;
 }
