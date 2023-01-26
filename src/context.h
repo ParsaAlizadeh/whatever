@@ -11,4 +11,7 @@ void ctx_save(void);
 int ctx_get_buf_mode(void);
 void ctx_set_buf_mode(int mode);
 
+const char *ctx_get_edmode(void);
+void ctx_set_edmode(const char *edmode);
+
 #endif

@@ -39,3 +39,13 @@ int ctx_get_buf_mode(void) {
 void ctx_set_buf_mode(int mode) {
     buf_mode = mode;
 }
+
+static const char *ctx_edmode = NULL;
+
+const char *ctx_get_edmode(void) {
+    return ctx_edmode;
+}
+
+void ctx_set_edmode(const char *edmode) {
+    ctx_edmode = edmode;
+}
