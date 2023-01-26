@@ -77,22 +77,9 @@ vecline *vc_new1(void) {
 
 vecline *vc_newfile(FILE *file) {
     vecline *this = vc_new0();
-    string *strline = string_new();
-    int chr;
-    while (1) {
-        chr = fgetc(file);
-        if (chr == '\n' || chr == EOF) {
-            int size = string_size(strline);
-            char *content = string_free(strline);
-            vector_push(this->lines, line_new(content, size));
-            if (chr != EOF)
-                strline = string_new();
-        }
-        if (chr == EOF)
-            break;
-        if (chr != '\n')
-            fprintf(strline->f, "%c", chr);
-    }
+    char *sline;
+    while ((sline = fu_getline(file)) != NULL)
+        vector_push(this->lines, line_new(sline, strlen(sline)));
     return this;
 }
 

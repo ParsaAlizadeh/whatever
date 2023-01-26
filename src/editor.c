@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
+#include "context.h"
 
 EDITOR *ed = NULL;
 
@@ -271,6 +272,12 @@ void init_ncurses(void) {
     noecho();
     keypad(stdscr, TRUE);
     ed = editor_new(stdscr);
+    const char *ctx = ctx_get();
+    if (ctx != NULL) {
+        vecline *vc = vc_newpath(ctx);
+        if (vc != NULL)
+            editor_setvc(vc);
+    }
 }
 
 void end_ncurses(void) {
