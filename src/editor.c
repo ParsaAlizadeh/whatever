@@ -160,7 +160,9 @@ void editor_mvcur(void) {
     pos_t dcur = editor_dcur();
     if (!wvisible(ed->fw, dcur))
         return;
-    wmove(ed->frame, dcur.line, LINE_WIDTH + dcur.col + 1);
+    // wmove(ed->frame, dcur.line, LINE_WIDTH + dcur.col + 1);
+    wmove(ed->fw, dcur.line, dcur.col);
+    wrefresh(ed->fw);
 }
 
 int editor_minvisx(void) {
@@ -250,11 +252,11 @@ void editor_refresh(void) {
     editor_fixoffset();
     editor_printfile();
     editor_printborder();
-    editor_mvcur();
     wrefresh(ed->fw);
     wrefresh(ed->lw);
     wrefresh(ed->iw);
     wrefresh(ed->frame);
+    editor_mvcur();
 }
 
 void editor_insert(char chr) {

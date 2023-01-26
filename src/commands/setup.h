@@ -12,6 +12,7 @@
 #include "../command.h"
 #include "../clipboard.h"
 #include "../parse.h"
+#include "../logging.h"
 
 int cmdlog(const command *, const char *, ...);
 int cmdlogrequired(const command *, char);

@@ -60,7 +60,7 @@ vector *scan_line(void) {
         fprintf(cur->f, "%c", c);
     }
     if (escaped || qoute)
-        fprintf(stderr, "scan_line: unexpected eof\n");
+        loginfo("scan_line: unexpected eof");
     if (string_size(cur) > 0) {
         /* no pipe at the end */
         vector_push(tokens, string_free(cur));

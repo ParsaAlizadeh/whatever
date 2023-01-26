@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "context.h"
+#include "logging.h"
 
 const command *lookup_command(int n, const command cmds[], char *name) {
     for (int i = 0; i < n; i++)
@@ -42,24 +43,24 @@ int feed_options(command_obj self, vector *tokens) {
     while ((opt = getopt(argc, argv, optstringbuf)) != -1) {
         switch (opt) {
         case '?':
-            fprintf(stderr, "%s: unknown option \"-%c\"\n", self.cmd->name, optopt);
+            loginfo("%s: unknown option \"-%c\"", self.cmd->name, optopt);
             return CMD_FAILURE;
         case ':':
-            fprintf(stderr, "%s: option \"-%c\" requires an argument\n", self.cmd->name, optopt);
+            loginfo("%s: option \"-%c\" requires an argument", self.cmd->name, optopt);
             return CMD_FAILURE;
         case 'h':
-            fprintf(stderr, "usage: %s %s\n", self.cmd->name, self.cmd->usage);
+            loginfo("usage: %s %s", self.cmd->name, self.cmd->usage);
             break;
         default:
             int rc = self.cmd->set_opt(self.obj, opt, optarg);
             if (rc != CMD_SUCCESS) {
                 switch (rc) {
                 case CMD_REPEATED_OPTION:
-                    fprintf(stderr, "%s: option \"-%c\" is repeated\n",
+                    loginfo("%s: option \"-%c\" is repeated",
                         self.cmd->name, opt);
                     break;
                 case CMD_UNEXPECTED:
-                    fprintf(stderr, "%s: unexpected option \"-%c\"\n",
+                    loginfo("%s: unexpected option \"-%c\"",
                         self.cmd->name, opt);
                     break;
                 }
@@ -69,7 +70,7 @@ int feed_options(command_obj self, vector *tokens) {
         }
     }
     if (optind < argc) {
-        fprintf(stderr, "%s: extra arguments was found\n", self.cmd->name);
+        loginfo("%s: extra arguments was found", self.cmd->name);
         return CMD_FAILURE;
     }
     return CMD_SUCCESS;
@@ -81,12 +82,12 @@ void run_command(command_obj self, char *inp, char **out) {
 
 int procedure_command(int n, const command cmds[], vector *tokens, char *inp, char **out) {
     if (tokens == NULL || tokens->size == 0) {
-        fprintf(stderr, "procedure: tokens should be non empty\n");
+        loginfo("procedure: tokens should be non empty");
         return CMD_FAILURE;
     }
     command_obj cobj = make_command(n, cmds, tokens);
     if (cobj.cmd == NULL) {
-        fprintf(stderr, "procedure: invalid command \"%s\"\n", (char *)tokens->seq[0]);
+        loginfo("procedure: invalid command \"%s\"", (char *)tokens->seq[0]);
         return CMD_FAILURE;
     }
     int rc = feed_options(cobj, tokens);

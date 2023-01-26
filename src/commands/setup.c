@@ -7,7 +7,7 @@ int cmdlog(const command *cmd, const char *format, ...) {
     char *full_format = malloc(size+1);
     sprintf(full_format, "%s: %s\n", cmd->name, format);
     fflush(stdout);
-    int r = vfprintf(stderr, full_format, args);
+    int r = vloginfo(full_format, args);
     free(full_format);
     va_end(args);
     return r;
