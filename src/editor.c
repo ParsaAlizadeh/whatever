@@ -250,11 +250,10 @@ void editor_printborder(void) {
 
 void editor_printinfo(void) {
     wmove(ed->iw, 0, 1);
-    const char *ctx = ctx_get();
-    if (ctx == NULL)
+    if (ctx_get_buf_mode())
         wprintw(ed->iw, "(buffer)");
     else
-        wprintw(ed->iw, "%s", ctx);
+        wprintw(ed->iw, "%s", ctx_get());
 }
 
 void editor_refresh(void) {
@@ -290,6 +289,10 @@ void init_ncurses(void) {
         if (vc != NULL)
             editor_setvc(vc);
     }
+}
+
+int editor_saveas(const char *path) {
+    return vc_writepath(ed->vc, path);
 }
 
 void end_ncurses(void) {

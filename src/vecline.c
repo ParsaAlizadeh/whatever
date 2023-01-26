@@ -92,6 +92,26 @@ vecline *vc_newpath(const char *path) {
     return this;
 }
 
+void vc_writefile(vecline *this, FILE *file) {
+    for (int i = 0; i < vc_nlines(this); i++) {
+        line_t *line = vc_atline(this, i);
+        FILE *fline = fmemopen(line->content, line->size, "r");
+        if (i > 0)
+            fprintf(file, "\n");
+        fu_copy(fline, file);
+        fclose(fline);
+    }
+}
+
+int vc_writepath(vecline *this, const char *path) {
+    FILE *file = fu_open(path, "r");
+    if (file == NULL)
+        return -1;
+    vc_writefile(this, file);
+    fclose(file);
+    return 0;
+}
+
 int vc_nlines(vecline *this) {
     return this->lines->size;
 }

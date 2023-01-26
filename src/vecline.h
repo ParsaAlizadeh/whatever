@@ -31,6 +31,9 @@ vecline *vc_new1(void);
 vecline *vc_newfile(FILE *file);
 vecline *vc_newpath(const char *path);
 
+void vc_writefile(vecline *this, FILE *file);
+int vc_writepath(vecline *this, const char *path);
+
 int vc_nlines(vecline *this);
 line_t *vc_atline(vecline *this, int row);
 void vc_free(vecline *this);
