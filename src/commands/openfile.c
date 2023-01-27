@@ -29,8 +29,15 @@ static void run(void *_this, char *inp, char **out) {
         return (void)cmdlogrequired(&openfile, 'f');
     ctx_set_buf_mode(0);
     ctx_set(this->path);
-    editor_loadctx();
-    editor_reset();
+    if (editor_loadctx() == -1) {
+        cmdlog(&openfile, "failed to open file: %s",
+            strerror(errno));
+        editor_setvc(vc_new1());
+        editor_reset();
+        ed->modified = 1;
+    } else {
+        editor_reset();
+    }
 }
 
 const command openfile = {

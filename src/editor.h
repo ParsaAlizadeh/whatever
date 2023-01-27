@@ -65,7 +65,7 @@ void editor_insert(char chr);
 void editor_erase(void);
 
 int editor_saveas(const char *path);
-void editor_loadctx(void);
+int editor_loadctx(void);
 void editor_clearbuffer(void);
 
 void init_ncurses(void);

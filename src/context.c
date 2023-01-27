@@ -4,6 +4,7 @@
 #include <string.h>
 #include "editor.h"
 #include "fileutil.h"
+#include "logging.h"
 
 static const char *ctx_file = NULL;
 static int buf_mode = 0;
@@ -35,7 +36,8 @@ void ctx_save(void) {
         return;
     const char *ctx = ctx_get();
     fu_backup(ctx);
-    editor_saveas(ctx);
+    if (editor_saveas(ctx) != 0)
+        loginfo("ctx: save failed");
     if (!ctx_get_buf_mode())
         ed->modified = 0;
 }

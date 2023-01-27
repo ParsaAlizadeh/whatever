@@ -36,7 +36,7 @@ static void _run_command(int n_cmds, const command all_cmds[], vector *tokens) {
     char *out = NULL;
     procedure_chain(n_cmds, all_cmds, tokens, &out);
     time_t after = _ctx_mtime();
-    if (after > before) {
+    if (after > before && ctx_get_buf_mode()) {
         ed->modified = 1;
         editor_loadctx();
     }

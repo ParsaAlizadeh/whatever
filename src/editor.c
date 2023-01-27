@@ -331,10 +331,12 @@ int editor_saveas(const char *path) {
     return vc_writepath(ed->vc, path);
 }
 
-void editor_loadctx(void) {
+int editor_loadctx(void) {
     vecline *vc = vc_newpath(ctx_get());
-    if (vc != NULL)
-        editor_setvc(vc);
+    if (vc == NULL)
+        return -1;
+    editor_setvc(vc);
+    return 0;
 }
 
 void editor_clearbuffer(void) {
