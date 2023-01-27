@@ -10,7 +10,7 @@ void legacy_mode(int n_cmds, const command all_cmds[]) {
         fflush(stdout);
         vector *tokens = scan_line(stdin);
         if (tokens->size > 0)
-            procedure_chain(n_cmds, all_cmds, tokens);
+            procedure_chain(n_cmds, all_cmds, tokens, NULL);
         vector_freeall(tokens);
     }
 }

@@ -5,7 +5,7 @@
 #include <string.h>
 #include "parse.h"
 
-int procedure_chain(int n, const command cmds[], vector *tokens) {
+int procedure_chain(int n, const command cmds[], vector *tokens, char **out) {
     vector *chain = vector_new();
     vector *cur = vector_new();
     for (int i = 0; i < tokens->size; i++) {
@@ -35,8 +35,10 @@ int procedure_chain(int n, const command cmds[], vector *tokens) {
         vector_free(local_tokens);
     }
     vector_free(chain);
-    if (current != NULL) {
-        // printf("%s", current);
+    if (out != NULL) {
+        *out = current;
+    } else if (current != NULL) {
+        printf("%s", current);
         free(current);
     }
     return rc;

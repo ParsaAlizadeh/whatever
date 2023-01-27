@@ -43,7 +43,7 @@ static char *next_prefix(const char *prefix, int is_last) {
     if (is_last)
         fprintf(subprefix->f, "     ");
     else
-        fprintf(subprefix->f, "│    ");
+        fprintf(subprefix->f, "|    ");
     return string_free(subprefix);
 }
 
@@ -59,9 +59,9 @@ static void traverse(
 {
     fprintf(fout, "%s", prefix);
     if (is_last)
-        fprintf(fout, "└────");
+        fprintf(fout, "'----");
     else
-        fprintf(fout, "├────");
+        fprintf(fout, "|----");
     fprintf(fout, "%s\n", base);
     if (maxdepth != 0 && depth >= maxdepth)
         return;

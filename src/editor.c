@@ -45,7 +45,7 @@ void editor_reset() {
     ed->off = (pos_t) { 0, 0 };
     ed->asel = (pos_t) { -1, 0 };
     ed->modified = 0;
-    editor_adjustcur();
+    editor_mvcur();
 }
 
 void editor_setvc(vecline *vc) {
@@ -182,10 +182,10 @@ pos_t editor_dcur(void) {
 }
 
 void editor_mvcur(void) {
+    editor_adjustcur();
     pos_t dcur = editor_dcur();
     if (!wvisible(ed->fw, dcur))
         return;
-    // wmove(ed->frame, dcur.line, LINE_WIDTH + dcur.col + 1);
     wmove(ed->fw, dcur.line, dcur.col);
     wrefresh(ed->fw);
 }
@@ -305,7 +305,6 @@ void editor_printinfo(void) {
 }
 
 void editor_refresh(void) {
-    editor_adjustcur();
     editor_fixoffset();
     editor_printfile();
     editor_printinfo();
