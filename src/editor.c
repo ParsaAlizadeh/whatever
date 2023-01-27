@@ -26,6 +26,7 @@ void editor_new(WINDOW *frame) {
     ed->iw = derwin(frame, 1, w, h-2, 0);
     ed->cw = derwin(frame, 1, w, h-1, 0);
 
+    ed->off = (pos_t) { 0, 0 };
     ed->acur = (pos_t) { 0, 0 };
     ed->vc = vc_new1();
     editor_reset();
@@ -42,7 +43,6 @@ void editor_free(void) {
 }
 
 void editor_reset() {
-    ed->off = (pos_t) { 0, 0 };
     ed->asel = (pos_t) { -1, 0 };
     ed->modified = 0;
     editor_mvcur();

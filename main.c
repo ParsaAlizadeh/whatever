@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "src/context.h"
+#include "src/modes/normal.h"
 
 #include "src/commands/creatfile.h"
 #include "src/commands/insertstr.h"
@@ -17,7 +18,7 @@
 #include "src/commands/tree.h"
 #include "src/commands/pretty.h"
 
-#include "src/modes/normal.h"
+#include "src/commands/openfile.h"
 
 int main(int argc, char *argv[]) {
     if (argc == 2)
@@ -36,7 +37,8 @@ int main(int argc, char *argv[]) {
         grepat,
         diff,
         tree,
-        pretty
+        pretty,
+        openfile
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     normal_mode(n_cmds, all_cmds);
