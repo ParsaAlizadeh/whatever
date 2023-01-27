@@ -36,6 +36,8 @@ void ctx_save(void) {
     const char *ctx = ctx_get();
     fu_backup(ctx);
     editor_saveas(ctx);
+    if (!ctx_get_buf_mode())
+        ed->modified = 0;
 }
 
 int ctx_get_buf_mode(void) {

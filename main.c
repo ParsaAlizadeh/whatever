@@ -17,8 +17,8 @@
 #include "src/commands/diff.h"
 #include "src/commands/tree.h"
 #include "src/commands/pretty.h"
-
 #include "src/commands/openfile.h"
+#include "src/commands/savefile.h"
 
 int main(int argc, char *argv[]) {
     if (argc == 2)
@@ -38,7 +38,8 @@ int main(int argc, char *argv[]) {
         diff,
         tree,
         pretty,
-        openfile
+        openfile,
+        savefile
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
     normal_mode(n_cmds, all_cmds);
