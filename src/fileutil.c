@@ -8,6 +8,7 @@
 #include <err.h>
 #include <ctype.h>
 #include "vecstr.h"
+#include "context.h"
 
 int mkdir_p(const char *_path) {
     if (_path == NULL  || *_path == '\0')
@@ -135,6 +136,8 @@ static int fu_pop_backups(const char *path, const char *cur, int n) {
 }
 
 int fu_backup(const char *path) {
+    if (strcmp(path, BUFFER_PATH) == 0)
+        return 0;
     FILE *orig, *bak;
     if ((orig = fu_open(path, "r")) == NULL)
         return -1;
@@ -153,6 +156,8 @@ int fu_backup(const char *path) {
 }
 
 int fu_restore(const char *path) {
+    if (strcmp(path, BUFFER_PATH) == 0)
+        return 0;
     if (fu_pop_backups(path, path, 0))
         return 0;
     return -1;
