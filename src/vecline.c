@@ -104,7 +104,7 @@ void vc_writefile(vecline *this, FILE *file) {
 }
 
 int vc_writepath(vecline *this, const char *path) {
-    FILE *file = fu_open(path, "r");
+    FILE *file = fu_open(path, "w");
     if (file == NULL)
         return -1;
     vc_writefile(this, file);

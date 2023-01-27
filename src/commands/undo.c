@@ -29,7 +29,6 @@ static void run(void *_this, char *inp, char **out) {
         return (void)cmdlogrequired(&undo, 'f');
     if (fu_restore(this->path) == -1)
         return (void)cmdlog(&undo, "no backup exists");
-    cmdlog(&undo, "done");
 }
 
 static void undo_free(void *_this) {

@@ -55,7 +55,6 @@ static void run(void *_this, char *inp, char **out) {
     fu_copyn(file, NULL, pos);
     fu_copyn(file, clipboard_reset(), this->n);
     fclose(file);
-    cmdlog(&copystr, "done");
 }
 
 const command copystr = {

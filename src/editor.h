@@ -21,7 +21,7 @@ typedef struct {
 
 extern EDITOR *ed;
 
-EDITOR *editor_new(WINDOW *frame);
+void editor_new(WINDOW *frame);
 void editor_free(void);
 void editor_reset(void);
 void editor_setvc(vecline *vc);
@@ -42,6 +42,7 @@ int editor_dcurline(void);
 int editor_dcurcol(void);
 pos_t editor_dcur(void);
 void editor_mvcur(void);
+void editor_adjustcur(void);
 
 int editor_minvisx(void);
 int editor_maxvisx(void);
@@ -65,6 +66,7 @@ void editor_erase(void);
 
 int editor_saveas(const char *path);
 void editor_loadctx(void);
+void editor_clearbuffer(void);
 
 void init_ncurses(void);
 void end_ncurses(void);

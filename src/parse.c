@@ -5,13 +5,14 @@
 #include <ctype.h>
 #include <string.h>
 #include "vecstr.h"
+#include "logging.h"
 
-vector *scan_line(void) {
+vector *scan_line(FILE *inp) {
     vector *tokens = vector_new();
     string *cur = string_new();
     char c;
     int escaped = 0, qoute = 0, was_qouted = 0;
-    while (scanf("%c", &c) != EOF) {
+    while (fscanf(inp, "%c", &c) != EOF) {
         if (!escaped && !qoute && c == '\n')
             break;
         if (!escaped && !qoute && c == ' ') {

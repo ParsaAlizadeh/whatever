@@ -33,7 +33,6 @@ static void run(void *_this, char *inp, char **_out) {
     fu_copy(file, out->f);
     fclose(file);
     string_free(out);
-    cmdlog(&cat, "done");
 }
 
 const command cat = {

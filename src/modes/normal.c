@@ -4,6 +4,7 @@
 #include "movement.h"
 #include "insert.h"
 #include "visual.h"
+#include "command.h"
 #include "../logging.h"
 #include "../editor.h"
 #include "../context.h"
@@ -37,6 +38,9 @@ void normal_mode(int n_cmds, const command all_cmds[]) {
             break;
         case 'v':
             visual_mode();
+            break;
+        case ':':
+            command_mode(n_cmds, all_cmds);
             break;
         default:
             loginfo("undefined key: %d", chr);

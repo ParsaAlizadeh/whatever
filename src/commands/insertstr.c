@@ -48,7 +48,6 @@ static void run(void *_this, char *inp, char **out) {
     if (fu_insertat(this->path, pos, this->str) == -1)
         return (void)cmdlog(&insertstr, "insert failed: %s",
             strerror(errno));
-    cmdlog(&insertstr, "done");
 }
 
 const command insertstr = {

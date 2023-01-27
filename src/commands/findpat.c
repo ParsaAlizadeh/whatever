@@ -83,7 +83,6 @@ static void run(void *_this, char *inp, char **_out) {
         fprintf(out->f, "\n");
     fclose(file);
     string_free(out);
-    cmdlog(&findpat, "done");
 }
 
 static void findpat_free(void *_this) {

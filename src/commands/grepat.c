@@ -77,7 +77,6 @@ static void run(void *_this, char *inp, char **_out) {
     if (this->count != -1)
         fprintf(out->f, "%ld\n", this->count);
     fclose(out->f);
-    cmdlog(&grepat, "done");
 }
 
 static void grepat_free(void *_this) {

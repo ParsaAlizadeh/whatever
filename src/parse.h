@@ -7,7 +7,7 @@
 #define PIPE "|"
 #define PIPENCODE "\x1f"
 
-vector *scan_line(void);
+vector *scan_line(FILE *inp);
 void prettify(FILE *file, FILE *out);
 
 #endif

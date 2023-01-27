@@ -71,7 +71,6 @@ static void run(void *_this, char *inp, char **_out) {
     fclose(file1);
     fclose(file2);
     string_free(out);
-    cmdlog(&diff, "done");
 }
 
 const command diff = {

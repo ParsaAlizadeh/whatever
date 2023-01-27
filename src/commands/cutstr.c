@@ -30,7 +30,6 @@ static void run(void *_this, char *inp, char **out) {
     cutstr_t *this = _this;
     copystr.run(this->copyobj, inp, out);
     removestr.run(this->removeobj, inp, out);
-    cmdlog(&cutstr, "done");
 }
 
 static void cutstr_free(void *_this) {

@@ -55,7 +55,6 @@ static void run(void *_this, char *inp, char **out) {
     if (fu_removeat(this->path, pos, this->n) == -1)
         return (void)cmdlog(&removestr, "remove failed: %s",
             strerror(errno));
-    cmdlog(&removestr, "done");
 }
 
 const command removestr = {

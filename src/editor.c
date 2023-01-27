@@ -2,26 +2,22 @@
 
 #include <stdlib.h>
 #include <ctype.h>
+#include <unistd.h>
+#include <err.h>
 #include "context.h"
+#include "fileutil.h"
 
 EDITOR *ed = NULL;
 
-static void _editor_reset(EDITOR *ed) {
-    ed->off = (pos_t) { 0, 0 };
-    ed->acur = (pos_t) { 0, 0 };
-    ed->asel = (pos_t) { -1, 0 };
-    ed->modified = 0;
-}
-
-EDITOR *editor_new(WINDOW *frame) {
+void editor_new(WINDOW *frame) {
     int h, w;
     getmaxyx(frame, h, w);
     if (h < 4)
-        return NULL;
+        return;
     if (w < LINE_WIDTH + 2)
-        return NULL;
+        return;
 
-    EDITOR *ed = malloc(sizeof(EDITOR));
+    ed = malloc(sizeof(EDITOR));
 
     ed->frame = frame;
     wrefresh(frame);
@@ -30,10 +26,9 @@ EDITOR *editor_new(WINDOW *frame) {
     ed->iw = derwin(frame, 1, w, h-2, 0);
     ed->cw = derwin(frame, 1, w, h-1, 0);
 
-    _editor_reset(ed);
+    ed->acur = (pos_t) { 0, 0 };
     ed->vc = vc_new1();
-
-    return ed;
+    editor_reset();
 }
 
 void editor_free(void) {
@@ -47,7 +42,10 @@ void editor_free(void) {
 }
 
 void editor_reset() {
-    _editor_reset(ed);
+    ed->off = (pos_t) { 0, 0 };
+    ed->asel = (pos_t) { -1, 0 };
+    ed->modified = 0;
+    editor_adjustcur();
 }
 
 void editor_setvc(vecline *vc) {
@@ -192,6 +190,19 @@ void editor_mvcur(void) {
     wrefresh(ed->fw);
 }
 
+void editor_adjustcur(void) {
+    int nlines = vc_nlines(ed->vc);
+    if (ed->acur.line < 0)
+        ed->acur.line = 0;
+    if (ed->acur.line >= nlines)
+        ed->acur.line = nlines-1;
+    int ncols = vc_atline(ed->vc, ed->acur.line)->size;
+    if (ed->acur.col < 0)
+        ed->acur.col = 0;
+    if (ed->acur.col > ncols)
+        ed->acur.col = ncols;
+}
+
 int editor_minvisx(void) {
     return editor_dcurcol() - SCROLLXOFF + 1;
 }
@@ -276,6 +287,7 @@ void editor_printborder(void) {
 }
 
 void editor_printinfo(void) {
+    wclear(ed->iw);
     wmove(ed->iw, 0, 1);
     const char *edmode = ctx_get_edmode();
     if (edmode != NULL)
@@ -293,6 +305,7 @@ void editor_printinfo(void) {
 }
 
 void editor_refresh(void) {
+    editor_adjustcur();
     editor_fixoffset();
     editor_printfile();
     editor_printinfo();
@@ -300,6 +313,7 @@ void editor_refresh(void) {
     wrefresh(ed->fw);
     wrefresh(ed->lw);
     wrefresh(ed->iw);
+    wrefresh(ed->cw);
     wrefresh(ed->frame);
     editor_mvcur();
 }
@@ -319,12 +333,13 @@ int editor_saveas(const char *path) {
 }
 
 void editor_loadctx(void) {
-    const char *ctx = ctx_get();
-    if (ctx != NULL) {
-        vecline *vc = vc_newpath(ctx);
-        if (vc != NULL)
-            editor_setvc(vc);
-    }
+    vecline *vc = vc_newpath(ctx_get());
+    if (vc != NULL)
+        editor_setvc(vc);
+}
+
+void editor_clearbuffer(void) {
+    unlink(BUFFER_PATH);
 }
 
 void init_ncurses(void) {
@@ -338,7 +353,11 @@ void init_ncurses(void) {
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
     init_pair(2, COLOR_WHITE, COLOR_YELLOW);
 
-    ed = editor_new(stdscr);
+    editor_new(stdscr);
+    if (ed == NULL)
+        errx(EXIT_FAILURE, "editor_new");
+
+    editor_clearbuffer();
     editor_loadctx();
 }
 

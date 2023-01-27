@@ -36,7 +36,7 @@ int procedure_chain(int n, const command cmds[], vector *tokens) {
     }
     vector_free(chain);
     if (current != NULL) {
-        printf("%s", current);
+        // printf("%s", current);
         free(current);
     }
     return rc;

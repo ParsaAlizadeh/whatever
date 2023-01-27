@@ -41,7 +41,6 @@ static void run(void *_this, char *inp, char **out) {
         return (void)cmdlog(&creatfile, "failed to create file: %s",
             strerror(errno));
     fclose(file);
-    cmdlog(&creatfile, "done");
 }
 
 const command creatfile = {

@@ -41,7 +41,6 @@ static void run(void *_this, char *inp, char **out) {
     if (fu_finsertat(this->path, pos, clipboard_get()) == -1)
         return (void)cmdlog(&pastestr, "insert failed: %s",
             strerror(errno));
-    cmdlog(&pastestr, "done");
 }
 
 const command pastestr = {

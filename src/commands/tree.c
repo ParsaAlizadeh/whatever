@@ -116,7 +116,6 @@ static void run(void *_this, char *inp, char **_out) {
     string *out = string_using(_out);
     traverse(out->f, ".", ".", "", 0, this->level, 1, 1, this->all);
     string_free(out);
-    cmdlog(&tree, "done");
 }
 
 const command tree = {

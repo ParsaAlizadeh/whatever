@@ -34,7 +34,6 @@ static void run(void *_this, char *inp, char **_out) {
     prettify(file, out->f);
     string_free(out);
     fclose(file);
-    cmdlog(&pretty, "done");
 }
 
 const command pretty = {

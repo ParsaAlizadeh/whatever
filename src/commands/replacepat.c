@@ -85,7 +85,6 @@ static void run(void *_this, char *inp, char **out) {
     fclose(file);
     if (!replaced)
         cmdlog(&replacepat, "pattern not found, not touching the file");
-    cmdlog(&replacepat, "done");
 }
 
 static void replacepat_free(void *_this) {
