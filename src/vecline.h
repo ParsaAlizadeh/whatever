@@ -3,10 +3,7 @@
 
 #include <stdio.h>
 #include "vector.h"
-
-typedef struct {
-    int line, col;
-} pos_t;
+#include "position.h"
 
 typedef struct {
     char *content;
