@@ -42,6 +42,9 @@ void normal_mode(int n_cmds, const command all_cmds[]) {
         case ':':
             command_mode(n_cmds, all_cmds);
             break;
+        case KEY_F(1):
+            wclear(ed->cw);
+            break;
         default:
             loginfo("undefined key: %d", chr);
         }
