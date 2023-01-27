@@ -6,6 +6,13 @@
 
 EDITOR *ed = NULL;
 
+static void _editor_reset(EDITOR *ed) {
+    ed->off = (pos_t) { 0, 0 };
+    ed->acur = (pos_t) { 0, 0 };
+    ed->asel = (pos_t) { -1, 0 };
+    ed->modified = 0;
+}
+
 EDITOR *editor_new(WINDOW *frame) {
     int h, w;
     getmaxyx(frame, h, w);
@@ -15,8 +22,6 @@ EDITOR *editor_new(WINDOW *frame) {
         return NULL;
 
     EDITOR *ed = malloc(sizeof(EDITOR));
-    ed->off = (pos_t) { 0, 0 };
-    ed->acur = (pos_t) { 0, 0 };
 
     ed->frame = frame;
     wrefresh(frame);
@@ -25,9 +30,8 @@ EDITOR *editor_new(WINDOW *frame) {
     ed->iw = derwin(frame, 1, w, h-2, 0);
     ed->cw = derwin(frame, 1, w, h-1, 0);
 
+    _editor_reset(ed);
     ed->vc = vc_new1();
-
-    ed->modified = 0;
 
     return ed;
 }
@@ -42,12 +46,14 @@ void editor_free(void) {
     ed = NULL;
 }
 
+void editor_reset() {
+    _editor_reset(ed);
+}
+
 void editor_setvc(vecline *vc) {
     vc_free(ed->vc);
     ed->vc = vc;
-    ed->acur = (pos_t) { 0, 0 };
-    ed->off = (pos_t) { 0, 0 };
-    ed->modified = 0;
+    editor_reset();
 }
 
 int editor_dline(pos_t apos) {
@@ -102,6 +108,13 @@ int editor_acol(int aline, int dcol) {
     return line->size;
 }
 
+int editor_ishl(pos_t apos) {
+    if (pos_inrange(ed->asel, apos, ed->acur))
+        return 1;
+    /* some other checks */
+    return 0;
+}
+
 static int wvisible(WINDOW *win, pos_t dpos) {
     int h, w;
     getmaxyx(win, h, w);
@@ -117,9 +130,20 @@ void editor_printc(pos_t apos) {
     if (!wvisible(ed->fw, dpos))
         return;
     char chr = vc_at(ed->vc, apos);
-    if (isspace(chr))
-        return;
-    mvwaddch(ed->fw, dpos.line, dpos.col, chr);
+    int ishl = editor_ishl(apos);
+    wmove(ed->fw, dpos.line, dpos.col);
+    if (ishl)
+        wattron(ed->fw, COLOR_PAIR(2));
+    if (chr == '\t') {
+        for (int i = 0; i < TAB_STOP; i++)
+            waddch(ed->fw, ' ');
+    } else if (chr == '\0' || isspace(chr)) {
+        waddch(ed->fw, ' ');
+    } else {
+        waddch(ed->fw, chr);
+    }
+    if (ishl)
+        wattroff(ed->fw, COLOR_PAIR(2));
 }
 
 void editor_printline(int aline) {
@@ -129,7 +153,7 @@ void editor_printline(int aline) {
     mvwprintw(ed->lw, aline - ed->off.line, 0, LINE_FORMAT, aline+1);
     pos_t apos = { aline, 0 };
     int size = vc_atline(ed->vc, aline)->size;
-    for (; apos.col < size; apos.col++)
+    for (; apos.col <= size; apos.col++)
         editor_printc(apos);
 }
 
@@ -290,13 +314,11 @@ void editor_erase(void) {
     ed->modified = 1;
 }
 
-void init_ncurses(void) {
-    initscr();
-    refresh();
-    cbreak();
-    noecho();
-    keypad(stdscr, TRUE);
-    ed = editor_new(stdscr);
+int editor_saveas(const char *path) {
+    return vc_writepath(ed->vc, path);
+}
+
+void editor_loadctx(void) {
     const char *ctx = ctx_get();
     if (ctx != NULL) {
         vecline *vc = vc_newpath(ctx);
@@ -305,8 +327,19 @@ void init_ncurses(void) {
     }
 }
 
-int editor_saveas(const char *path) {
-    return vc_writepath(ed->vc, path);
+void init_ncurses(void) {
+    initscr();
+    refresh();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+
+    start_color();
+    init_pair(1, COLOR_WHITE, COLOR_BLACK);
+    init_pair(2, COLOR_WHITE, COLOR_YELLOW);
+
+    ed = editor_new(stdscr);
+    editor_loadctx();
 }
 
 void end_ncurses(void) {

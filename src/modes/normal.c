@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "movement.h"
 #include "insert.h"
+#include "visual.h"
 #include "../logging.h"
 #include "../editor.h"
 #include "../context.h"
@@ -16,7 +17,6 @@ void normal_mode(int n_cmds, const command all_cmds[]) {
     while (1) {
         ctx_set_edmode("NORMAL");
         editor_refresh();
-
         chr = getch();
 
         if (chr == 'q') {
@@ -34,6 +34,9 @@ void normal_mode(int n_cmds, const command all_cmds[]) {
         HOMEEND_MOVEMENT
         case 'a':
             insert_mode();
+            break;
+        case 'v':
+            visual_mode();
             break;
         default:
             loginfo("undefined key: %d", chr);

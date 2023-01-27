@@ -16,18 +16,22 @@ typedef struct {
     vecline *vc;
     pos_t off, acur;
     int modified;
+    pos_t asel;
 } EDITOR;
 
 extern EDITOR *ed;
 
 EDITOR *editor_new(WINDOW *frame);
 void editor_free(void);
+void editor_reset(void);
 void editor_setvc(vecline *vc);
 
 int editor_dline(pos_t apos);
 int editor_dcol(pos_t apos);
 pos_t editor_dpos(pos_t apos);
 int editor_acol(int aline, int dcol);
+
+int editor_ishl(pos_t apos);
 
 void editor_printc(pos_t apos);
 void editor_printline(int aline);
@@ -60,6 +64,7 @@ void editor_insert(char chr);
 void editor_erase(void);
 
 int editor_saveas(const char *path);
+void editor_loadctx(void);
 
 void init_ncurses(void);
 void end_ncurses(void);

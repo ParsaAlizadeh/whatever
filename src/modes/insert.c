@@ -13,7 +13,6 @@ void insert_mode(void) {
     while (1) {
         ctx_set_edmode("INSERT");
         editor_refresh();
-
         chr = getch();
 
         switch (chr) {
