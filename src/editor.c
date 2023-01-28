@@ -51,7 +51,6 @@ void editor_reset() {
 void editor_setvc(vecline *vc) {
     vc_free(ed->vc);
     ed->vc = vc;
-    editor_reset();
 }
 
 int editor_dline(pos_t apos) {

@@ -1,8 +1,6 @@
 #include "command.h"
 
 #include <stdlib.h>
-#include <sys/stat.h>
-#include <time.h>
 #include "cboxi.h"
 #include "../logging.h"
 #include "../editor.h"
@@ -23,20 +21,12 @@ static FILE *_read_command(void) {
     return cboxi_content();
 }
 
-static time_t _ctx_mtime(void) {
-    struct stat buf;
-    stat(ctx_get(), &buf);
-    return buf.st_mtime;
-}
-
 static void _run_command(int n_cmds, const command all_cmds[], vector *tokens) {
     ctx_set_buf_mode(1);
     ctx_save();
-    time_t before = _ctx_mtime();
     char *out = NULL;
     procedure_chain(n_cmds, all_cmds, tokens, &out);
-    time_t after = _ctx_mtime();
-    if (after > before && ctx_get_buf_mode()) {
+    if (ctx_get_buf_mode()) {
         ed->modified = 1;
         editor_loadctx();
     }
