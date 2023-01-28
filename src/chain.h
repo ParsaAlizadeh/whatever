@@ -3,6 +3,6 @@
 
 #include "command.h"
 
-int procedure_chain(int, const command [], vector *, char **);
+int procedure_chain(vector *, char **);
 
 #endif

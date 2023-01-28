@@ -10,9 +10,7 @@
 #include "../context.h"
 #include "../parse.h"
 
-void normal_mode(int n_cmds, const command all_cmds[]) {
-    (void) n_cmds;
-    (void) all_cmds;
+void normal_mode(void) {
     init_ncurses();
     int quits = 0;
     int chr;
@@ -41,14 +39,16 @@ void normal_mode(int n_cmds, const command all_cmds[]) {
             visual_mode();
             break;
         case ':':
-            command_mode(n_cmds, all_cmds);
+            command_mode();
             break;
         case KEY_F(1):
             wclear(ed->cw);
             break;
         case '=':
             loginfo("=");
-            editor_run_command(n_cmds, all_cmds, scan_strline("pretty"));
+            vector *tokens = scan_strline("pretty");
+            editor_run_command(tokens);
+            vector_freeall(tokens);
             break;
         default:
             loginfo("undefined key: %d", chr);

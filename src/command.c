@@ -7,18 +7,20 @@
 #include "context.h"
 #include "logging.h"
 
-const command *lookup_command(int n, const command cmds[], char *name) {
+const command *lookup_command(char *name) {
+    int n = ctx_get_ncmds();
+    const command *cmds = ctx_get_allcmds();
     for (int i = 0; i < n; i++)
         if (strcmp(cmds[i].name, name) == 0)
             return &cmds[i];
     return NULL;
 }
 
-command_obj make_command(int n, const command cmds[], vector *tokens) {
+command_obj make_command(vector *tokens) {
     command_obj result = {0};
     if (tokens->size == 0)
         return result;
-    result.cmd = lookup_command(n, cmds, (char *)tokens->seq[0]);
+    result.cmd = lookup_command((char *)tokens->seq[0]);
     if (result.cmd == NULL)
         return result;
     result.obj = result.cmd->make();
@@ -80,12 +82,12 @@ void run_command(command_obj self, char *inp, char **out) {
     self.cmd->run(self.obj, inp, out);
 }
 
-int procedure_command(int n, const command cmds[], vector *tokens, char *inp, char **out) {
+int procedure_command(vector *tokens, char *inp, char **out) {
     if (tokens == NULL || tokens->size == 0) {
         loginfo("procedure: tokens should be non empty");
         return CMD_FAILURE;
     }
-    command_obj cobj = make_command(n, cmds, tokens);
+    command_obj cobj = make_command(tokens);
     if (cobj.cmd == NULL) {
         loginfo("procedure: invalid command \"%s\"", (char *)tokens->seq[0]);
         return CMD_FAILURE;

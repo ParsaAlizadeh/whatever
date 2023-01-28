@@ -59,3 +59,19 @@ const char *ctx_get_edmode(void) {
 void ctx_set_edmode(const char *edmode) {
     ctx_edmode = edmode;
 }
+
+static int ctx_ncmds = 0;
+static const command *ctx_allcmds = NULL;
+
+void ctx_set_cmds(int n_cmds, const command *all_cmds) {
+    ctx_ncmds = n_cmds;
+    ctx_allcmds = all_cmds;
+}
+
+int ctx_get_ncmds(void) {
+    return ctx_ncmds;
+}
+
+const command *ctx_get_allcmds(void) {
+    return ctx_allcmds;
+}

@@ -3,6 +3,6 @@
 
 #include "../command.h"
 
-void legacy_mode(int n_cmds, const command all_cmds[]);
+void legacy_mode(void);
 
 #endif

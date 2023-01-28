@@ -21,7 +21,7 @@ static FILE *_read_command(void) {
     return cboxi_content();
 }
 
-void command_mode(int n_cmds, const command all_cmds[]) {
+void command_mode(void) {
     cboxi_init(':');
     FILE *inp = _read_command();
     if (inp == NULL) {
@@ -32,7 +32,7 @@ void command_mode(int n_cmds, const command all_cmds[]) {
     vector *tokens = scan_line(inp);
     fclose(inp);
     if (tokens->size > 0)
-        editor_run_command(n_cmds, all_cmds, tokens);
+        editor_run_command(tokens);
     else
         wclear(ed->cw);
     vector_freeall(tokens);

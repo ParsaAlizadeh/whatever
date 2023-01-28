@@ -5,7 +5,7 @@
 #include <string.h>
 #include "parse.h"
 
-int procedure_chain(int n, const command cmds[], vector *tokens, char **out) {
+int procedure_chain(vector *tokens, char **out) {
     vector *chain = vector_new();
     vector *cur = vector_new();
     for (int i = 0; i < tokens->size; i++) {
@@ -22,7 +22,7 @@ int procedure_chain(int n, const command cmds[], vector *tokens, char **out) {
     int rc = CMD_SUCCESS;
     for (int i = 0; i < chain->size; i++) {
         vector *local_tokens = chain->seq[i];
-        int rc = procedure_command(n, cmds, local_tokens, current, &nxt);
+        int rc = procedure_command(local_tokens, current, &nxt);
         if (current != NULL)
             free(current);
         current = nxt;

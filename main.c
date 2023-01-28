@@ -42,7 +42,8 @@ int main(int argc, char *argv[]) {
         savefile
     };
     int n_cmds = sizeof(all_cmds) / sizeof(command);
-    normal_mode(n_cmds, all_cmds);
+    ctx_set_cmds(n_cmds, all_cmds);
+    normal_mode();
     ctx_clear();
     return EXIT_SUCCESS;
 }

@@ -25,8 +25,8 @@ typedef struct {
     const command *cmd;
 } command_obj;
 
-const command *lookup_command(int, const command [], char *);
-command_obj make_command(int, const command [], vector *);
+const command *lookup_command(char *);
+command_obj make_command(vector *);
 int feed_options(command_obj, vector *);
 void run_command(command_obj, char *inp, char **out);
 
@@ -34,6 +34,6 @@ void run_command(command_obj, char *inp, char **out);
  * given an array of all commands and a vector of tokens,
  * runs the command and return an cmd_error (0 on success)
  */
-int procedure_command(int, const command [], vector *, char *inp, char **out);
+int procedure_command(vector *tokens, char *inp, char **out);
 
 #endif

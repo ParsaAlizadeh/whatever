@@ -6,6 +6,8 @@
 #include <err.h>
 #include "context.h"
 #include "fileutil.h"
+#include "chain.h"
+#include "parse.h"
 
 EDITOR *ed = NULL;
 
@@ -361,10 +363,10 @@ void editor_run_command_end(char *out) {
     }
 }
 
-void editor_run_command(int n_cmds, const command all_cmds[], vector *tokens) {
+void editor_run_command(vector *tokens) {
     editor_run_command_init();
     char *out = NULL;
-    procedure_chain(n_cmds, all_cmds, tokens, &out);
+    procedure_chain(tokens, &out);
     editor_run_command_end(out);
 }
 
