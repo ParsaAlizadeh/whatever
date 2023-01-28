@@ -1,5 +1,6 @@
 #include "editor.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
@@ -8,6 +9,7 @@
 #include "fileutil.h"
 #include "chain.h"
 #include "parse.h"
+#include "vecstr.h"
 
 EDITOR *ed = NULL;
 
@@ -368,6 +370,19 @@ void editor_run_command(vector *tokens) {
     char *out = NULL;
     procedure_chain(tokens, &out);
     editor_run_command_end(out);
+}
+
+void editor_run_commandf(const char *format, ...) {
+    string *cmd = string_new();
+    va_list args;
+    va_start(args, format);
+    vfprintf(cmd->f, format, args);
+    va_end(args);
+    char *strcmd = string_free(cmd);
+    vector *tokens = scan_strline(strcmd);
+    editor_run_command(tokens);
+    vector_freeall(tokens);
+    free(strcmd);
 }
 
 void init_ncurses(void) {

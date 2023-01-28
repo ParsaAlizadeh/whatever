@@ -46,9 +46,7 @@ void normal_mode(void) {
             break;
         case '=':
             loginfo("=");
-            vector *tokens = scan_strline("pretty");
-            editor_run_command(tokens);
-            vector_freeall(tokens);
+            editor_run_commandf("pretty");
             break;
         default:
             loginfo("undefined key: %d", chr);

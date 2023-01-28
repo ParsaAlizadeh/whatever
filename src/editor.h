@@ -71,6 +71,7 @@ void editor_clearbuffer(void);
 void editor_run_command_init(void);
 void editor_run_command_end(char *out);
 void editor_run_command(vector *tokens);
+void editor_run_commandf(const char *format, ...);
 
 void init_ncurses(void);
 void end_ncurses(void);
