@@ -342,6 +342,32 @@ void editor_clearbuffer(void) {
     unlink(BUFFER_PATH);
 }
 
+void editor_run_command_init(void) {
+    ctx_set_buf_mode(1);
+    ctx_save();
+}
+
+void editor_run_command_end(char *out) {
+    if (ctx_get_buf_mode()) {
+        ed->modified = 1;
+        editor_loadctx();
+    }
+    ctx_set_buf_mode(0);
+    if (out != NULL) {
+        ctx_set(NULL);
+        editor_setvc(vc_newstr(out));
+        editor_reset();
+        free(out);
+    }
+}
+
+void editor_run_command(int n_cmds, const command all_cmds[], vector *tokens) {
+    editor_run_command_init();
+    char *out = NULL;
+    procedure_chain(n_cmds, all_cmds, tokens, &out);
+    editor_run_command_end(out);
+}
+
 void init_ncurses(void) {
     initscr();
     refresh();

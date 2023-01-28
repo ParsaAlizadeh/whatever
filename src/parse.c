@@ -71,6 +71,13 @@ vector *scan_line(FILE *inp) {
     return tokens;
 }
 
+vector *scan_strline(const char *inp) {
+    FILE *finp = fmemopen((char *)inp, strlen(inp), "r");
+    vector *tokens = scan_line(finp);
+    fclose(finp);
+    return tokens;
+}
+
 static void multifputs(FILE *file, int n, const char *str) {
     while (n--)
         fputs(str, file);

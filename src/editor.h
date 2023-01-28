@@ -2,6 +2,7 @@
 #define EDITOR_H
 
 #include <ncurses.h>
+#include "command.h"
 #include "vecline.h"
 
 #define TAB_STOP        4
@@ -67,6 +68,10 @@ void editor_erase(void);
 int editor_saveas(const char *path);
 int editor_loadctx(void);
 void editor_clearbuffer(void);
+
+void editor_run_command_init(void);
+void editor_run_command_end(char *out);
+void editor_run_command(int n_cmds, const command all_cmds[], vector *tokens);
 
 void init_ncurses(void);
 void end_ncurses(void);

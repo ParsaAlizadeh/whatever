@@ -8,6 +8,7 @@
 #include "../logging.h"
 #include "../editor.h"
 #include "../context.h"
+#include "../parse.h"
 
 void normal_mode(int n_cmds, const command all_cmds[]) {
     (void) n_cmds;
@@ -44,6 +45,10 @@ void normal_mode(int n_cmds, const command all_cmds[]) {
             break;
         case KEY_F(1):
             wclear(ed->cw);
+            break;
+        case '=':
+            loginfo("=");
+            editor_run_command(n_cmds, all_cmds, scan_strline("pretty"));
             break;
         default:
             loginfo("undefined key: %d", chr);
