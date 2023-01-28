@@ -8,7 +8,6 @@
 #include "../logging.h"
 #include "../editor.h"
 #include "../context.h"
-#include "../parse.h"
 
 void normal_mode(void) {
     init_ncurses();

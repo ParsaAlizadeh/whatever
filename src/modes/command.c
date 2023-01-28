@@ -7,7 +7,6 @@
 #include "../context.h"
 #include "../fileutil.h"
 #include "../parse.h"
-#include "../chain.h"
 
 static FILE *_read_command(void) {
     while (1) {
