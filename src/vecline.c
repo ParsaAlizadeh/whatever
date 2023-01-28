@@ -93,7 +93,7 @@ vecline *vc_newpath(const char *path) {
 }
 
 vecline *vc_newstr(const char *str) {
-    FILE *file = fmemopen(str, strlen(str), "r");
+    FILE *file = fmemopen((char *)str, strlen(str), "r");
     vecline *this = vc_newfile(file);
     fclose(file);
     return this;

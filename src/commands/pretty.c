@@ -21,19 +21,15 @@ static int set_opt(void *_this, int c, char *argv) {
     return CMD_SUCCESS;
 }
 
-static void run(void *_this, char *inp, char **_out) {
+static void run(void *_this, char *inp, char **out) {
     (void)inp;
+    (void)out;
     pretty_t *this = _this;
     if (this->path == NULL)
         return (void)cmdlogrequired(&pretty, 'f');
-    FILE *file = fu_open(this->path, "r");
-    if (file == NULL)
-        return (void)cmdlog(&pretty, "failed to open file: %s",
+    if (fu_pretty(this->path) == -1)
+        return (void)cmdlog(&pretty, "pretty failed: %s",
             strerror(errno));
-    string *out = string_using(_out);
-    prettify(file, out->f);
-    string_free(out);
-    fclose(file);
 }
 
 const command pretty = {

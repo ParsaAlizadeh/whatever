@@ -18,7 +18,7 @@ const char *ctx_get(void) {
 void ctx_set(const char *path) {
     if (ctx_file != NULL) {
         ctx_save();
-        free(ctx_file);
+        free((void *)ctx_file);
     }
     if (path != NULL)
         path = strdup(path);

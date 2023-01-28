@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include "vecstr.h"
 #include "context.h"
+#include "parse.h"
 
 int mkdir_p(const char *_path) {
     if (_path == NULL  || *_path == '\0')
@@ -163,26 +164,37 @@ int fu_restore(const char *path) {
     return -1;
 }
 
-int fu_fmodifyat(const char *path, long pos, long n, FILE *from, FILE *to) {
-    FILE *file;
-    if ((file = fu_open(path, "r")) == NULL)
+int fu_fileop_init(const char *path, FILE **file, FILE **tmp) {
+    if ((*file = fu_open(path, "r")) == NULL)
         return -1;
-    FILE *tmp = fu_tmpfile();
+    *tmp = fu_tmpfile();
+    return 0;
+}
+
+int fu_fileop_end(const char *path, FILE **file, FILE **tmp) {
+    fclose(*file);
+    if ((*file = fu_open(path, "w")) == NULL) {
+        fclose(*tmp);
+        return -1;
+    }
+    rewind(*tmp);
+    fu_copy(*tmp, *file);
+    fclose(*file);
+    fclose(*tmp);
+    return 0;
+}
+
+int fu_fmodifyat(const char *path, long pos, long n, FILE *from, FILE *to) {
+    FILE *file, *tmp;
+    if (fu_fileop_init(path, &file, &tmp) != 0)
+        return -1;
     fu_copyn(file, tmp, pos);
     fu_copyn(file, to, n);
     if (from != NULL)
         fu_copy(from, tmp);
     fu_copy(file, tmp);
-    fflush(tmp);
-    fclose(file);
-    if ((file = fu_open(path, "w")) == NULL) {
-        fclose(tmp);
+    if (fu_fileop_end(path, &file, &tmp) != 0)
         return -1;
-    }
-    rewind(tmp);
-    fu_copy(tmp, file);
-    fclose(file);
-    fclose(tmp);
     return 0;
 }
 
@@ -199,6 +211,16 @@ int fu_insertat(const char *path, long pos, const char *str) {
 
 int fu_removeat(const char *path, long pos, long n) {
     return fu_fmodifyat(path, pos, n, NULL, NULL);
+}
+
+int fu_pretty(const char *path) {
+    FILE *file, *tmp;
+    if (fu_fileop_init(path, &file, &tmp) != 0)
+        return -1;
+    prettify(file, tmp);
+    if (fu_fileop_end(path, &file, &tmp) != 0)
+        return -1;
+    return 0;
 }
 
 long fu_whereat(FILE *file, long line, long col) {
