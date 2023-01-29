@@ -47,6 +47,10 @@ void normal_mode(void) {
             loginfo("=");
             editor_runf("pretty");
             break;
+        case 'u':
+            loginfo("u");
+            editor_runf("undo");
+            break;
         default:
             loginfo("undefined key: %d", chr);
         }
