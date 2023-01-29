@@ -94,3 +94,7 @@ const char *cboxi_content(void) {
 FILE *cboxi_fcontent(void) {
     return fmemopen(line->content, line->size, "r");
 }
+
+int cboxi_size(void) {
+    return line->size;
+}

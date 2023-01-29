@@ -149,6 +149,21 @@ int editor_ishl(pos_t apos) {
     return 0;
 }
 
+int editor_hl_next(void) {
+    if (ed->hls == NULL || ed->hls->size == 0)
+        return -1;
+    for (int i = 0; i < ed->hls->size; i++) {
+        highlight_t *hl = ed->hls->seq[i];
+        if (pos_less(ed->acur, hl->afrom)) {
+            ed->acur = hl->afrom;
+            return 0;
+        }
+    }
+    highlight_t *first = ed->hls->seq[0];
+    ed->acur = first->afrom;
+    return 0;
+}
+
 static int wvisible(WINDOW *win, pos_t dpos) {
     int h, w;
     getmaxyx(win, h, w);

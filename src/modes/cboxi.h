@@ -14,5 +14,6 @@ void cboxi_end(void);
 cboxi_rc_t cboxi_refresh(void);
 const char *cboxi_content(void);
 FILE *cboxi_fcontent(void);
+int cboxi_size(void);
 
 #endif

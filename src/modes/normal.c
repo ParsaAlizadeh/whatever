@@ -59,6 +59,11 @@ void normal_mode(void) {
             loginfo("p");
             editor_runf("paste -p %d:%d", ed->acur.line+1, ed->acur.col);
             break;
+        case 'n':
+            loginfo("n");
+            if (editor_hl_next() == -1)
+                loginfo("not any highlights available");
+            break;
         default:
             loginfo("undefined key: %d", chr);
         }
