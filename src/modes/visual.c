@@ -24,6 +24,7 @@ static void _run_command(const char *cmd, int isdelete) {
 }
 
 void visual_mode(void) {
+    editor_hl_reset();
     ed->asel = ed->acur;
     int running = 1;
     int chr;

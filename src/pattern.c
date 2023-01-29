@@ -42,6 +42,8 @@ static vector *build_nodes(const char *str, int size) {
 
 pattern *pattern_new(const char *pat) {
     int size = strlen(pat);
+    if (size == 0)
+        return NULL;
     pattern *this = malloc(sizeof(pattern));
     this->nodes = build_nodes(pat, size);
     this->visited = 0;

@@ -87,6 +87,10 @@ cboxi_rc_t cboxi_refresh(void) {
     return CBOXI_CONTINUE;
 }
 
-FILE *cboxi_content(void) {
+const char *cboxi_content(void) {
+    return line->content;
+}
+
+FILE *cboxi_fcontent(void) {
     return fmemopen(line->content, line->size, "r");
 }

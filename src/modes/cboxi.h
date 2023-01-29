@@ -12,6 +12,7 @@ typedef enum {
 void cboxi_init(char c);
 void cboxi_end(void);
 cboxi_rc_t cboxi_refresh(void);
-FILE *cboxi_content(void);
+const char *cboxi_content(void);
+FILE *cboxi_fcontent(void);
 
 #endif

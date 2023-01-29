@@ -17,7 +17,7 @@ static FILE *_read_command(void) {
         if (rc == CBOXI_DONE)
             break;
     }
-    return cboxi_content();
+    return cboxi_fcontent();
 }
 
 void command_mode(void) {

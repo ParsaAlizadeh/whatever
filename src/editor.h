@@ -17,6 +17,7 @@ typedef struct {
     pos_t off, acur;
     int modified;
     pos_t asel;
+    vector *hls;
 } EDITOR;
 
 extern EDITOR *ed;
@@ -31,6 +32,10 @@ int editor_dcol(pos_t apos);
 pos_t editor_dpos(pos_t apos);
 int editor_acol(int aline, int dcol);
 
+void editor_hl_reset(void);
+void editor_hl_push(highlight_t *hl);
+void editor_hl_adda(pos_t afrom, pos_t ato);
+void editor_hl_addt(int tfrom, int n);
 int editor_ishl(pos_t apos);
 
 void editor_printc(pos_t apos);

@@ -23,3 +23,14 @@ int pos_inrange(pos_t afrom, pos_t apos, pos_t ato) {
         return 1;
     return pos_lesseq(ato, apos) && pos_less(apos, afrom);
 }
+
+highlight_t *hl_new(pos_t afrom, pos_t ato) {
+    highlight_t *this = malloc(sizeof(highlight_t));
+    this->afrom = afrom;
+    this->ato = ato;
+    return this;
+}
+
+int hl_inrange(highlight_t *this, pos_t apos) {
+    return pos_inrange(this->afrom, apos, this->ato);
+}

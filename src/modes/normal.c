@@ -5,6 +5,7 @@
 #include "insert.h"
 #include "visual.h"
 #include "command.h"
+#include "search.h"
 #include "../logging.h"
 #include "../editor.h"
 #include "../context.h"
@@ -39,6 +40,9 @@ void normal_mode(void) {
             break;
         case ':':
             command_mode();
+            break;
+        case '/':
+            search_mode();
             break;
         case KEY_F(1):
             wclear(ed->cw);

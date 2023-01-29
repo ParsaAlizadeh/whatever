@@ -33,10 +33,14 @@ void editor_new(WINDOW *frame) {
     ed->off = (pos_t) { 0, 0 };
     ed->acur = (pos_t) { 0, 0 };
     ed->vc = vc_new1();
+
+    ed->hls = NULL;
+
     editor_reset();
 }
 
 void editor_free(void) {
+    editor_hl_reset();
     delwin(ed->lw);
     delwin(ed->fw);
     delwin(ed->iw);
@@ -50,6 +54,7 @@ void editor_reset() {
     ed->asel = (pos_t) { -1, 0 };
     ed->modified = 0;
     editor_mvcur();
+    editor_hl_reset();
 }
 
 void editor_setvc(vecline *vc) {
@@ -109,10 +114,38 @@ int editor_acol(int aline, int dcol) {
     return line->size;
 }
 
+void editor_hl_reset(void) {
+    if (ed->hls != NULL)
+        vector_freeall(ed->hls);
+    ed->hls = NULL;
+}
+
+void editor_hl_push(highlight_t *hl) {
+    if (ed->hls == NULL)
+        ed->hls = vector_new();
+    vector_push(ed->hls, hl);
+}
+
+void editor_hl_adda(pos_t afrom, pos_t ato) {
+    editor_hl_push(hl_new(afrom, ato));
+}
+
+void editor_hl_addt(int tfrom, int n) {
+    pos_t afrom = vc_fromtpos(ed->vc, tfrom);
+    pos_t ato = vc_fromtpos(ed->vc, tfrom + n);
+    editor_hl_adda(afrom, ato);
+}
+
 int editor_ishl(pos_t apos) {
     if (pos_inrange(ed->asel, apos, ed->acur))
         return 1;
-    /* some other checks */
+    if (ed->hls == NULL)
+        return 0;
+    for (int i = 0; i < ed->hls->size; i++) {
+        highlight_t *hl = ed->hls->seq[i];
+        if (hl_inrange(hl, apos))
+            return 1;
+    }
     return 0;
 }
 
@@ -335,11 +368,13 @@ void editor_refresh(void) {
 }
 
 void editor_insert(char chr) {
+    editor_hl_reset();
     ed->acur = vc_insert(ed->vc, ed->acur, chr);
     ed->modified = 1;
 }
 
 void editor_erase(void) {
+    editor_hl_reset();
     ed->acur = vc_erase(ed->vc, ed->acur);
     ed->modified = 1;
 }
@@ -361,12 +396,14 @@ void editor_clearbuffer(void) {
 }
 
 void editor_run_init(void) {
+    editor_hl_reset();
     ctx_set_buf_mode(1);
     ctx_save();
 }
 
 void editor_run_end(char *out) {
     if (ctx_get_buf_mode()) {
+        editor_hl_reset();
         ed->modified = 1;
         editor_loadctx();
     }
