@@ -30,7 +30,7 @@ static void run(void *_this, char *inp, char **out) {
     ctx_set_buf_mode(0);
     ctx_set(this->path);
     if (editor_loadctx() == -1) {
-        cmdlog(&openfile, "failed to open file: %s",
+        cmdlog(&openfile, "failed to open file, will open an empty file: %s",
             strerror(errno));
         editor_setvc(vc_new1());
         editor_reset();
