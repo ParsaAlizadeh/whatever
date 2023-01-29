@@ -37,6 +37,9 @@ line_t *vc_atline(vecline *this, int row);
 void vc_free(vecline *this);
 int vc_at(vecline *this, pos_t apos);
 
+pos_t vc_fromtpos(vecline *this, int tpos);
+int vc_totpos(vecline *this, pos_t apos);
+
 pos_t vc_insert(vecline *this, pos_t apos, char chr);
 pos_t vc_erase(vecline *this, pos_t apos);
 

@@ -63,6 +63,8 @@ static void run(void *_this, char *inp, char **out) {
             this->at--;
         if (this->at > 0)
             continue;
+        if (!replaced && strcmp(this->path, BUFFER_PATH) == 0)
+            editor_tcur(ss.offset);
         if (!replaced && fu_backup(this->path) == -1)
             cmdlog(&replacepat, "backup failed, ignoring: %s",
                 strerror(errno));

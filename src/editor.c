@@ -184,6 +184,13 @@ pos_t editor_dcur(void) {
     };
 }
 
+int editor_tcur(int tcur) {
+    int prv = vc_totpos(ed->vc, ed->acur);
+    if (tcur >= 0)
+        ed->acur = vc_fromtpos(ed->vc, tcur);
+    return prv;
+}
+
 void editor_mvcur(void) {
     editor_adjustcur();
     pos_t dcur = editor_dcur();

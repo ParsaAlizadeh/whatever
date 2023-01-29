@@ -143,6 +143,24 @@ int vc_at(vecline *this, pos_t apos) {
     return line->content[apos.col];
 }
 
+pos_t vc_fromtpos(vecline *this, int tpos) {
+    int total = 0;
+    for (int row = 0; row < vc_nlines(this); row++) {
+        line_t *line = vc_atline(this, row);
+        if (tpos < total + line->size + 1)
+            return (pos_t) { row, tpos - total };
+        total += line->size + 1;
+    }
+    return (pos_t) { -1, 0 };
+}
+
+int vc_totpos(vecline *this, pos_t apos) {
+    int total = 0;
+    for (int row = 0; row < apos.line; row++)
+        total += vc_atline(this, row)->size + 1;
+    return total + apos.col;
+}
+
 pos_t vc_insert(vecline *this, pos_t apos, char chr) {
     line_t *line = vc_atline(this, apos.line);
     if (line == NULL)
