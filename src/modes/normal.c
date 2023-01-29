@@ -51,6 +51,10 @@ void normal_mode(void) {
             loginfo("u");
             editor_runf("undo");
             break;
+        case 'p':
+            loginfo("p");
+            editor_runf("paste -p %d:%d", ed->acur.line+1, ed->acur.col);
+            break;
         default:
             loginfo("undefined key: %d", chr);
         }
