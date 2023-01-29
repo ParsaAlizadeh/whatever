@@ -41,7 +41,7 @@ line_t *editor_curline(void);
 int editor_dcurline(void);
 int editor_dcurcol(void);
 pos_t editor_dcur(void);
-int editor_tcur(int tcur);
+void editor_set_tcur(int tcur);
 void editor_mvcur(void);
 void editor_adjustcur(void);
 
