@@ -17,7 +17,7 @@ void insert_mode(void) {
 
         switch (chr) {
         ARROW_MOVEMENT
-        HOMEEND_MOVEMENT
+        MISC_MOVEMENT
         case KEY_BACKSPACE:
             editor_erase();
             break;

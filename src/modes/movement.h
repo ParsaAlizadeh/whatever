@@ -1,29 +1,37 @@
 #define CASE_MOVEMENT(l, d, u, r) \
     case l: \
         loginfo("left"); \
-        editor_left(); \
+        editor_toleft(); \
         break; \
     case d: \
         loginfo("down"); \
-        editor_down(); \
+        editor_todown(); \
         break; \
     case u: \
         loginfo("up"); \
-        editor_up(); \
+        editor_toup(); \
         break; \
     case r: \
         loginfo("right"); \
-        editor_right(); \
+        editor_toright(); \
         break; \
 
-#define HOMEEND_MOVEMENT \
+#define MISC_MOVEMENT \
     case KEY_HOME: \
         loginfo("home"); \
-        editor_home(); \
+        editor_tohome(); \
         break; \
     case KEY_END: \
         loginfo("end"); \
-        editor_end(); \
+        editor_toend(); \
+        break; \
+    case KEY_SHOME: \
+        loginfo("start"); \
+        editor_tostart(); \
+        break; \
+    case KEY_SEND: \
+        loginfo("finish"); \
+        editor_tofinish(); \
         break;
 
 #define ARROW_MOVEMENT  CASE_MOVEMENT(KEY_LEFT, KEY_DOWN, KEY_UP, KEY_RIGHT)

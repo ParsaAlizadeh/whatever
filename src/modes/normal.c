@@ -30,7 +30,7 @@ void normal_mode(void) {
         switch (chr) {
         ARROW_MOVEMENT
         VIM_MOVEMENT
-        HOMEEND_MOVEMENT
+        MISC_MOVEMENT
         case 'a':
             insert_mode();
             break;

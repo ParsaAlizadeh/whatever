@@ -18,7 +18,7 @@ void visual_mode(void) {
         switch (chr) {
         ARROW_MOVEMENT
         VIM_MOVEMENT
-        HOMEEND_MOVEMENT
+        MISC_MOVEMENT
         case KEY_F(1):
             running = 0;
             break;

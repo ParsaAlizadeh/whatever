@@ -7,8 +7,8 @@
 #define TAB_STOP        4
 #define SCROLLYOFF      3
 #define SCROLLXOFF      TAB_STOP
-#define LINE_WIDTH      4
-#define LINE_FORMAT     "%-4d"
+#define LINE_WIDTH      5
+#define LINE_FORMAT     "%-5d"
 
 typedef struct {
     WINDOW *frame;
@@ -50,12 +50,14 @@ int editor_minvisy(void);
 int editor_maxvisy(void);
 void editor_fixoffset(void);
 
-void editor_left(void);
-void editor_right(void);
-void editor_up(void);
-void editor_down(void);
-void editor_home(void);
-void editor_end(void);
+void editor_toleft(void);
+void editor_toright(void);
+void editor_toup(void);
+void editor_todown(void);
+void editor_tohome(void);
+void editor_toend(void);
+void editor_tostart(void);
+void editor_tofinish(void);
 
 void editor_printborder(void);
 void editor_printinfo(void);
