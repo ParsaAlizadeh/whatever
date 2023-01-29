@@ -38,6 +38,7 @@ void visual_mode(void) {
         VIM_MOVEMENT
         MISC_MOVEMENT
         case KEY_F(1):
+        case 'v':
             running = 0;
             break;
         case 'd':

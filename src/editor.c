@@ -174,15 +174,26 @@ static int wvisible(WINDOW *win, pos_t dpos) {
     return 1;
 }
 
+static int editor_colorof(pos_t apos, char chr) {
+    if (editor_ishl(apos))
+        return COLOR_HL;
+    if (chr == '(' || chr == ')')
+        return COLOR_PAREN;
+    if (chr == '[' || chr == ']')
+        return COLOR_BRACKET;
+    if (chr == '{' || chr == '}')
+        return COLOR_CURLY;
+    return COLOR_TXT;
+}
+
 void editor_printc(pos_t apos) {
     pos_t dpos = editor_dpos(apos);
     if (!wvisible(ed->fw, dpos))
         return;
     char chr = vc_at(ed->vc, apos);
-    int ishl = editor_ishl(apos);
+    int color = editor_colorof(apos, chr);
     wmove(ed->fw, dpos.line, dpos.col);
-    if (ishl)
-        wattron(ed->fw, COLOR_PAIR(2));
+    wattron(ed->fw, COLOR_PAIR(color));
     if (chr == '\t') {
         for (int i = 0; i < TAB_STOP; i++)
             waddch(ed->fw, ' ');
@@ -191,8 +202,7 @@ void editor_printc(pos_t apos) {
     } else {
         waddch(ed->fw, chr);
     }
-    if (ishl)
-        wattroff(ed->fw, COLOR_PAIR(2));
+    wattroff(ed->fw, COLOR_PAIR(color));
 }
 
 void editor_printline(int aline) {
@@ -459,8 +469,11 @@ void init_ncurses(void) {
     keypad(stdscr, TRUE);
 
     start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    init_pair(2, COLOR_WHITE, COLOR_YELLOW);
+    init_pair(COLOR_TXT, COLOR_TXT_P);
+    init_pair(COLOR_HL, COLOR_HL_P);
+    init_pair(COLOR_PAREN, COLOR_PAREN_P);
+    init_pair(COLOR_BRACKET, COLOR_BRACKET_P);
+    init_pair(COLOR_CURLY, COLOR_CURLY_P);
 
     editor_new(stdscr);
     if (ed == NULL)
