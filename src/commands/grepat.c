@@ -26,7 +26,8 @@ static int set_opt(void *_this, int c, char *argv) {
     SINGLE_OPTION_CONSTANT('c', count, -1, 0)
     SINGLE_OPTION_CONSTANT('a', all, 0, 1)
     case 'f':
-        vector_push(this->files, argv);
+        if (strcmp(argv, BUFFER_PATH) != 0)
+            vector_push(this->files, argv);
         break;
     default:
         return CMD_UNEXPECTED;
@@ -76,7 +77,7 @@ static void run(void *_this, char *inp, char **_out) {
     }
     if (this->count != -1)
         fprintf(out->f, "%ld\n", this->count);
-    fclose(out->f);
+    string_free(out);
 }
 
 static void grepat_free(void *_this) {
