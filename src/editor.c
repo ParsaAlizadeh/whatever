@@ -346,12 +346,12 @@ void editor_clearbuffer(void) {
     unlink(BUFFER_PATH);
 }
 
-void editor_run_command_init(void) {
+void editor_run_init(void) {
     ctx_set_buf_mode(1);
     ctx_save();
 }
 
-void editor_run_command_end(char *out) {
+void editor_run_end(char *out) {
     if (ctx_get_buf_mode()) {
         ed->modified = 1;
         editor_loadctx();
@@ -365,14 +365,14 @@ void editor_run_command_end(char *out) {
     }
 }
 
-void editor_run_command(vector *tokens) {
-    editor_run_command_init();
+void editor_run(vector *tokens) {
+    editor_run_init();
     char *out = NULL;
     procedure_chain(tokens, &out);
-    editor_run_command_end(out);
+    editor_run_end(out);
 }
 
-void editor_run_commandf(const char *format, ...) {
+void editor_runf(const char *format, ...) {
     string *cmd = string_new();
     va_list args;
     va_start(args, format);
@@ -380,7 +380,7 @@ void editor_run_commandf(const char *format, ...) {
     va_end(args);
     char *strcmd = string_free(cmd);
     vector *tokens = scan_strline(strcmd);
-    editor_run_command(tokens);
+    editor_run(tokens);
     vector_freeall(tokens);
     free(strcmd);
 }

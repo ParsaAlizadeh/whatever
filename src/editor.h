@@ -68,10 +68,10 @@ int editor_saveas(const char *path);
 int editor_loadctx(void);
 void editor_clearbuffer(void);
 
-void editor_run_command_init(void);
-void editor_run_command_end(char *out);
-void editor_run_command(vector *tokens);
-void editor_run_commandf(const char *format, ...);
+void editor_run_init(void);
+void editor_run_end(char *out);
+void editor_run(vector *tokens);
+void editor_runf(const char *format, ...);
 
 void init_ncurses(void);
 void end_ncurses(void);
