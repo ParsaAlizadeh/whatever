@@ -16,7 +16,7 @@
         editor_toright(); \
         break; \
 
-#define MISC_MOVEMENT \
+#define HOMEND_MOVEMENT \
     case KEY_HOME: \
         loginfo("home"); \
         editor_tohome(); \
@@ -34,5 +34,18 @@
         editor_tofinish(); \
         break;
 
-#define ARROW_MOVEMENT  CASE_MOVEMENT(KEY_LEFT, KEY_DOWN, KEY_UP, KEY_RIGHT)
-#define VIM_MOVEMENT    CASE_MOVEMENT('h', 'j', 'k', 'l')
+#define MATCH_MOVEMENT \
+    case '[': \
+        loginfo("["); \
+        editor_toprvmatch(); \
+        break; \
+    case ']': \
+        loginfo("]"); \
+        editor_tonxtmatch(); \
+        break; \
+
+#define ARROW_MOVEMENT      CASE_MOVEMENT(KEY_LEFT, KEY_DOWN, KEY_UP, KEY_RIGHT)
+#define VIM_MOVEMENT        CASE_MOVEMENT('h', 'j', 'k', 'l')
+
+#define CHAR_MOVEMENT       VIM_MOVEMENT MATCH_MOVEMENT
+#define NONCHAR_MOVEMENT    ARROW_MOVEMENT HOMEND_MOVEMENT

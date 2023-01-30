@@ -34,9 +34,8 @@ void visual_mode(void) {
         chr = getch();
 
         switch (chr) {
-        ARROW_MOVEMENT
-        VIM_MOVEMENT
-        MISC_MOVEMENT
+        CHAR_MOVEMENT
+        NONCHAR_MOVEMENT
         case KEY_F(1):
         case 'v':
             running = 0;

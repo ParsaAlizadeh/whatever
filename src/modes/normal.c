@@ -29,9 +29,8 @@ void normal_mode(void) {
         }
 
         switch (chr) {
-        ARROW_MOVEMENT
-        VIM_MOVEMENT
-        MISC_MOVEMENT
+        CHAR_MOVEMENT
+        NONCHAR_MOVEMENT
         case 'a':
             insert_mode();
             break;

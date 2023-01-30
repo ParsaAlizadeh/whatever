@@ -16,8 +16,7 @@ void insert_mode(void) {
         chr = getch();
 
         switch (chr) {
-        ARROW_MOVEMENT
-        MISC_MOVEMENT
+        NONCHAR_MOVEMENT
         case KEY_BACKSPACE:
             editor_erase();
             break;
