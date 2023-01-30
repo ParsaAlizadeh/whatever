@@ -4,11 +4,11 @@
 #include <ncurses.h>
 #include "vecline.h"
 
-#define TAB_STOP        4
-#define SCROLLYOFF      3
+#define TAB_STOP        8
+#define SCROLLYOFF      4
 #define SCROLLXOFF      TAB_STOP
 #define LINE_WIDTH      5
-#define LINE_FORMAT     "%-5d"
+#define LINE_FORMAT     "%d"
 
 #define COLOR_TXT       1
 #define COLOR_TXT_P     COLOR_WHITE, COLOR_BLACK
