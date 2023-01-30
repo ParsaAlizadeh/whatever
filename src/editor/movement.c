@@ -46,3 +46,17 @@ void editor_tofinish(void) {
     line_t *line = vc_atline(ed->vc, n_lines-1);
     ed->acur = (pos_t) { n_lines-1, line->size };
 }
+
+void editor_toprvmatch(void) {
+    pos_t match = editor_curmatch();
+    if (match.line == -1 || pos_less(ed->acur, match))
+        return;
+    ed->acur = match;
+}
+
+void editor_tonxtmatch(void) {
+    pos_t match = editor_curmatch();
+    if (match.line == -1 || pos_less(match, ed->acur))
+        return;
+    ed->acur = match;
+}

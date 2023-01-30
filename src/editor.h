@@ -10,16 +10,21 @@
 #define LINE_WIDTH      5
 #define LINE_FORMAT     "%d"
 
-#define COLOR_TXT       1
+enum {
+    COLOR_TXT = 1,
+    COLOR_HL,
+    COLOR_PAREN,
+    COLOR_BRACKET,
+    COLOR_CURLY,
+    COLOR_MATCH
+};
+
 #define COLOR_TXT_P     COLOR_WHITE, COLOR_BLACK
-#define COLOR_HL        2
 #define COLOR_HL_P      COLOR_WHITE, COLOR_YELLOW
-#define COLOR_PAREN     3
 #define COLOR_PAREN_P   COLOR_BLUE, COLOR_BLACK
-#define COLOR_BRACKET   4
 #define COLOR_BRACKET_P COLOR_GREEN, COLOR_BLACK
-#define COLOR_CURLY     5
 #define COLOR_CURLY_P   COLOR_MAGENTA, COLOR_BLACK
+#define COLOR_MATCH_P   COLOR_BLACK, COLOR_WHITE
 
 typedef struct {
     WINDOW *frame;
@@ -42,5 +47,6 @@ extern EDITOR *ed;
 #include "editor/movement.h"
 #include "editor/buffer.h"
 #include "editor/run.h"
+#include "editor/matching.h"
 
 #endif

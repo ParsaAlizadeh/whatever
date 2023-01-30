@@ -16,6 +16,8 @@ int wvisible(WINDOW *win, pos_t dpos) {
 static int colorof(pos_t apos, char chr) {
     if (editor_ishl(apos))
         return COLOR_HL;
+    if (pos_eq(apos, editor_curmatch()))
+        return COLOR_MATCH;
     if (chr == '(' || chr == ')')
         return COLOR_PAREN;
     if (chr == '[' || chr == ']')

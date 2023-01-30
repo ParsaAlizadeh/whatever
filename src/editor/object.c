@@ -55,6 +55,7 @@ void init_ncurses(void) {
     init_pair(COLOR_PAREN, COLOR_PAREN_P);
     init_pair(COLOR_BRACKET, COLOR_BRACKET_P);
     init_pair(COLOR_CURLY, COLOR_CURLY_P);
+    init_pair(COLOR_MATCH, COLOR_MATCH_P);
 
     editor_new(stdscr);
     if (ed == NULL)
