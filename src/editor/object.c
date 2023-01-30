@@ -8,7 +8,7 @@ EDITOR *ed = NULL;
 void editor_new(WINDOW *frame) {
     int h, w;
     getmaxyx(frame, h, w);
-    if (h < 4)
+    if (h < 3)
         return;
     if (w < LINE_WIDTH + 2)
         return;
@@ -17,8 +17,8 @@ void editor_new(WINDOW *frame) {
 
     ed->frame = frame;
     wrefresh(frame);
-    ed->lw = derwin(frame, h-3, LINE_WIDTH, 0, 0);
-    ed->fw = derwin(frame, h-3, w-LINE_WIDTH-1, 0, LINE_WIDTH+1);
+    ed->lw = derwin(frame, h-2, LINE_WIDTH, 0, 0);
+    ed->fw = derwin(frame, h-2, w-LINE_WIDTH-1, 0, LINE_WIDTH+1);
     ed->iw = derwin(frame, 1, w, h-2, 0);
     ed->cw = derwin(frame, 1, w, h-1, 0);
 

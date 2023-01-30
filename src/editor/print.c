@@ -61,11 +61,9 @@ void editor_printfile(void) {
     for (int aline = 0; aline < vc_nlines(ed->vc); aline++)
         editor_printline(aline);
 }
+
 void editor_printborder(void) {
     mvwvline(ed->frame, 0, getmaxx(ed->lw), ACS_VLINE, getmaxy(ed->lw));
-    mvwhline(ed->frame, getmaxy(ed->lw), 0, ACS_HLINE, getmaxx(ed->lw));
-    mvwhline(ed->frame, getmaxy(ed->lw), getmaxx(ed->lw)+1, ACS_HLINE, getmaxx(ed->fw));
-    mvwaddch(ed->frame, getmaxy(ed->lw), getmaxx(ed->lw), ACS_BTEE);
 }
 
 void editor_printinfo(void) {
@@ -84,6 +82,7 @@ void editor_printinfo(void) {
         if (ed->modified)
             wprintw(ed->iw, " +");
     }
+    mvwchgat(ed->iw, 0, 0, getmaxx(ed->iw), A_REVERSE, COLOR_TXT, NULL);
 }
 
 void editor_refresh(void) {
