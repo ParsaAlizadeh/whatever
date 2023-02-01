@@ -1,3 +1,6 @@
+#ifndef MOVEMENT_MODE_H
+#define MOVEMENT_MODE_H
+
 #define CASE_MOVEMENT(l, d, u, r) \
     case l: \
         loginfo("left"); \
@@ -49,3 +52,5 @@
 
 #define CHAR_MOVEMENT       VIM_MOVEMENT MATCH_MOVEMENT
 #define NONCHAR_MOVEMENT    ARROW_MOVEMENT HOMEND_MOVEMENT
+
+#endif
