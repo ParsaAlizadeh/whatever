@@ -8,11 +8,9 @@
 #include "logging.h"
 
 const command *lookup_command(char *name) {
-    int n = ctx_get_ncmds();
-    const command *cmds = ctx_get_allcmds();
-    for (int i = 0; i < n; i++)
-        if (strcmp(cmds[i].name, name) == 0)
-            return &cmds[i];
+    for (int i = 0; i < ctx_ncmds; i++)
+        if (strcmp(ctx_allcmds[i].name, name) == 0)
+            return &ctx_allcmds[i];
     return NULL;
 }
 

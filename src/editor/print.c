@@ -71,9 +71,8 @@ void editor_printborder(void) {
 void editor_printinfo(void) {
     wclear(ed->iw);
     wmove(ed->iw, 0, 1);
-    const char *edmode = ctx_get_edmode();
-    if (edmode != NULL)
-        wprintw(ed->iw, "%s", edmode);
+    if (ctx_edmode != NULL)
+        wprintw(ed->iw, "%s", ctx_edmode);
     else
         wprintw(ed->iw, "?????");
     waddch(ed->iw, ' ');

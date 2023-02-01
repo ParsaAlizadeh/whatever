@@ -39,7 +39,7 @@ void search_mode(void) {
     cboxi_init('/');
     int running = 1;
     while (running) {
-        ctx_set_edmode("SEARCH");
+        ctx_edmode = "SEARCH";
         int rc = cboxi_refresh();
         switch (rc) {
         case CBOXI_CANCEL:

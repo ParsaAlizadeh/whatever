@@ -10,7 +10,7 @@
 
 static FILE *_read_command(void) {
     while (1) {
-        ctx_set_edmode("COMMAND");
+        ctx_edmode = "COMMAND";
         int rc = cboxi_refresh();
         if (rc == CBOXI_CANCEL)
             return NULL;

@@ -41,9 +41,9 @@ int main(int argc, char *argv[]) {
         openfile,
         savefile
     };
-    int n_cmds = sizeof(all_cmds) / sizeof(command);
-    ctx_set_cmds(n_cmds, all_cmds);
+    ctx_allcmds = all_cmds;
+    ctx_ncmds = sizeof(all_cmds) / sizeof(command);
     normal_mode();
-    ctx_clear();
+    ctx_set(NULL);
     return EXIT_SUCCESS;
 }

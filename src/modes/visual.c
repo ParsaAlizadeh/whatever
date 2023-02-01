@@ -29,7 +29,7 @@ void visual_mode(void) {
     int running = 1;
     int chr;
     while (running) {
-        ctx_set_edmode("VISUAL");
+        ctx_edmode = "VISUAL";
         editor_refresh();
         chr = getch();
 

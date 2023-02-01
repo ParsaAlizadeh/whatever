@@ -11,7 +11,7 @@
 void insert_mode(void) {
     int chr;
     while (1) {
-        ctx_set_edmode("INSERT");
+        ctx_edmode = "INSERT";
         editor_refresh();
         chr = getch();
 

@@ -15,7 +15,7 @@ void normal_mode(void) {
     int quits = 0;
     int chr;
     while (1) {
-        ctx_set_edmode("NORMAL");
+        ctx_edmode = "NORMAL";
         editor_refresh();
         chr = getch();
 
