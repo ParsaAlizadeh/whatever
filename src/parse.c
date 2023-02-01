@@ -107,12 +107,12 @@ void prettify(FILE *file, FILE *out) {
                 break;
             if (chr == '}') {
                 indent--;
-                multifputs(out, indent*4, " ");
+                multifputs(out, indent, "\t");
                 fprintf(out, "}\n");
                 prenext = 1;
                 break;
             }
-            multifputs(out, indent*4, " ");
+            multifputs(out, indent, "\t");
             ungetc(chr, file);
             prenext = 0;
             if (chr == '{') {
