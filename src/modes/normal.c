@@ -48,15 +48,16 @@ void normal_mode(void) {
             break;
         case '=':
             loginfo("=");
-            editor_runf("pretty");
+            editor_runf(RUN_READWRITE, "pretty");
             break;
         case 'u':
             loginfo("u");
-            editor_runf("undo");
+            editor_runf(RUN_READWRITE, "undo");
             break;
         case 'p':
             loginfo("p");
-            editor_runf("paste -p %d:%d", ed->acur.line+1, ed->acur.col);
+            editor_runf(RUN_READWRITE, "paste -p %d:%d",
+                ed->acur.line+1, ed->acur.col);
             break;
         case 'n':
             loginfo("n");

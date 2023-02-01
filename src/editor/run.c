@@ -12,8 +12,8 @@ void editor_run_init(void) {
     ctx_save();
 }
 
-void editor_run_end(char *out) {
-    if (ctx_get_buf_mode()) {
+void editor_run_end(run_mode_t mode, char *out) {
+    if (mode == RUN_READWRITE && ctx_get_buf_mode()) {
         editor_hl_reset();
         ed->modified = 1;
         editor_loadctx();
@@ -27,14 +27,14 @@ void editor_run_end(char *out) {
     }
 }
 
-void editor_run(vector *tokens) {
+void editor_run(run_mode_t mode, vector *tokens) {
     editor_run_init();
     char *out = NULL;
     procedure_chain(tokens, &out);
-    editor_run_end(out);
+    editor_run_end(mode, out);
 }
 
-void editor_runf(const char *format, ...) {
+void editor_runf(run_mode_t mode, const char *format, ...) {
     string *cmd = string_new();
     va_list args;
     va_start(args, format);
@@ -42,7 +42,7 @@ void editor_runf(const char *format, ...) {
     va_end(args);
     char *strcmd = string_free(cmd);
     vector *tokens = scan_strline(strcmd);
-    editor_run(tokens);
+    editor_run(mode, tokens);
     vector_freeall(tokens);
     free(strcmd);
 }

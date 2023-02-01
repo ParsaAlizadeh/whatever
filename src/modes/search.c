@@ -23,7 +23,7 @@ static void _update_hls(void) {
     pattern_free(pat);
     fclose(file);
     ctx_set_buf_mode(0);
-    editor_run_end(NULL);
+    editor_run_end(RUN_READONLY, NULL);
     ed->acur = prvcur;
     editor_hl_next();
 }
