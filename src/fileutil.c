@@ -68,6 +68,16 @@ int fu_isdirectory(const char *path) {
     return S_ISDIR(buf.st_mode);
 }
 
+static int _fu_is_read(const char *mode) {
+    return strcmp(mode, "r") == 0 || strcmp(mode, "rb") == 0;
+}
+
+static void _fu_update_counter(const char *path, const char *mode) {
+    const char *ctx = ctx_get();
+    if (ctx && !_fu_is_read(mode) && strcmp(path, ctx) == 0)
+        ctx_counter++;
+}
+
 FILE *fu_open(const char *path, const char *mode) {
     if (fu_isdirectory(path)) {
         errno = EISDIR;
@@ -82,6 +92,7 @@ FILE *fu_open(const char *path, const char *mode) {
     }
     free(dir);
 #endif
+    _fu_update_counter(path, mode);
     return fopen(path, mode);
 }
 

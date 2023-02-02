@@ -62,7 +62,7 @@ void init_ncurses(void) {
         errx(EXIT_FAILURE, "editor_new failed");
 
     editor_unlinkbuffer();
-    editor_loadctx();
+    editor_readctx();
 }
 
 void end_ncurses(void) {

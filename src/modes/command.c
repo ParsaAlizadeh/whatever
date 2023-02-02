@@ -31,7 +31,7 @@ void command_mode(void) {
     vector *tokens = scan_line(inp);
     fclose(inp);
     if (tokens->size > 0)
-        editor_run(RUN_READWRITE, tokens);
+        editor_run(tokens);
     else
         wclear(ed->cw);
     vector_freeall(tokens);

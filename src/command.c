@@ -97,7 +97,9 @@ int procedure_command(vector *tokens, char *inp, char **out) {
     }
 
     /* may or maynot return error-code, didn't care, won't logged */
-    (void) cobj.cmd->set_opt(cobj.obj, 'f', (char *)ctx_get());
+    char *ctx = (char *)ctx_get();
+    if (ctx)
+        (void) cobj.cmd->set_opt(cobj.obj, 'f', ctx);
 
     run_command(cobj, inp, out);
     cobj.cmd->free(cobj.obj);

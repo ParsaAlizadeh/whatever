@@ -22,20 +22,22 @@ static int set_opt(void *_this, int c, char *argv) {
 }
 
 static void run(void *_this, char *inp, char **out) {
-    (void)inp;
     (void)out;
     savefile_t *this = _this;
-    int is_saveas = (this->path != NULL && strcmp(this->path, BUFFER_PATH) != 0);
-    if (is_saveas) {
-        ctx_set(this->path);
-        ed->modified = 1;
-    }
-    ctx_set_buf_mode(0);
-    if (ctx_get_buf_mode()) {
-        cmdlog(&savefile, "saving buffer has no effect");
+    if (ed == NULL)
+        return (void)cmdlog(&savefile, "nothing to save");
+    editor_run_end(inp);
+    int is_saveas = (strcmp(this->path, BUFFER_PATH) != 0);
+    if (is_saveas)
+        ctx_set(CTX_PATH, this->path);
+    const char *ctx = ctx_get();
+    if (ctx != NULL) {
+        editor_writectx();
+        editor_reset();
     } else {
-        ctx_save();
+        cmdlog(&savefile, "saving buffer has no effect");
     }
+    editor_run_init();
 }
 
 const command savefile = {

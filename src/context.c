@@ -6,44 +6,37 @@
 #include "fileutil.h"
 #include "logging.h"
 
+ctx_mode_t ctx_mode = CTX_NULL;
+int ctx_counter = 0;
 static const char *ctx_file = NULL;
-static int buf_mode = 0;
 
 const char *ctx_get(void) {
-    if (ctx_get_buf_mode())
+    switch (ctx_mode) {
+    case CTX_NULL:
+        return NULL;
+    case CTX_BUFFER:
         return BUFFER_PATH;
-    return ctx_file;
+    case CTX_PATH:
+        return ctx_file;
+    }
+    return NULL;
 }
 
-void ctx_set(const char *path) {
+void ctx_set(ctx_mode_t mode, const char *path) {
     if (ctx_file != NULL) {
-        ctx_save();
         free((void *)ctx_file);
     }
     if (path != NULL)
         path = strdup(path);
+    ctx_mode = mode;
     ctx_file = path;
 }
 
-void ctx_save(void) {
-    if (ed == NULL)
-        return;
-    if (!ctx_get_buf_mode() && !ed->modified)
-        return;
-    const char *ctx = ctx_get();
-    fu_backup(ctx);
-    if (editor_saveas(ctx) != 0)
-        loginfo("ctx: save failed");
-    if (!ctx_get_buf_mode())
-        ed->modified = 0;
-}
-
-int ctx_get_buf_mode(void) {
-    return ctx_file == NULL || buf_mode;
-}
-
-void ctx_set_buf_mode(int mode) {
-    buf_mode = mode;
+void ctx_fix(void) {
+    if (ctx_file == NULL)
+        ctx_mode = CTX_NULL;
+    else
+        ctx_mode = CTX_PATH;
 }
 
 const char *ctx_edmode = NULL;

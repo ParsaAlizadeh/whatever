@@ -22,7 +22,7 @@
 
 int main(int argc, char *argv[]) {
     if (argc == 2)
-        ctx_set(argv[1]);
+        ctx_set(CTX_PATH, argv[1]);
     const command all_cmds[] = {
         creatfile,
         insertstr,
@@ -44,6 +44,6 @@ int main(int argc, char *argv[]) {
     ctx_allcmds = all_cmds;
     ctx_ncmds = sizeof(all_cmds) / sizeof(command);
     normal_mode();
-    ctx_set(NULL);
+    ctx_set(CTX_NULL, NULL);
     return EXIT_SUCCESS;
 }

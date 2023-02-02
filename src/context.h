@@ -6,12 +6,18 @@
 
 #define BUFFER_PATH "/tmp/.buffer"
 
-const char *ctx_get(void);
-void ctx_set(const char *path);
-void ctx_save(void);
+typedef enum {
+    CTX_NULL,
+    CTX_BUFFER,
+    CTX_PATH
+} ctx_mode_t;
 
-int ctx_get_buf_mode(void);
-void ctx_set_buf_mode(int mode);
+extern ctx_mode_t ctx_mode;
+extern int ctx_counter;
+
+const char *ctx_get(void);
+void ctx_set(ctx_mode_t mode, const char *path);
+void ctx_fix(void);
 
 extern const char *ctx_edmode;
 

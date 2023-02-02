@@ -27,9 +27,15 @@ static void run(void *_this, char *inp, char **out) {
     openfile_t *this = _this;
     if (this->path == NULL || strcmp(this->path, BUFFER_PATH) == 0)
         return (void)cmdlogrequired(&openfile, 'f');
-    ctx_set_buf_mode(0);
-    ctx_set(this->path);
-    if (editor_loadctx() == -1) {
+    if (ed == NULL) {
+        ctx_set(CTX_PATH, this->path);
+        return;
+    }
+    editor_run_end(NULL);
+    if (editor_writectx() == -1)
+        cmdlog(&openfile, "failed to save previous buffer, ignoring");
+    ctx_set(CTX_PATH, this->path);
+    if (editor_readctx() == -1) {
         cmdlog(&openfile, "failed to open file, will open an empty file: %s",
             strerror(errno));
         editor_setvc(vc_new1());
@@ -38,6 +44,7 @@ static void run(void *_this, char *inp, char **out) {
     } else {
         editor_reset();
     }
+    editor_run_init();
 }
 
 const command openfile = {

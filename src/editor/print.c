@@ -76,7 +76,7 @@ void editor_printinfo(void) {
     else
         wprintw(ed->iw, "?????");
     waddch(ed->iw, ' ');
-    if (ctx_get_buf_mode())
+    if (ctx_get() == NULL)
         wprintw(ed->iw, "(buffer)");
     else {
         wprintw(ed->iw, "%s", ctx_get());

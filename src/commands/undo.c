@@ -27,14 +27,15 @@ static void run(void *_this, char *inp, char **out) {
     undo_t *this = _this;
     if (this->path == NULL)
         return (void)cmdlogrequired(&undo, 'f');
-    if (strcmp(this->path, BUFFER_PATH) == 0) {
-        ctx_set_buf_mode(0);
-        if (ctx_get_buf_mode())
-            return (void)cmdlog(&undo, "undo has no effect on buffer");
+    if (ed != NULL && strcmp(this->path, BUFFER_PATH) == 0) {
+        editor_run_end(NULL);
+        if (ctx_get() == NULL)
+            return (void)cmdlog(&undo, "no file has been set");
         if (!ed->modified && fu_restore(ctx_get()) == -1)
             return (void)cmdlog(&undo, "no backup exists");
-        editor_loadctx();
+        editor_readctx();
         editor_reset();
+        editor_run_init();
         return;
     }
     if (fu_restore(this->path) == -1)
