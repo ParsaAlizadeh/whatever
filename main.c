@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "src/context.h"
 #include "src/modes/normal.h"
+#include "src/modes/legacy.h"
 
 #include "src/commands/creatfile.h"
 #include "src/commands/insertstr.h"
@@ -43,7 +44,10 @@ int main(int argc, char *argv[]) {
     };
     ctx_allcmds = all_cmds;
     ctx_ncmds = sizeof(all_cmds) / sizeof(command);
-    normal_mode();
+    if (getenv("LEGACY"))
+        legacy_mode();
+    else
+        normal_mode();
     ctx_set(CTX_NULL, NULL);
     return EXIT_SUCCESS;
 }
