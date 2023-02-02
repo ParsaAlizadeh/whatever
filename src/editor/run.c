@@ -7,7 +7,6 @@
 #include "../parse.h"
 
 void editor_run_init(void) {
-    editor_hl_reset();
     ctx_mode = CTX_BUFFER;
     editor_writepath(ctx_get());
     ctx_counter = 0;

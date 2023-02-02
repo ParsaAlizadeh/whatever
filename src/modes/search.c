@@ -16,6 +16,7 @@ static void _update_hls(void) {
     if (pat == NULL)
         return;
     editor_run_init();
+    editor_hl_reset();
     FILE *file = fu_open(ctx_get(), "r");
     subseq_t ss;
     while ((ss = fu_nextmatch(file, pat)).offset != -1)
