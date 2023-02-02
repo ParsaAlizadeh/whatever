@@ -59,7 +59,7 @@ static void traverse(
 {
     fprintf(fout, "%s", prefix);
     if (is_last)
-        fprintf(fout, "'----");
+        fprintf(fout, "`----");
     else
         fprintf(fout, "|----");
     fprintf(fout, "%s\n", base);
