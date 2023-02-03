@@ -50,7 +50,7 @@ static int movedir(vecline *vc, pos_t *apos, int dir) {
         apos->line--;
         if (apos->line < 0)
             return -1;
-        apos->col = vc_atline(vc, apos->line)->size - 1;
+        apos->col = vc_atline(vc, apos->line)->size;
     }
     return 0;
 }
