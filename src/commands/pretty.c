@@ -27,6 +27,9 @@ static void run(void *_this, char *inp, char **out) {
     pretty_t *this = _this;
     if (this->path == NULL)
         return (void)cmdlogrequired(&pretty, 'f');
+    if (fu_backup(this->path) == -1)
+        cmdlog(&pretty, "backup failed, ignoring: %s",
+            strerror(errno));
     if (fu_pretty(this->path) == -1)
         return (void)cmdlog(&pretty, "pretty failed: %s",
             strerror(errno));

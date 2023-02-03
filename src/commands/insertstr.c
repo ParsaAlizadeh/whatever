@@ -38,13 +38,12 @@ static void run(void *_this, char *inp, char **out) {
     if (this->line_no == -1)
         return (void)cmdlogrequired(&insertstr, 'p');
 
-    if (fu_backup(this->path) == -1)
-        cmdlog(&insertstr, "backup failed, ignoring: %s",
-            strerror(errno));
-
     long pos = fu_pwhereat(this->path, this->line_no, this->col_no, 1, NULL);
     if (pos == -1)
         return (void)cmdlog(&insertstr, "not a valid position");
+    if (fu_backup(this->path) == -1)
+        cmdlog(&insertstr, "backup failed, ignoring: %s",
+            strerror(errno));
     if (fu_insertat(this->path, pos, this->str) == -1)
         return (void)cmdlog(&insertstr, "insert failed: %s",
             strerror(errno));
