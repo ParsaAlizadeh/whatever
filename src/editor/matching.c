@@ -37,7 +37,7 @@ static int movedir(vecline *vc, pos_t *apos, int dir) {
     if (dir == 0) {
         line_t *line = vc_atline(vc, apos->line);
         apos->col++;
-        if (apos->col == line->size) {
+        if (apos->col > line->size) {
             apos->col = 0;
             apos->line++;
         }
