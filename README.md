@@ -1,7 +1,5 @@
 # vim, ed, shell, whatever
 
-Parsa Alizadeh, 401110494
-
 ## Build
 
 For reasonable, logical and intuitive use cases:
