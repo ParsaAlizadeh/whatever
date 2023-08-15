@@ -1,22 +1,23 @@
-CFLAGS=-lncurses -Wall -Wextra -g -fsanitize=address -O2
-PROG=main
-SRCS=${wildcard main.c src/*.c src/**/*.c}
-OBJS=${patsubst %.c,build/%.o,${SRCS}}
-DEPS=${patsubst %.o,%.d,${OBJS}}
+PROGRAM=main
+COPTIMIZE = 0
+CFLAGS = -Wall -Wextra -O${COPTIMIZE} ${CDEFINES} -fsanitize=address -g3 -lncurses
+SOURCES = ${wildcard main.c src/*.c src/**/*.c}
+OBJECTS = ${patsubst %.c,build/%.o,${SOURCES}}
+DEPENDS = ${patsubst %.o,%.d,${OBJECTS}}
 
-all: ${PROG}
+all: ${PROGRAM}
 
-${PROG}: ${OBJS}
-	${CC} ${CFLAGS} ${OBJS} -o ${PROG}
+${PROGRAM}: ${OBJECTS}
+	${CC} ${CFLAGS} ${OBJECTS} -o ${PROGRAM}
 
 build/%.o: %.c
 	mkdir -p ${dir $@}
-	${CC} ${CFLAGS} ${CDEFINES} -MMD -c $< -o $@
+	${CC} ${CFLAGS} -MMD -c $< -o $@
 
--include ${DEPS}
+-include ${DEPENDS}
 
 clean:
-	rm -rf ${PROG} build
+	rm -rf ${PROGRAM} build
 
 count:
 	find . -name '*.c' -or -name '*.h' | xargs wc | sort -rn
