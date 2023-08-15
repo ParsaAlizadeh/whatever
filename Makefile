@@ -11,7 +11,7 @@ ${PROGRAM}: ${OBJECTS}
 	${CC} ${CFLAGS} ${OBJECTS} -o ${PROGRAM}
 
 build/%.o: %.c
-	mkdir -p ${dir $@}
+	@mkdir -p ${dir $@}
 	${CC} ${CFLAGS} -MMD -c $< -o $@
 
 -include ${DEPENDS}
