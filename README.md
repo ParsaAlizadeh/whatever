@@ -8,11 +8,7 @@ For reasonable, logical and intuitive use cases:
 $ make
 ```
 
-For teacher assistants:
-
-```console
-$ make CDEFINES=-DIDIOT
-```
+Teacher assistants may edit [settings.h](src/settings.h) and set `IS_IDIOT` to 1.
 
 ## Run
 

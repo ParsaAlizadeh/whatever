@@ -10,6 +10,7 @@
 #include "vecstr.h"
 #include "context.h"
 #include "parse.h"
+#include "settings.h"
 
 int mkdir_p(const char *_path) {
     if (_path == NULL  || *_path == '\0')
@@ -83,15 +84,16 @@ FILE *fu_open(const char *path, const char *mode) {
         errno = EISDIR;
         return NULL;
     }
-#ifdef IDIOT
-    char *dir = fu_dirname(path);
-    if (!fu_isdirectory(dir)) {
-        errno = EFAULT; /* I am aware this is a socket error, hence the ifdef */
+    if (IS_IDIOT) {
+        char *dir = fu_dirname(path);
+        if (!fu_isdirectory(dir)) {
+            /* I am aware EFAULT is a socket error, hence the IS_IDIOT */
+            errno = EFAULT;
+            free(dir);
+            return NULL;
+        }
         free(dir);
-        return NULL;
     }
-    free(dir);
-#endif
     _fu_update_counter(path, mode);
     return fopen(path, mode);
 }

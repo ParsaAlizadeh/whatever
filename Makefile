@@ -1,6 +1,6 @@
 PROGRAM=main
 COPTIMIZE = 0
-CFLAGS = -Wall -Wextra -O${COPTIMIZE} ${CDEFINES} -fsanitize=address -g3 -lncurses
+CFLAGS = -Wall -Wextra -O${COPTIMIZE} -fsanitize=address -g3 -lncurses
 SOURCES = ${wildcard main.c src/*.c src/**/*.c}
 OBJECTS = ${patsubst %.c,build/%.o,${SOURCES}}
 DEPENDS = ${patsubst %.o,%.d,${OBJECTS}}
