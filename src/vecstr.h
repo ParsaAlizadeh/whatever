@@ -9,12 +9,12 @@ typedef struct {
     FILE *f;
 } string;
 
-string *string_new(void);
-string *string_using(char **);
-char *string_free(string *);
-size_t string_size(string *);
+extern string *string_new(void);
+extern string *string_using(char **);
+extern char *string_free(string *);
+extern size_t string_size(string *);
 
-char *string_insert(const char *str, int size, int ind, char chr);
-char *string_erase(const char *str, int size, int ind);
+extern char *string_insert(const char *str, int size, int ind, char chr);
+extern char *string_erase(const char *str, int size, int ind);
 
 #endif

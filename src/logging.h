@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-int vloginfo(const char *format, va_list ap);
-int loginfo(const char *format, ...);
+extern int vloginfo(const char *format, va_list ap);
+extern int loginfo(const char *format, ...);
 
 #endif

@@ -3,19 +3,19 @@
 
 #include "../editor.h"
 
-void editor_toleft(void);
-void editor_toright(void);
+extern void editor_toleft(void);
+extern void editor_toright(void);
 
-void editor_toup(void);
-void editor_todown(void);
+extern void editor_toup(void);
+extern void editor_todown(void);
 
-void editor_tohome(void);
-void editor_toend(void);
+extern void editor_tohome(void);
+extern void editor_toend(void);
 
-void editor_tostart(void);
-void editor_tofinish(void);
+extern void editor_tostart(void);
+extern void editor_tofinish(void);
 
-void editor_toprvmatch(void);
-void editor_tonxtmatch(void);
+extern void editor_toprvmatch(void);
+extern void editor_tonxtmatch(void);
 
 #endif

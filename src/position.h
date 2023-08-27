@@ -9,16 +9,16 @@ typedef struct {
     pos_t afrom, ato;
 } highlight_t;
 
-int pos_eq(pos_t, pos_t);
-int pos_less(pos_t, pos_t);
-int pos_lesseq(pos_t, pos_t);
+extern int pos_eq(pos_t, pos_t);
+extern int pos_less(pos_t, pos_t);
+extern int pos_lesseq(pos_t, pos_t);
 
 /*
  * checks for afrom <= apos < ato or ato <= apos < aform
  */
-int pos_inrange(pos_t afrom, pos_t apos, pos_t ato);
+extern int pos_inrange(pos_t afrom, pos_t apos, pos_t ato);
 
-highlight_t *hl_new(pos_t afrom, pos_t ato);
-int hl_inrange(highlight_t *this, pos_t apos);
+extern highlight_t *hl_new(pos_t afrom, pos_t ato);
+extern int hl_inrange(highlight_t *, pos_t apos);
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-FILE *clipboard_reset(void);
-FILE *clipboard_get(void);
+extern FILE *clipboard_reset(void);
+extern FILE *clipboard_get(void);
 
 #endif

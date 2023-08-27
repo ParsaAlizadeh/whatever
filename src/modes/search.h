@@ -1,6 +1,6 @@
 #ifndef SEARCH_MODE_H
 #define SEARCH_MODE_H
 
-void search_mode(void);
+extern void search_mode(void);
 
 #endif

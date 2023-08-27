@@ -3,12 +3,12 @@
 
 #include "../editor.h"
 
-int wvisible(WINDOW *win, pos_t dpos);
-void editor_printc(pos_t apos);
-void editor_printline(int aline);
-void editor_printfile(void);
-void editor_printborder(void);
-void editor_printinfo(void);
-void editor_refresh(void);
+extern int wvisible(WINDOW *win, pos_t dpos);
+extern void editor_printc(pos_t apos);
+extern void editor_printline(int aline);
+extern void editor_printfile(void);
+extern void editor_printborder(void);
+extern void editor_printinfo(void);
+extern void editor_refresh(void);
 
 #endif

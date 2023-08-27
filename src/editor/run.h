@@ -3,9 +3,9 @@
 
 #include "../editor.h"
 
-void editor_run_init(void);
-void editor_run_end(char *out);
-void editor_run(vector *tokens);
-void editor_runf(const char *format, ...);
+extern void editor_run_init(void);
+extern void editor_run_end(char *out);
+extern void editor_run(vector *tokens);
+extern void editor_runf(const char *format, ...);
 
 #endif

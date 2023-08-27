@@ -16,8 +16,8 @@
 #include "../context.h"
 #include "../editor.h"
 
-int cmdlog(const command *, const char *, ...);
-int cmdlogrequired(const command *, char);
+extern int cmdlog(const command *, const char *fmt, ...);
+extern int cmdlogrequired(const command *, char opt);
 
 #define SINGLE_OPTION_CONSTANT(c, memb, def, val) \
     case c: \

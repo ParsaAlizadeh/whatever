@@ -3,6 +3,6 @@
 
 #include "command.h"
 
-int procedure_chain(vector *, char **);
+extern int procedure_chain(vector *, char **);
 
 #endif

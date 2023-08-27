@@ -3,10 +3,10 @@
 
 #include "../editor.h"
 
-void editor_new(WINDOW *frame);
-void editor_free(void);
+extern void editor_new(WINDOW *frame);
+extern void editor_free(void);
 
-void init_ncurses(void);
-void end_ncurses(void);
+extern void init_ncurses(void);
+extern void end_ncurses(void);
 
 #endif

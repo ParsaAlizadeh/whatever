@@ -3,13 +3,13 @@
 
 #include "../editor.h"
 
-void editor_reset(void);
-void editor_setvc(vecline *vc);
-int editor_readstr(char *str);
-int editor_readpath(const char *path);
-int editor_writepath(const char *path);
-int editor_readctx(void);
-int editor_writectx(void);
-void editor_unlinkbuffer(void);
+extern void editor_reset(void);
+extern void editor_setvc(vecline *vc);
+extern int editor_readstr(char *str);
+extern int editor_readpath(const char *path);
+extern int editor_writepath(const char *path);
+extern int editor_readctx(void);
+extern int editor_writectx(void);
+extern void editor_unlinkbuffer(void);
 
 #endif

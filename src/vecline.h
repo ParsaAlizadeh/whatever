@@ -14,35 +14,35 @@ typedef struct {
     vector *lines;
 } vecline;
 
-line_t *line_new(char *content, int size);
-void line_free(line_t *this);
+extern line_t *line_new(char *content, int size);
+extern void line_free(line_t *);
 
-int line_insert(line_t *this, int col, char chr);
-int line_erase(line_t *this, int col);
+extern int line_insert(line_t *, int col, char chr);
+extern int line_erase(line_t *, int col);
 
-void line_append(line_t *this, line_t *oth);
-line_t *line_partition(line_t *this, int col);
+extern void line_append(line_t *, line_t *oth);
+extern line_t *line_partition(line_t *, int col);
 
-vecline *vc_new0(void);
-vecline *vc_new1(void);
-vecline *vc_newfile(FILE *file);
-vecline *vc_newpath(const char *path);
-vecline *vc_newstr(const char *str);
+extern vecline *vc_new0(void);
+extern vecline *vc_new1(void);
+extern vecline *vc_newfile(FILE *file);
+extern vecline *vc_newpath(const char *path);
+extern vecline *vc_newstr(const char *str);
 
-void vc_writefile(vecline *this, FILE *file);
-int vc_writepath(vecline *this, const char *path);
+extern void vc_writefile(vecline *, FILE *file);
+extern int vc_writepath(vecline *, const char *path);
 
-int vc_nlines(vecline *this);
-line_t *vc_atline(vecline *this, int row);
-void vc_free(vecline *this);
-int vc_at(vecline *this, pos_t apos);
+extern int vc_nlines(vecline *);
+extern line_t *vc_atline(vecline *, int row);
+extern void vc_free(vecline *);
+extern int vc_at(vecline *, pos_t apos);
 
-pos_t vc_fromtpos(vecline *this, int tpos);
-int vc_totpos(vecline *this, pos_t apos);
+extern pos_t vc_fromtpos(vecline *, int tpos);
+extern int vc_totpos(vecline *, pos_t apos);
 
-pos_t vc_insert(vecline *this, pos_t apos, char chr);
-pos_t vc_erase(vecline *this, pos_t apos);
+extern pos_t vc_insert(vecline *, pos_t apos, char chr);
+extern pos_t vc_erase(vecline *, pos_t apos);
 
-void vc_log(vecline *this);
+extern void vc_log(vecline *);
 
 #endif

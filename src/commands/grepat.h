@@ -1,5 +1,5 @@
-#ifndef grepat_H
-#define grepat_H
+#ifndef GREPAT_H
+#define GREPAT_H
 
 #include "../command.h"
 

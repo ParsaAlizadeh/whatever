@@ -3,15 +3,15 @@
 
 #include "../editor.h"
 
-line_t *editor_curline(void);
-int editor_dcurline(void);
-int editor_dcurcol(void);
-pos_t editor_dcur(void);
-void editor_set_tcur(int tcur);
-void editor_mvcur(void);
-void editor_adjustcur(void);
+extern line_t *editor_curline(void);
+extern int editor_dcurline(void);
+extern int editor_dcurcol(void);
+extern pos_t editor_dcur(void);
+extern void editor_set_tcur(int tcur);
+extern void editor_mvcur(void);
+extern void editor_adjustcur(void);
 
-void editor_insert(char chr);
-void editor_erase(void);
+extern void editor_insert(char chr);
+extern void editor_erase(void);
 
 #endif

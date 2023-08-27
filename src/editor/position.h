@@ -3,9 +3,9 @@
 
 #include "../editor.h"
 
-int editor_dline(pos_t apos);
-int editor_dcol(pos_t apos);
-pos_t editor_dpos(pos_t apos);
-int editor_acol(int aline, int dcol);
+extern int editor_dline(pos_t apos);
+extern int editor_dcol(pos_t apos);
+extern pos_t editor_dpos(pos_t apos);
+extern int editor_acol(int aline, int dcol);
 
 #endif

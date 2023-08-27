@@ -9,11 +9,11 @@ typedef enum {
     CBOXI_DONE
 } cboxi_rc_t;
 
-void cboxi_init(char c);
-void cboxi_end(void);
-cboxi_rc_t cboxi_refresh(void);
-const char *cboxi_content(void);
-FILE *cboxi_fcontent(void);
-int cboxi_size(void);
+extern void cboxi_init(char c);
+extern void cboxi_end(void);
+extern cboxi_rc_t cboxi_refresh(void);
+extern const char *cboxi_content(void);
+extern FILE *cboxi_fcontent(void);
+extern int cboxi_size(void);
 
 #endif
