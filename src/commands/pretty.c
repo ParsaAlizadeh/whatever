@@ -38,7 +38,7 @@ static void run(void *_this, char *inp, char **out) {
 const command pretty = {
     .name       = "pretty",
     .optstring  = "f:",
-    .usage      = "-f FILE",
+    .usage      = "[-f FILE]",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,

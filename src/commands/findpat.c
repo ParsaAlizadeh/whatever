@@ -95,7 +95,7 @@ static void findpat_free(void *_this) {
 const command findpat = {
     .name       = "find",
     .optstring  = "f:s:ci:wa",
-    .usage      = "-f FILE -s PATTERN [-cwa] [-i AT]",
+    .usage      = "[-f FILE] -s PATTERN [-cwa] [-i AT]",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,

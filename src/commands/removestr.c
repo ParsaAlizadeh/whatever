@@ -59,7 +59,7 @@ static void run(void *_this, char *inp, char **out) {
 const command removestr = {
     .name       = "remove",
     .optstring  = "f:p:n:<>",
-    .usage      = "-f FILE -p LINE:COL -n COUNT [-<>]",
+    .usage      = "[-f FILE] -p LINE:COL -n COUNT [-< | ->]",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,

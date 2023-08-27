@@ -42,7 +42,7 @@ static void cutstr_free(void *_this) {
 const command cutstr = {
     .name       = "cut",
     .optstring  = "f:p:n:<>",
-    .usage      = "-p LINE:COL -n COUNT [-<>]",
+    .usage      = "[-f FILE] -p LINE:COL -n COUNT [-< | ->]",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,

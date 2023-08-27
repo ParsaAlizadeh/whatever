@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
     const command all_cmds[] = {
         help,
         creatfile,
+        openfile,
         insertstr,
         removestr,
         cat,
@@ -41,7 +42,6 @@ int main(int argc, char *argv[]) {
         diff,
         tree,
         pretty,
-        openfile,
         savefile
     };
     ctx_allcmds = all_cmds;

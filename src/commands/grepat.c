@@ -91,7 +91,7 @@ static void grepat_free(void *_this) {
 const command grepat = {
     .name       = "grep",
     .optstring  = "f:s:ca",
-    .usage      = "-f FILE [-f FILE [...]] -s PATTERN [-ca]",
+    .usage      = "[-f FILE] [[-f FILE] [...]] -s PATTERN [-ca]",
     .make       = make,
     .set_opt    = set_opt,
     .run        = run,
