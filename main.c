@@ -4,6 +4,7 @@
 #include "src/modes/normal.h"
 #include "src/modes/legacy.h"
 
+#include "src/commands/help.h"
 #include "src/commands/creatfile.h"
 #include "src/commands/insertstr.h"
 #include "src/commands/removestr.h"
@@ -25,6 +26,7 @@ int main(int argc, char *argv[]) {
     if (argc == 2)
         ctx_set(CTX_PATH, argv[1]);
     const command all_cmds[] = {
+        help,
         creatfile,
         insertstr,
         removestr,
