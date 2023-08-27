@@ -30,7 +30,7 @@ int feed_options(command_obj self, vector *tokens) {
 
     int argc = tokens->size;
     char **argv = (char **)tokens->seq;
-    int opt;
+    int opt, rc;
 
     /* start from beginning, optind=0 forces getopt to reset its internal variables */
     optind = 0;
@@ -52,7 +52,7 @@ int feed_options(command_obj self, vector *tokens) {
             loginfo("usage: %s %s", self.cmd->name, self.cmd->usage);
             break;
         default:
-            int rc = self.cmd->set_opt(self.obj, opt, optarg);
+            rc = self.cmd->set_opt(self.obj, opt, optarg);
             if (rc != CMD_SUCCESS) {
                 switch (rc) {
                 case CMD_REPEATED_OPTION:
@@ -96,7 +96,7 @@ int procedure_command(vector *tokens, char *inp, char **out) {
         return rc;
     }
 
-    /* may or maynot return error-code, didn't care, won't logged */
+    /* set_opt may or may not return error-code. didn't care, won't log */
     char *ctx = (char *)ctx_get();
     if (ctx)
         (void) cobj.cmd->set_opt(cobj.obj, 'f', ctx);
